@@ -1,0 +1,109 @@
+<!doctype html>
+<!-- Location: admin/documents.html (Documents: upload PDFs, edit, publish, withdraw) -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Documents | Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+  <link rel="preconnect" href="https://orlu-land-community-api.onrender.com" crossorigin>
+
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin admin-pending" data-admin-page="documents">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="admin-shell">
+    <aside class="admin-nav" data-admin-nav></aside>
+
+    <main class="admin-main" id="main">
+      <header class="admin-head">
+        <div>
+          <h1 class="admin-head__title">Documents</h1>
+          <p class="admin-head__lead">PDFs for the website's Documents page. New uploads start as drafts. Only published documents can be seen and downloaded.</p>
+        </div>
+        <div class="admin-head__actions">
+          <a class="button button--quiet" href="/documents.html" target="_blank" rel="noopener">View Documents page</a>
+        </div>
+      </header>
+
+      <div class="split">
+        <section class="split__main" aria-labelledby="list-title">
+          <div class="split__main-head">
+            <h2 class="panel__title" id="list-title">All documents</h2>
+            <p class="list-meta" aria-live="polite" data-count></p>
+          </div>
+          <nav class="status-tabs" aria-label="Filter by status" data-status-tabs hidden></nav>
+          <div data-documents></div>
+        </section>
+
+        <section class="panel split__side" aria-labelledby="form-title" data-form-panel>
+          <h2 class="panel__title" id="form-title" data-form-title>Upload a document</h2>
+
+          <form class="form form--compact" data-doc-form novalidate>
+            <p class="notice notice--error" role="alert" data-form-error hidden></p>
+
+            <!-- Upload mode: choose a PDF -->
+            <div class="field" data-upload-only>
+              <span class="field__label" id="file-label">PDF file</span>
+              <label class="dropzone dropzone--compact" data-dropzone>
+                <input type="file" name="file" accept="application/pdf,.pdf" class="visually-hidden"
+                  aria-labelledby="file-label" aria-describedby="file-hint" data-file-input>
+                <span class="dropzone__main">Drag a PDF here, or <span class="dropzone__link">choose a file</span></span>
+                <span class="dropzone__hint" id="file-hint">PDF only, up to 20 MB.</span>
+              </label>
+              <div class="file-chosen" data-file-chosen hidden></div>
+              <p class="field__error" data-error-for="file" hidden></p>
+            </div>
+
+            <!-- Edit mode: the stored file (it can't be replaced) -->
+            <div class="file-chosen file-chosen--stored" data-file-stored hidden></div>
+
+            <div class="field">
+              <label class="field__label" for="title">Title</label>
+              <input class="field__input" id="title" name="title" type="text" maxlength="255" required
+                placeholder="For example: Membership Application Form">
+              <p class="field__hint">Shown on the website. Filled in from the file name; change it to something clear.</p>
+              <p class="field__error" data-error-for="title" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="description">Description <span class="field__optional">optional</span></label>
+              <textarea class="field__input" id="description" name="description" rows="4"
+                placeholder="What it is and who needs it"></textarea>
+              <p class="field__error" data-error-for="description" hidden></p>
+            </div>
+
+            <label class="check" data-upload-only>
+              <input type="checkbox" name="publish_now">
+              <span>Publish straight away</span>
+            </label>
+
+            <div class="upload-progress" data-progress hidden>
+              <div class="upload-progress__bar"><span data-progress-bar></span></div>
+              <p class="field__hint" aria-live="polite" data-progress-text></p>
+            </div>
+
+            <div class="form__actions">
+              <button class="button" type="submit" data-save>Upload document</button>
+              <button class="button button--quiet" type="button" data-cancel-edit hidden>Cancel</button>
+            </div>
+
+            <!-- Edit mode: publish / withdraw -->
+            <div class="doc-state" data-doc-state hidden></div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="/js/admin/documents.js"></script>
+</body>
+</html>

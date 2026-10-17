@@ -1,0 +1,277 @@
+<!doctype html>
+<!-- Location: index.html (project root) -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orlu Community</title>
+  <meta name="description" content="News, events and people of Orlu Zone, Imo West Senatorial District, Imo State, Nigeria.">
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+
+  <!-- Start waking the API server while the page loads -->
+  <link rel="preconnect" href="https://orlu-land-community-api.onrender.com" crossorigin>
+
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" data-site-header></header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <svg class="hero__uli" viewBox="0 0 640 420" aria-hidden="true">
+        <!-- Uli-inspired line drawing -->
+        <path pathLength="1" d="M320 210c0-22 18-40 40-40s40 18 40 40-18 64-64 64-88-38-88-88 50-112 112-112 136 62 136 136-80 160-160 160"/>
+        <circle pathLength="1" cx="320" cy="210" r="168"/>
+        <path pathLength="1" d="M40 360c30-24 60 24 90 0s60 24 90 0 60 24 90 0"/>
+        <path pathLength="1" d="M40 60c30-24 60 24 90 0s60 24 90 0"/>
+        <path pathLength="1" d="M560 40c-46 20-46 80 0 100"/>
+        <path pathLength="1" d="M590 40c-46 20-46 80 0 100"/>
+        <circle class="uli-dot" cx="360" cy="210" r="6"/>
+        <circle class="uli-dot" cx="130" cy="40" r="4"/>
+        <circle class="uli-dot" cx="220" cy="380" r="4"/>
+        <circle class="uli-dot" cx="590" cy="160" r="4"/>
+      </svg>
+
+      <div class="hero__inner hero__inner--split">
+        <div class="hero__text">
+          <p class="hero__volume">Compendium of Honour: Who's Who, Vol. 1</p>
+          <h1 class="hero__title" id="hero-title" data-hero-title>Orlu Community</h1>
+          <p class="hero__place">Orlu Zone, Imo West Senatorial District, Imo State</p>
+          <p class="hero__motto">Documenting historical greatness, legacies that inspire generations</p>
+          <p class="hero__description" data-hero-description>News, events and the people of Orlu Zone, for everyone at home and in the diaspora.</p>
+          <div class="hero__actions">
+            <a class="button button--gold" href="/events.html">See upcoming events</a>
+            <a class="button button--quiet" href="/posts.html">Read the latest news</a>
+          </div>
+        </div>
+
+        <!--
+          Animated round picture frame (js/hero-show.js).
+          To add photos: put them in assets/images/home/ and add one slide per photo
+          inside <div class="hero-show__slides">, like this:
+
+            <div class="hero-show__slide" data-caption="Caption shown under the picture">
+              <img src="/assets/images/home/your-photo.jpg" alt="What the photo shows">
+            </div>
+
+          Square photos fit the circle best. With 2 or more slides the pictures
+          zoom slowly and change every 7 seconds. With none, a plain pattern shows.
+          For a map or picture that must not be cropped, add the class
+          hero-show__slide--fit to its slide.
+        -->
+        <figure class="hero-show" data-hero-show aria-roledescription="slideshow" aria-label="Pictures of Orlu Zone">
+          <div class="hero-show__frame">
+            <svg class="hero-show__ring" viewBox="0 0 100 100" aria-hidden="true">
+              <circle pathLength="1" cx="50" cy="50" r="49" transform="rotate(-90 50 50)"/>
+            </svg>
+            <div class="hero-show__slides">
+              <div class="hero-show__slide is-active" data-caption="">
+                <img src="/assets/images/home/red-cap.jpg" alt="A red Igbo chieftaincy cap with a white feather, resting on a wooden shelf" width="800" height="800" fetchpriority="high">
+              </div>
+            </div>
+            <svg class="hero-show__empty" viewBox="0 0 200 200" aria-hidden="true">
+              <circle cx="100" cy="100" r="70"/>
+              <circle cx="100" cy="100" r="44"/>
+              <circle cx="100" cy="100" r="18"/>
+              <path d="M30 100c12-10 24 10 36 0s24 10 36 0 24 10 36 0 24 10 36 0"/>
+              <circle class="dot" cx="100" cy="100" r="5"/>
+            </svg>
+          </div>
+          <figcaption class="hero-show__bar">
+            <p class="hero-show__caption" data-hero-caption></p>
+            <div class="hero-show__controls" data-hero-controls></div>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="zone band--light" aria-labelledby="zone-title">
+      <div class="container zone__inner">
+        <div class="zone__intro">
+          <h2 class="zone__title" id="zone-title">Orlu Zone at a glance</h2>
+          <p>Orlu Zone is the Imo West Senatorial District of Imo State, in south-eastern Nigeria. It is the largest of the state's three senatorial zones, alongside Owerri and Okigwe.</p>
+          <dl class="glance-facts">
+            <div><dt>Senatorial district</dt><dd>Imo West</dd></div>
+            <div><dt>Local government areas</dt><dd>12</dd></div>
+            <div><dt>Zones in Imo State</dt><dd>1 of 3</dd></div>
+            <div><dt>Commercial hub</dt><dd>Orlu town</dd></div>
+          </dl>
+        </div>
+
+        <div class="zone__lgas">
+          <h3 class="zone__label">The 12 local government areas</h3>
+          <ul class="lga-tags">
+            <li>Ideato North</li>
+            <li>Ideato South</li>
+            <li>Isu</li>
+            <li>Njaba</li>
+            <li>Nkwerre</li>
+            <li>Nwangele</li>
+            <li>Oguta</li>
+            <li>Ohaji/Egbema</li>
+            <li>Orlu</li>
+            <li>Orsu</li>
+            <li>Oru East</li>
+            <li>Oru West</li>
+          </ul>
+          <a class="zone__more" href="/about.html#lgas">Read more about Orlu Zone</a>
+        </div>
+
+        <ul class="zone__facts">
+          <li class="zone-fact">
+            <h3>A commercial hub</h3>
+            <p>Orlu town is widely known as the commercial hub of Imo State, and is home to the Imo International Market.</p>
+          </li>
+          <li class="zone-fact">
+            <h3>The Orashi River</h3>
+            <p>The Orashi rises from a spring at Dikenafai, in the Ideato area, and flows past Oguta Lake on its way to Rivers State and the Niger Delta.</p>
+          </li>
+          <li class="zone-fact">
+            <h3>Home and abroad</h3>
+            <p>Sons and daughters of Orlu live across Nigeria and around the world. This site keeps everyone connected to what's happening at home.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section container aims" aria-labelledby="aims-title">
+      <div class="section-head">
+        <h2 id="aims-title">Aims and objectives</h2>
+      </div>
+
+      <div class="aims__aim">
+        <h3 class="aims__label">Our aim</h3>
+        <p class="aims__statement">To create a dignified, permanent and worldwide-accessible record that honours the achievements of distinguished people of Orlu Zone, and to inspire present and future generations through their example.</p>
+      </div>
+
+      <h3 class="aims__label">Our objectives</h3>
+      <ul class="objectives">
+        <li class="objective">
+          <h4 class="objective__verb">Document</h4>
+          <p>Compile accurate, well-researched profiles of notable men and women of Orlu Zone.</p>
+        </li>
+        <li class="objective">
+          <h4 class="objective__verb">Preserve</h4>
+          <p>Keep every entry permanently online and searchable, so no legacy is lost.</p>
+        </li>
+        <li class="objective">
+          <h4 class="objective__verb">Honour</h4>
+          <p>Recognise merit, service, enterprise and integrity across all walks of life.</p>
+        </li>
+        <li class="objective">
+          <h4 class="objective__verb">Connect</h4>
+          <p>Link the home community with the diaspora through stories, events and networking.</p>
+        </li>
+        <li class="objective">
+          <h4 class="objective__verb">Inspire</h4>
+          <p>Give young people role models and encourage excellence and community service.</p>
+        </li>
+        <li class="objective">
+          <h4 class="objective__verb">Promote</h4>
+          <p>Showcase the culture, heritage and development opportunities of Orlu Zone.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="section container band--light band--bleed whoswho" aria-labelledby="whoswho-title">
+      <div class="section-head">
+        <h2 id="whoswho-title">Who's Who categories</h2>
+        <a href="/profiles.html">See all profiles</a>
+      </div>
+      <p class="whoswho__intro">Distinguished people of Orlu Zone are honoured in seven categories. Choose one to see the people in it.</p>
+      <!-- Each link jumps to the matching category on the Leadership page when a profile category in the admin has exactly this name. -->
+      <ul class="whoswho__list">
+        <li><a class="whoswho__item" href="/profiles.html#group-traditional-ruler-titled-chiefs">
+          <span class="whoswho__name">Traditional Ruler &amp; Titled Chiefs</span>
+          <span class="whoswho__desc">Ndi Eze, royal fathers and custodians of Orlu culture.</span>
+        </a></li>
+        <li><a class="whoswho__item" href="/profiles.html#group-public-service-politics">
+          <span class="whoswho__name">Public Service &amp; Politics</span>
+          <span class="whoswho__desc">Governors, senators, legislators and public office holders from Orlu Zone.</span>
+        </a></li>
+        <li><a class="whoswho__item" href="/profiles.html#group-business-industry">
+          <span class="whoswho__name">Business &amp; Industry</span>
+          <span class="whoswho__desc">Entrepreneurs, bankers and industrialists who build Orlu Zone.</span>
+        </a></li>
+        <li><a class="whoswho__item" href="/profiles.html#group-professionals-academics">
+          <span class="whoswho__name">Professionals &amp; Academics</span>
+          <span class="whoswho__desc">Professors, researchers, scholars and professionals of Orlu Zone.</span>
+        </a></li>
+        <li><a class="whoswho__item" href="/profiles.html#group-clergy-faith-leaders">
+          <span class="whoswho__name">Clergy &amp; Faith Leaders</span>
+          <span class="whoswho__desc">Bishops, pastors, priests and elders who guide the people.</span>
+        </a></li>
+        <li><a class="whoswho__item" href="/profiles.html#group-philanthropy-community-service">
+          <span class="whoswho__name">Philanthropy &amp; Community Service</span>
+          <span class="whoswho__desc">Sons and daughters who give their time and wealth to the community.</span>
+        </a></li>
+        <li><a class="whoswho__item" href="/profiles.html#group-youth-arts-sports">
+          <span class="whoswho__name">Youth, Arts &amp; Sports</span>
+          <span class="whoswho__desc">The next generation of Orlu leaders, artists and sportsmen and women.</span>
+        </a></li>
+      </ul>
+    </section>
+
+    <section class="invest" aria-labelledby="invest-title">
+      <div class="container invest__inner">
+        <div class="invest__text">
+          <h2 class="invest__title" id="invest-title">Aku Ruo Ulo: invest at home</h2>
+          <p class="invest__motto" lang="ig">Siri na mba, no ulo na Orlu Zone.</p>
+          <p class="invest__lead">Bring wealth home: invest in a home or real estate in Orlu Zone. Building at home creates jobs and wealth for the community.</p>
+        </div>
+        <div class="invest__action">
+          <a class="button button--gold" href="/about.html#invest">Learn about investing in Orlu Zone</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container" aria-labelledby="events-title">
+      <div class="section-head">
+        <h2 id="events-title">Coming up</h2>
+        <a href="/events.html">All events</a>
+      </div>
+      <div data-upcoming-events></div>
+    </section>
+
+    <section class="section container" aria-labelledby="featured-title" data-featured-section>
+      <div class="section-head">
+        <h2 id="featured-title">Featured</h2>
+      </div>
+      <div data-featured-posts></div>
+    </section>
+
+    <section class="section container" aria-labelledby="latest-title">
+      <div class="section-head">
+        <h2 id="latest-title">Latest news</h2>
+        <a href="/posts.html">All news</a>
+      </div>
+      <div data-latest-posts></div>
+    </section>
+    <section class="section container band--light band--bleed explore-band" aria-labelledby="explore-title">
+      <div class="section-head">
+        <h2 id="explore-title">Explore</h2>
+      </div>
+      <ul class="explore">
+        <li><a class="explore__link" href="/profiles.html"><span class="explore__name">Leadership</span><span class="explore__desc">The people who lead the community, at home and in the diaspora.</span></a></li>
+        <li><a class="explore__link" href="/gallery.html"><span class="explore__name">Gallery</span><span class="explore__desc">Photos from community events, ceremonies and everyday life.</span></a></li>
+        <li><a class="explore__link" href="/documents.html"><span class="explore__name">Documents</span><span class="explore__desc">Forms, letters and reports to download and print.</span></a></li>
+        <li><a class="explore__link" href="/about.html#invest"><span class="explore__name">Invest at home</span><span class="explore__desc">Build or buy a home in Orlu Zone and help create jobs and wealth.</span></a></li>
+        <li><a class="explore__link" href="/about.html"><span class="explore__name">About</span><span class="explore__desc">The land, the people and how the community is organised.</span></a></li>
+        <li><a class="explore__link" href="/contact.html"><span class="explore__name">Contact</span><span class="explore__desc">Ask a question, share news or get involved.</span></a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script type="module" src="/js/pages/home.js"></script>
+</body>
+</html>

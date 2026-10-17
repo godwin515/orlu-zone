@@ -1,0 +1,55 @@
+<!doctype html>
+<!-- Location: 404.html (project root)
+     Hosts like Netlify, Vercel and GitHub Pages show this file automatically for
+     any address that doesn't exist. All paths here start with "/" so it works
+     at any depth (e.g. /old/news/page). -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" data-site-header></header>
+
+  <main id="main" class="lost">
+    <div class="container lost__inner">
+      <p class="lost__code" aria-hidden="true">404</p>
+      <h1 class="lost__title">We couldn't find that page</h1>
+      <p class="lost__text">
+        The address <code class="lost__path" data-missing-path></code> doesn't match anything on this site.
+        It may have been moved, or the link may be mistyped.
+      </p>
+
+      <form class="search-page-form lost__search" action="/search.html" method="get" role="search">
+        <label class="visually-hidden" for="lost-search">Search news and events</label>
+        <input id="lost-search" name="q" type="search" placeholder="Search news and events"
+          autocomplete="off" required data-search-input>
+        <button class="button" type="submit">Search</button>
+      </form>
+
+      <nav class="lost__links" aria-label="Popular pages">
+        <a class="button button--quiet" href="/index.html">Go to the homepage</a>
+        <a class="button button--quiet" href="/posts.html">Read the latest news</a>
+        <a class="button button--quiet" href="/events.html">See upcoming events</a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script type="module" src="/js/pages/not-found.js"></script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!doctype html>
+<!-- Location: admin/post-edit.html
+     New post:  post-edit.html
+     Edit post: post-edit.html?id=<post-id> -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Post | Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap">
+  <link rel="preconnect" href="https://orlu-land-community-api.onrender.com" crossorigin>
+
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/admin.css">
+
+  <!-- For the content preview: same rendering as the public post page -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js" defer></script>
+</head>
+<body class="admin admin-pending" data-admin-page="posts">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="admin-shell">
+    <aside class="admin-nav" data-admin-nav></aside>
+
+    <main class="admin-main" id="main">
+      <header class="admin-head">
+        <div>
+          <p class="admin-head__crumb"><a href="/admin/posts.html">Posts</a></p>
+          <h1 class="admin-head__title" data-page-title>New post</h1>
+        </div>
+        <div class="admin-head__actions" data-head-actions></div>
+      </header>
+
+      <div data-load-state></div>
+
+      <form class="editor" data-post-form novalidate hidden>
+        <p class="notice notice--error" role="alert" data-form-error hidden></p>
+
+        <div class="editor__main">
+          <div class="field">
+            <label class="field__label" for="title">Title</label>
+            <input class="field__input field__input--title" id="title" name="title" type="text" maxlength="200" required>
+            <p class="field__error" data-error-for="title" hidden></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="slug">Web address</label>
+            <div class="slug-input">
+              <span class="slug-input__prefix" aria-hidden="true">/post.html?slug=</span>
+              <input class="field__input" id="slug" name="slug" type="text" maxlength="80" required
+                autocapitalize="off" spellcheck="false" aria-describedby="slug-hint">
+            </div>
+            <p class="field__hint" id="slug-hint">Lowercase letters, numbers and hyphens. Filled in from the title until you change it.</p>
+            <p class="field__error" data-error-for="slug" hidden></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="excerpt">Summary <span class="field__optional">optional</span></label>
+            <textarea class="field__input" id="excerpt" name="excerpt" rows="3" maxlength="400"
+              aria-describedby="excerpt-hint"></textarea>
+            <p class="field__hint" id="excerpt-hint">Shown on news cards and in search. One or two sentences works best. <span data-excerpt-count></span></p>
+            <p class="field__error" data-error-for="excerpt" hidden></p>
+          </div>
+
+          <div class="field">
+            <div class="field__label-row">
+              <label class="field__label" for="content">Post text</label>
+              <div class="segmented" role="tablist" aria-label="Post text view">
+                <button type="button" role="tab" aria-selected="true" aria-controls="content-write" id="tab-write" data-view="write">Write</button>
+                <button type="button" role="tab" aria-selected="false" aria-controls="content-preview" id="tab-preview" data-view="preview">Preview</button>
+              </div>
+            </div>
+            <div id="content-write" role="tabpanel" aria-labelledby="tab-write">
+              <textarea class="field__input field__input--content" id="content" name="content" rows="18" required
+                aria-describedby="content-hint"></textarea>
+              <p class="field__hint" id="content-hint">
+                Leave a blank line between paragraphs. You can use Markdown:
+                <code>## Heading</code>, <code>**bold**</code>, <code>- list item</code>, <code>[link text](https://…)</code>.
+              </p>
+            </div>
+            <div id="content-preview" class="editor__preview prose" role="tabpanel" aria-labelledby="tab-preview" hidden data-preview></div>
+            <p class="field__error" data-error-for="content" hidden></p>
+          </div>
+
+          <section class="editor__section" aria-labelledby="photos-title">
+            <div class="editor__section-head">
+              <h2 class="editor__section-title" id="photos-title">Photos</h2>
+              <button type="button" class="button button--quiet" data-pick-gallery>Add photos</button>
+            </div>
+            <p class="field__hint">Shown as a photo grid at the end of the post. Use the arrows to change the order.</p>
+            <div data-gallery></div>
+          </section>
+        </div>
+
+        <aside class="editor__side">
+          <section class="panel panel--publish" aria-labelledby="publish-title">
+            <h2 class="panel__title" id="publish-title">Publishing</h2>
+
+            <fieldset class="choice-group">
+              <legend class="visually-hidden">Status</legend>
+              <label class="choice">
+                <input type="radio" name="status" value="draft" checked>
+                <span><strong>Draft</strong><small>Only visible here in the admin</small></span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="status" value="published">
+                <span><strong>Published</strong><small>Live on the website</small></span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="status" value="scheduled">
+                <span><strong>Scheduled</strong><small>Set a date to publish</small></span>
+              </label>
+            </fieldset>
+
+            <div class="field" data-schedule-field hidden>
+              <label class="field__label" for="scheduled_at">Publish on (Nigerian time)</label>
+              <input class="field__input" id="scheduled_at" name="scheduled_at" type="datetime-local">
+              <p class="field__error" data-error-for="scheduled_at" hidden></p>
+              <p class="notice notice--warn">Check with the backend team that scheduled posts publish automatically. If not, publish it yourself on the day.</p>
+            </div>
+
+            <label class="check">
+              <input type="checkbox" name="featured" id="featured">
+              <span>Feature on the homepage</span>
+            </label>
+
+            <div class="panel__actions">
+              <button class="button" type="submit" data-save>Save draft</button>
+              <p class="save-state" data-save-state aria-live="polite"></p>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="details-title">
+            <h2 class="panel__title" id="details-title">Details</h2>
+
+            <div class="field">
+              <label class="field__label" for="category_id">Category</label>
+              <select class="field__input" id="category_id" name="category_id" required></select>
+              <p class="field__error" data-error-for="category_id" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="author_id">Author</label>
+              <select class="field__input" id="author_id" name="author_id" required></select>
+              <p class="field__error" data-error-for="author_id" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="event_id">Related event <span class="field__optional">optional</span></label>
+              <select class="field__input" id="event_id" name="event_id"></select>
+              <p class="field__hint">The post will appear on that event's page under “News about this event”.</p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="video_url">Video link <span class="field__optional">optional</span></label>
+              <input class="field__input" id="video_url" name="video_url" type="url" inputmode="url"
+                placeholder="https://www.youtube.com/watch?v=…">
+              <p class="field__error" data-error-for="video_url" hidden></p>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="image-title">
+            <h2 class="panel__title" id="image-title">Featured image</h2>
+            <div data-featured-image></div>
+          </section>
+        </aside>
+      </form>
+    </main>
+  </div>
+
+  <script type="module" src="/js/admin/post-edit.js"></script>
+</body>
+</html>

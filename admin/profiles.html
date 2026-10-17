@@ -1,0 +1,108 @@
+<!doctype html>
+<!-- Location: admin/profiles.html (Leadership: community profiles — list, order, add, edit, publish) -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Leadership | Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+  <link rel="preconnect" href="https://orlu-land-community-api.onrender.com" crossorigin>
+
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin admin-pending" data-admin-page="profiles">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="admin-shell">
+    <aside class="admin-nav" data-admin-nav></aside>
+
+    <main class="admin-main" id="main">
+      <header class="admin-head">
+        <div>
+          <h1 class="admin-head__title">Leadership</h1>
+          <p class="admin-head__lead">Community profiles on the website's Leadership page. Only published profiles show, in the order set here.</p>
+        </div>
+        <div class="admin-head__actions">
+          <a class="button button--quiet" href="/profiles.html" target="_blank" rel="noopener">View Leadership page</a>
+        </div>
+      </header>
+
+      <div class="order-bar" role="region" aria-label="Unsaved order" data-order-bar hidden>
+        <p>You've changed the order. Save it to update the website.</p>
+        <div class="form__actions">
+          <button type="button" class="button button--gold" data-save-order>Save order</button>
+          <button type="button" class="button button--outline-light" data-undo-order>Undo changes</button>
+        </div>
+      </div>
+
+      <div class="split">
+        <section class="split__main" aria-labelledby="list-title">
+          <div class="split__main-head">
+            <h2 class="panel__title" id="list-title">Profiles</h2>
+            <p class="list-meta" aria-live="polite" data-count></p>
+          </div>
+          <p class="field__hint" data-how hidden>Drag profiles to reorder them, or use the arrow buttons. The order applies across all categories.</p>
+          <div data-profiles></div>
+        </section>
+
+        <section class="panel split__side" aria-labelledby="form-title" data-form-panel>
+          <h2 class="panel__title" id="form-title" data-form-title>Add a profile</h2>
+
+          <form class="form form--compact" data-profile-form novalidate>
+            <p class="notice notice--error" role="alert" data-form-error hidden></p>
+
+            <div class="field">
+              <label class="field__label" for="name">Name</label>
+              <input class="field__input" id="name" name="name" type="text" maxlength="255" required
+                placeholder="For example: Chief Emeka Okafor">
+              <p class="field__error" data-error-for="name" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="category">Category</label>
+              <input class="field__input" id="category" name="category" type="text" maxlength="120" required
+                list="category-options" autocomplete="off" aria-describedby="category-hint"
+                placeholder="For example: Community Leadership">
+              <datalist id="category-options" data-category-options></datalist>
+              <p class="field__hint" id="category-hint">Profiles with the same category are grouped together on the website. Pick an existing one to keep them together.</p>
+              <p class="field__error" data-error-for="category" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="biography">Biography <span class="field__optional">optional</span></label>
+              <textarea class="field__input" id="biography" name="biography" rows="6"></textarea>
+              <p class="field__hint">Their role and background. Leave a blank line between paragraphs. Long bios fold behind “Read more”. <span data-bio-count></span></p>
+              <p class="field__error" data-error-for="biography" hidden></p>
+            </div>
+
+            <div class="field">
+              <span class="field__label" id="photo-label">Photo <span class="field__optional">optional</span></span>
+              <div class="avatar-choice" aria-labelledby="photo-label" data-photo></div>
+              <p class="field__hint">A portrait photo works best. Without one, their initials are shown.</p>
+            </div>
+
+            <label class="check">
+              <input type="checkbox" name="is_published" id="is_published">
+              <span>Show on the website</span>
+            </label>
+
+            <div class="form__actions">
+              <button class="button" type="submit" data-save>Add profile</button>
+              <button class="button button--quiet" type="button" data-cancel-edit hidden>Cancel</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="/js/admin/profiles.js"></script>
+</body>
+</html>

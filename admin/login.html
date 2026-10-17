@@ -1,0 +1,67 @@
+<!doctype html>
+<!-- Location: admin/login.html -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in | Orlu Community admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+  <!-- Wake the API early: Render's free tier can take a while on the first request -->
+  <link rel="preconnect" href="https://orlu-land-community-api.onrender.com" crossorigin>
+
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="login-page">
+  <main class="login" id="main">
+    <div class="login__card">
+      <a class="login__brand" href="/index.html">
+        <img src="/assets/logo.svg" alt="" width="44" height="44">
+        <span data-community-name>Orlu Community</span>
+      </a>
+
+      <h1 class="login__title">Sign in to manage the site</h1>
+
+      <p class="notice" role="status" data-notice hidden></p>
+
+      <form class="form" data-login-form novalidate>
+        <div class="field">
+          <label class="field__label" for="email">Email</label>
+          <input class="field__input" id="email" name="email" type="email" autocomplete="username"
+            inputmode="email" required>
+          <p class="field__error" data-error-for="email" hidden></p>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="password">Password</label>
+          <div class="field__with-action">
+            <input class="field__input" id="password" name="password" type="password"
+              autocomplete="current-password" required>
+            <button class="field__action" type="button" data-toggle-password aria-controls="password"
+              aria-pressed="false">Show</button>
+          </div>
+          <p class="field__error" data-error-for="password" hidden></p>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" name="remember" data-remember>
+          <span>Keep me signed in on this device</span>
+        </label>
+
+        <button class="button login__submit" type="submit" data-submit>Sign in</button>
+        <p class="login__slow" data-slow hidden>The server is waking up. This can take up to a minute the first time.</p>
+      </form>
+    </div>
+
+    <p class="login__back"><a href="/index.html">Back to the website</a></p>
+  </main>
+
+  <script type="module" src="/js/admin/login.js"></script>
+</body>
+</html>

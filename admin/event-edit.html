@@ -1,0 +1,160 @@
+<!doctype html>
+<!-- Location: admin/event-edit.html
+     New event:  event-edit.html
+     Edit event: event-edit.html?id=<event-id> -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Event | Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap">
+  <link rel="preconnect" href="https://orlu-land-community-api.onrender.com" crossorigin>
+
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/admin.css">
+
+  <!-- For the description preview: same rendering as the public event page -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js" defer></script>
+</head>
+<body class="admin admin-pending" data-admin-page="events">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="admin-shell">
+    <aside class="admin-nav" data-admin-nav></aside>
+
+    <main class="admin-main" id="main">
+      <header class="admin-head">
+        <div>
+          <p class="admin-head__crumb"><a href="/admin/events.html">Events</a></p>
+          <h1 class="admin-head__title" data-page-title>New event</h1>
+        </div>
+        <div class="admin-head__actions" data-head-actions></div>
+      </header>
+
+      <div data-load-state></div>
+
+      <form class="editor" data-event-form novalidate hidden>
+        <p class="notice notice--error" role="alert" data-form-error hidden></p>
+
+        <div class="editor__main">
+          <div class="field">
+            <label class="field__label" for="title">Event name</label>
+            <input class="field__input field__input--title" id="title" name="title" type="text" maxlength="200" required>
+            <p class="field__error" data-error-for="title" hidden></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="slug">Web address</label>
+            <div class="slug-input">
+              <span class="slug-input__prefix" aria-hidden="true">/event.html?slug=</span>
+              <input class="field__input" id="slug" name="slug" type="text" maxlength="80" required
+                autocapitalize="off" spellcheck="false" aria-describedby="slug-hint">
+            </div>
+            <p class="field__hint" id="slug-hint">Lowercase letters, numbers and hyphens. Filled in from the name until you change it.</p>
+            <p class="field__error" data-error-for="slug" hidden></p>
+          </div>
+
+          <fieldset class="when-group">
+            <legend class="field__label">When <span class="field__optional">Nigerian time (WAT)</span></legend>
+            <div class="when-group__fields">
+              <div class="field">
+                <label class="field__label field__label--small" for="start_at">Starts</label>
+                <input class="field__input" id="start_at" name="start_at" type="datetime-local" required>
+                <p class="field__error" data-error-for="start_at" hidden></p>
+              </div>
+              <div class="field">
+                <label class="field__label field__label--small" for="end_at">Ends <span class="field__optional">optional</span></label>
+                <input class="field__input" id="end_at" name="end_at" type="datetime-local">
+                <p class="field__error" data-error-for="end_at" hidden></p>
+              </div>
+            </div>
+            <p class="field__hint" data-when-summary></p>
+          </fieldset>
+
+          <div class="field">
+            <label class="field__label" for="location">Where <span class="field__optional">optional</span></label>
+            <input class="field__input" id="location" name="location" type="text" maxlength="200"
+              placeholder="For example: Orlu Town Hall, Orlu">
+            <p class="field__hint">Shown on the event page with a link to Google Maps.</p>
+            <p class="field__error" data-error-for="location" hidden></p>
+          </div>
+
+          <div class="field">
+            <div class="field__label-row">
+              <label class="field__label" for="description">Description</label>
+              <div class="segmented" role="tablist" aria-label="Description view">
+                <button type="button" role="tab" aria-selected="true" aria-controls="description-write" id="tab-write" data-view="write">Write</button>
+                <button type="button" role="tab" aria-selected="false" aria-controls="description-preview" id="tab-preview" data-view="preview">Preview</button>
+              </div>
+            </div>
+            <div id="description-write" role="tabpanel" aria-labelledby="tab-write">
+              <textarea class="field__input field__input--content" id="description" name="description" rows="14" required
+                aria-describedby="description-hint"></textarea>
+              <p class="field__hint" id="description-hint">
+                What's happening, who should come and anything to bring. The first sentence or two is used as the summary in lists.
+                Markdown works: <code>## Heading</code>, <code>**bold**</code>, <code>- list item</code>.
+              </p>
+            </div>
+            <div id="description-preview" class="editor__preview prose" role="tabpanel" aria-labelledby="tab-preview" hidden data-preview></div>
+            <p class="field__error" data-error-for="description" hidden></p>
+          </div>
+
+          <section class="editor__section" aria-labelledby="photos-title">
+            <div class="editor__section-head">
+              <h2 class="editor__section-title" id="photos-title">Photos</h2>
+              <button type="button" class="button button--quiet" data-pick-gallery>Add photos</button>
+            </div>
+            <p class="field__hint">Shown on the event page. After the event, add photos from the day here. Use the arrows to change the order.</p>
+            <div data-gallery></div>
+          </section>
+        </div>
+
+        <aside class="editor__side">
+          <section class="panel panel--publish" aria-labelledby="publish-title">
+            <h2 class="panel__title" id="publish-title">Publishing</h2>
+
+            <fieldset class="choice-group">
+              <legend class="visually-hidden">Status</legend>
+              <label class="choice">
+                <input type="radio" name="status" value="draft" checked>
+                <span><strong>Draft</strong><small>Only visible here in the admin</small></span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="status" value="published">
+                <span><strong>Published</strong><small>Listed on the website</small></span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="status" value="cancelled">
+                <span><strong>Cancelled</strong><small>Stays on the website, marked as called off</small></span>
+              </label>
+            </fieldset>
+
+            <p class="notice notice--warn" data-cancel-note hidden>
+              People who open this event will see “This event has been cancelled”, and it won't offer “Add to calendar”.
+            </p>
+
+            <div class="panel__actions">
+              <button class="button" type="submit" data-save>Save draft</button>
+              <p class="save-state" data-save-state aria-live="polite"></p>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="image-title">
+            <h2 class="panel__title" id="image-title">Featured image</h2>
+            <div data-featured-image></div>
+          </section>
+        </aside>
+      </form>
+    </main>
+  </div>
+
+  <script type="module" src="/js/admin/event-edit.js"></script>
+</body>
+</html>

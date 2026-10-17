@@ -1,0 +1,83 @@
+<!doctype html>
+<!-- Location: admin/pages.html
+     Opened as pages.html (About) or pages.html?page=contact -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pages | Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap">
+  <link rel="preconnect" href="https://orlu-land-community-api.onrender.com" crossorigin>
+
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/admin.css">
+
+  <!-- For the preview: same rendering as the public pages -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js" defer></script>
+</head>
+<body class="admin admin-pending" data-admin-page="pages">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="admin-shell">
+    <aside class="admin-nav" data-admin-nav></aside>
+
+    <main class="admin-main" id="main">
+      <header class="admin-head">
+        <div>
+          <h1 class="admin-head__title">Pages</h1>
+          <p class="admin-head__lead">The text on the website's About and Contact pages.</p>
+        </div>
+        <div class="admin-head__actions">
+          <a class="button button--quiet" target="_blank" rel="noopener" data-view-page>View on website</a>
+        </div>
+      </header>
+
+      <nav class="status-tabs" aria-label="Choose a page" data-page-tabs></nav>
+
+      <div data-load-state></div>
+
+      <form class="page-form" data-page-form novalidate hidden>
+        <p class="notice" role="status" data-page-notice hidden></p>
+        <p class="notice notice--error" role="alert" data-form-error hidden></p>
+
+        <div class="field">
+          <label class="field__label" for="title">Page heading</label>
+          <input class="field__input field__input--title" id="title" name="title" type="text" maxlength="160" required>
+          <p class="field__error" data-error-for="title" hidden></p>
+        </div>
+
+        <div class="field">
+          <div class="field__label-row">
+            <label class="field__label" for="content">Page text</label>
+            <div class="segmented" role="tablist" aria-label="Page text view">
+              <button type="button" role="tab" aria-selected="true" aria-controls="content-write" id="tab-write" data-view="write">Write</button>
+              <button type="button" role="tab" aria-selected="false" aria-controls="content-preview" id="tab-preview" data-view="preview">Preview</button>
+            </div>
+          </div>
+          <div id="content-write" role="tabpanel" aria-labelledby="tab-write">
+            <textarea class="field__input field__input--content" id="content" name="content" rows="20" required
+              aria-describedby="content-hint"></textarea>
+            <p class="field__hint" id="content-hint" data-content-hint></p>
+          </div>
+          <div id="content-preview" class="editor__preview prose" role="tabpanel" aria-labelledby="tab-preview" hidden data-preview></div>
+          <p class="field__error" data-error-for="content" hidden></p>
+        </div>
+
+        <div class="page-form__actions">
+          <button class="button" type="submit" data-save>Save page</button>
+          <p class="save-state" data-save-state aria-live="polite"></p>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <script type="module" src="/js/admin/pages.js"></script>
+</body>
+</html>

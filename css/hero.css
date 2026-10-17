@@ -1,0 +1,81 @@
+/* Location: css/hero.css — hero photo layout. Load after site.css. */
+
+.hero--with-image .hero__layout {
+  position: relative;
+  z-index: 1; /* above the uli drawing */
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  width: 100%;
+  max-width: var(--container-max, 72rem);
+  margin-inline: auto;
+}
+
+/* Text column no longer centres itself; the grid does that. */
+.hero--with-image .hero__inner {
+  margin: 0;
+  max-width: none;
+}
+
+@media (min-width: 56rem) {
+  .hero--with-image .hero__layout {
+    grid-template-columns: 1.1fr 1fr;
+  }
+}
+
+/* Photo */
+.hero__media {
+  position: relative;
+  margin: 0;
+  padding: 0 14px 14px 0; /* room for the offset frame */
+}
+
+/* Gold offset frame behind the photo */
+/* .hero__media::before {
+  content: "";
+  position: absolute;
+  inset: 14px 0 0 14px;
+  border: 2px solid var(--color-gold, #e0a526);
+  border-radius: var(--radius-lg, 18px);
+  pointer-events: none; */
+/* } */
+
+.hero__image {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4/ 3;
+  object-fit: cover ;
+  /* padding: 20px ; */
+  border-radius: var(--radius-lg, 180px 180px);
+  background: rgba(255, 255, 255, 0.08); /* placeholder tint while loading */
+  box-shadow:0 20px 40px rgba(0, 0, 0, 0.25);
+  border: 3px solid var(--color-gold, #e0a526)
+
+
+}
+
+.hero__caption {
+  position: absolute;
+  left: 14px;
+  bottom: 30px;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  backdrop-filter: blur(4px);
+}
+
+.hero__caption:empty {
+  display: none;
+}
+
+/* Phones: photo under the text, a bit shorter */
+@media (max-width: 55.99rem) {
+  .hero__image {
+    aspect-ratio: 16 / 10;
+  }
+}

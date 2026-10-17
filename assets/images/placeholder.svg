@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
+  <!-- Fallback image for posts and events with no featured image. Location: assets/images/placeholder.svg -->
+  <rect width="600" height="400" fill="#e3ede6"/>
+  <g fill="none" stroke="#1f5a3a" stroke-opacity="0.22" stroke-width="3" stroke-linecap="round">
+    <circle cx="300" cy="200" r="46"/>
+    <circle cx="300" cy="200" r="86"/>
+    <path d="M60 330c40-30 80 30 120 0s80 30 120 0 80 30 120 0 80 30 120 0"/>
+    <path d="M60 70c40-30 80 30 120 0s80 30 120 0 80 30 120 0 80 30 120 0"/>
+  </g>
+  <circle cx="300" cy="200" r="8" fill="#1f5a3a" fill-opacity="0.3"/>
+</svg>

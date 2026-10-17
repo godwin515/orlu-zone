@@ -1,0 +1,62 @@
+<!doctype html>
+<!-- Location: admin/posts.html
+     Opened as posts.html, with optional ?status=draft|scheduled|published&category=<id>&q=<words>&page=<n> -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Posts | Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+  <link rel="preconnect" href="https://orlu-land-community-api.onrender.com" crossorigin>
+
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin admin-pending" data-admin-page="posts">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="admin-shell">
+    <aside class="admin-nav" data-admin-nav></aside>
+
+    <main class="admin-main" id="main">
+      <header class="admin-head">
+        <div>
+          <h1 class="admin-head__title">Posts</h1>
+          <p class="admin-head__lead">News and announcements. Only published posts appear on the website.</p>
+        </div>
+        <div class="admin-head__actions">
+          <a class="button" href="/admin/post-edit.html">New post</a>
+        </div>
+      </header>
+
+      <section class="toolbar" aria-label="Filter posts">
+        <nav class="status-tabs" aria-label="Filter by status" data-status-tabs></nav>
+        <div class="toolbar__fields">
+          <div class="field field--inline">
+            <label class="field__label" for="filter-category">Category</label>
+            <select class="field__input" id="filter-category" data-filter-category>
+              <option value="">All categories</option>
+            </select>
+          </div>
+          <div class="field field--inline field--grow">
+            <label class="field__label" for="filter-q">Find by title</label>
+            <input class="field__input" id="filter-q" type="search" placeholder="Type part of a title" data-filter-q>
+          </div>
+        </div>
+      </section>
+
+      <p class="list-meta" aria-live="polite" data-count></p>
+      <div data-posts></div>
+      <nav class="pagination" aria-label="Post pages" data-pagination></nav>
+    </main>
+  </div>
+
+  <script type="module" src="/js/admin/posts.js"></script>
+</body>
+</html>

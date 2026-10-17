@@ -1,0 +1,123 @@
+<!doctype html>
+<!-- Location: admin/settings.html (community name, description, contact details, logo) -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Site settings | Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+  <link rel="preconnect" href="https://orlu-land-community-api.onrender.com" crossorigin>
+
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin admin-pending" data-admin-page="settings">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="admin-shell">
+    <aside class="admin-nav" data-admin-nav></aside>
+
+    <main class="admin-main" id="main">
+      <header class="admin-head">
+        <div>
+          <h1 class="admin-head__title">Site settings</h1>
+          <p class="admin-head__lead">The community's name, description and contact details. They appear in the header, footer, homepage and Contact page.</p>
+        </div>
+      </header>
+
+      <div data-load-state></div>
+
+      <form class="editor" data-settings-form novalidate hidden>
+        <p class="notice notice--error" role="alert" data-form-error hidden></p>
+
+        <div class="editor__main">
+          <section class="panel settings-section" aria-labelledby="identity-title">
+            <h2 class="panel__title" id="identity-title">About the community</h2>
+
+            <div class="field">
+              <label class="field__label" for="community_name">Community name</label>
+              <input class="field__input" id="community_name" name="community_name" type="text" maxlength="120" required>
+              <p class="field__hint">Shown in the header, the homepage banner and browser tabs.</p>
+              <p class="field__error" data-error-for="community_name" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="description">Short description <span class="field__optional">optional</span></label>
+              <textarea class="field__input" id="description" name="description" rows="3" maxlength="300"></textarea>
+              <p class="field__hint">One or two sentences under the name on the homepage and in the footer. <span data-description-count></span></p>
+              <p class="field__error" data-error-for="description" hidden></p>
+            </div>
+          </section>
+
+          <section class="panel settings-section" aria-labelledby="contact-title">
+            <h2 class="panel__title" id="contact-title">Contact details</h2>
+            <p class="field__hint">Leave any of these empty and it won't be shown on the website.</p>
+
+            <div class="field">
+              <label class="field__label" for="phone">Phone</label>
+              <input class="field__input" id="phone" name="phone" type="tel" inputmode="tel" maxlength="40"
+                placeholder="+234 803 000 0000" autocomplete="off">
+              <p class="field__error" data-error-for="phone" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="email">Email</label>
+              <input class="field__input" id="email" name="email" type="email" inputmode="email" maxlength="160"
+                placeholder="secretariat@example.org" autocomplete="off">
+              <p class="field__error" data-error-for="email" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="whatsapp_url">WhatsApp</label>
+              <input class="field__input" id="whatsapp_url" name="whatsapp_url" type="text" maxlength="200"
+                placeholder="+234 803 000 0000 or https://wa.me/2348030000000" autocomplete="off" aria-describedby="whatsapp-hint">
+              <p class="field__hint" id="whatsapp-hint">Type a WhatsApp number and it's turned into a chat link, or paste a wa.me or group invite link.</p>
+              <p class="field__error" data-error-for="whatsapp_url" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="address">Address</label>
+              <textarea class="field__input" id="address" name="address" rows="2" maxlength="300"
+                placeholder="Town Union Secretariat, Owerri Road, Orlu, Imo State"></textarea>
+              <p class="field__hint">Linked to Google Maps on the Contact page.</p>
+              <p class="field__error" data-error-for="address" hidden></p>
+            </div>
+          </section>
+        </div>
+
+        <aside class="editor__side">
+          <section class="panel panel--publish" aria-labelledby="save-title">
+            <h2 class="panel__title" id="save-title">Save</h2>
+            <div class="panel__actions">
+              <button class="button" type="submit" data-save>Save settings</button>
+              <p class="save-state" data-save-state aria-live="polite"></p>
+            </div>
+          </section>
+
+          <section class="panel" aria-labelledby="logo-title">
+            <h2 class="panel__title" id="logo-title">Logo</h2>
+            <div data-logo></div>
+            <p class="notice notice--warn" data-logo-note>
+              The website shows the logo file in <code>assets/</code> for now: the API returns the logo's ID but not its link.
+              Once the backend adds <code>logo_url</code>, the logo chosen here will show automatically.
+            </p>
+          </section>
+
+          <section class="panel" aria-labelledby="preview-title">
+            <h2 class="panel__title" id="preview-title">How it looks</h2>
+            <div class="settings-preview" data-preview aria-live="polite"></div>
+          </section>
+        </aside>
+      </form>
+    </main>
+  </div>
+
+  <script type="module" src="/js/admin/settings.js"></script>
+</body>
+</html>

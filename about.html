@@ -1,0 +1,228 @@
+<!doctype html>
+<!-- Location: about.html (project root). Content comes from GET /pages/about -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About Orlu Zone</title>
+  <meta name="description" content="About Orlu Zone, its 12 local government areas, the Orashi River, the Compendium of Honour, and investing at home (Aku Ruo Ulo).">
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap">
+  <link rel="preconnect" href="https://orlu-land-community-api.onrender.com" crossorigin>
+
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/site.css">
+
+  <!-- Markdown parser and HTML sanitizer for page content (see js/content.js) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" data-site-header></header>
+
+  <main id="main">
+    <header class="page-header">
+      <div class="container">
+        <h1 class="page-header__title" data-page-title>About Orlu Zone</h1>
+        <p class="page-header__lead">The land, the people and the Compendium that honours them.</p>
+        <nav class="about-jump" aria-label="On this page">
+          <ul>
+            <li><a class="chip" href="#zone">Orlu Zone</a></li>
+            <li><a class="chip" href="#lgas">The 12 LGAs</a></li>
+            <li><a class="chip" href="#river">The Orashi River</a></li>
+            <li><a class="chip" href="#compendium">The Compendium</a></li>
+            <li><a class="chip" href="#invest">Invest at home</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- 1. About Orlu Zone (dark) -->
+    <section class="about-block" id="zone" aria-labelledby="zone-title">
+      <div class="container about-split">
+        <div>
+          <h2 class="about-title" id="zone-title">About Orlu Zone</h2>
+          <p class="about-lead"><strong>Orlu Zone</strong> is the Imo West Senatorial District of Imo State, in south-eastern Nigeria. It is the largest of the state's three senatorial zones and is made up of 12 local government areas. Orlu town is widely regarded as the commercial hub of Imo State.</p>
+          <!-- Anything the admin writes for the "about" page (Admin, Pages) appears here -->
+          <div data-page-content></div>
+        </div>
+        <dl class="fact-list">
+          <div><dt>State</dt><dd>Imo State, Nigeria</dd></div>
+          <div><dt>Senatorial zone</dt><dd>Imo West (Orlu)</dd></div>
+          <div><dt>Local governments</dt><dd>12</dd></div>
+          <div><dt>Zones in Imo</dt><dd>3</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- 2. The 12 LGAs (light) -->
+    <section class="about-block band--light" id="lgas" aria-labelledby="lgas-title">
+      <div class="container">
+        <h2 class="about-title" id="lgas-title">The 12 local government areas</h2>
+        <p class="about-intro">Orlu Zone is made up of these local government areas.</p>
+        <ul class="lga-grid">
+            <li>Ideato North</li>
+            <li>Ideato South</li>
+            <li>Isu</li>
+            <li>Njaba</li>
+            <li>Nkwerre</li>
+            <li>Nwangele</li>
+            <li>Oguta</li>
+            <li>Ohaji/Egbema</li>
+            <li>Orlu</li>
+            <li>Orsu</li>
+            <li>Oru East</li>
+            <li>Oru West</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 3. The Orashi River (dark) -->
+    <section class="about-block" id="river" aria-labelledby="river-title">
+      <div class="container about-split about-split--river">
+        <div>
+          <h2 class="about-title" id="river-title">The Orashi River</h2>
+          <p class="about-lead">The <strong>Orashi River</strong> (also called Urashi or Ulasi) has its source in Imo State and is one of the state's significant rivers. It flows past Oguta Lake, in the Oguta area of Orlu Zone, on its way to Rivers State and the Niger Delta.</p>
+          <aside class="about-note">
+            <h3>Waterway</h3>
+            <p>The Federal Government approved dredging the river from Oguta Lake to Degema to improve inland waterways.</p>
+          </aside>
+        </div>
+        <!-- The river's course, from source to coast -->
+        <ol class="river-route">
+          <li>
+            <h3>Source</h3>
+            <p>The river rises from a spring at Dikenafai, in the Ideato area of Imo State.</p>
+          </li>
+          <li>
+            <h3>Oguta Lake</h3>
+            <p>The Orashi flows past the south-western part of Oguta Lake. The Njaba River is the lake's major inflow.</p>
+          </li>
+          <li>
+            <h3>To the coast</h3>
+            <p>The river route runs through Oguta, Ndoni, Abonnema and Degema, in Rivers State, to the coast.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 4. About the Compendium (light) -->
+    <section class="about-block band--light" id="compendium" aria-labelledby="compendium-title">
+      <div class="container about-split">
+        <div>
+          <h2 class="about-title" id="compendium-title">About the Compendium</h2>
+          <p class="about-lead">The <strong>Compendium of Honour: Who's Who in Orlu Zone</strong> is a permanent, searchable record of distinguished indigenes and residents of Orlu Zone, established in 2026. Each entry is a dignified profile with achievements, service and legacy, preserved for the community and the diaspora.</p>
+          <div class="about-actions">
+            <a class="button" href="/profiles.html">See the profiles</a>
+            <a class="button button--quiet" href="/contact.html">Contact us</a>
+          </div>
+        </div>
+        <dl class="fact-list">
+          <div><dt>Volume</dt><dd>Vol. 1, Est. 2026</dd></div>
+          <div><dt>Region</dt><dd>Orlu Zone, Imo State</dd></div>
+          <div><dt>Format</dt><dd>Online Who's Who, news and events</dd></div>
+          <div><dt>Access</dt><dd>Worldwide, permanent archive</dd></div>
+        </dl>
+      </div>
+
+      <div class="container">
+        <h3 class="about-subtitle">Purpose of the Compendium</h3>
+        <ul class="purpose-list">
+          <li><h4>Preserve</h4><p>Keep a permanent, searchable record of Orlu Zone's distinguished people.</p></li>
+          <li><h4>Honour</h4><p>Recognise merit, service and integrity while the people are still among us.</p></li>
+          <li><h4>Inspire</h4><p>Give young people and the diaspora role models and a link to home.</p></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 5. Aku Ruo Ulo: invest at home (dark). The homepage links here with /about.html#invest -->
+    <section class="about-block invest-page" id="invest" aria-labelledby="invest-page-title">
+      <div class="container">
+        <h2 class="about-title" id="invest-page-title">Aku Ruo Ulo: invest at home</h2>
+        <p class="invest-page__motto" lang="ig">Siri na mba, no ulo na Orlu Zone.</p>
+        <p class="about-lead">Bring wealth home: invest in a home or real estate in Orlu Zone.</p>
+
+        <div class="invest-overview">
+          <h3 class="about-subtitle">Overview</h3>
+          <p>Investing in real estate or building a home in Orlu Zone (Imo West Senatorial District), Imo State, is a strategic move. It is driven by strong diaspora interest, major infrastructure expansion, and the zone's standing as a commercial and academic hub. The region spans twelve local government areas with thriving commercial and industrial centres.</p>
+          <p class="invest-overview__pull">Aku Ruo Ulo Siri Na Mba: it will help in creating jobs and wealth.</p>
+        </div>
+
+        <h3 class="about-subtitle">Core drivers for home investment</h3>
+        <ul class="driver-list">
+          <li>
+            <h4>Infrastructure and urban renewal</h4>
+            <p>Federal and state governments are concluding dualization and reconstruction projects, including the Orlu–Mgbee–Akokwa–Uga Road, the Anara–Nwangele–Nkwerre–Orlu Road and the Orlu–Awo Idemili–Ihiala Road. The dualization of the Mgbidi–Omuma–Okporo Road has unlocked commercial activity. The Government House Annex in Eziachi, Orlu, brings government closer to the people and lifts nearby property values.</p>
+          </li>
+          <li>
+            <h4>Strong anchor institutions</h4>
+            <p>Property near the zone's institutions enjoys high rental demand and steady appreciation:</p>
+            <ul>
+              <li>Imo State University Teaching Hospital (IMSUTH), Orlu town</li>
+              <li>Imo State School of Nursing and Health Technology, Okporo</li>
+              <li>Imo International Market, one of West Africa's most influential pharmaceutical and commercial hubs</li>
+            </ul>
+          </li>
+          <li>
+            <h4>The diaspora “Aku Ruo Ulo” influx</h4>
+            <p>Orlu is home to some of Nigeria's most successful industrialists and diaspora members. There is steady demand for premium residential homes, gated estates and country homes, especially during festive periods.</p>
+          </li>
+        </ul>
+
+        <h3 class="about-subtitle">Market estimates and property types</h3>
+        <p class="about-intro">Land remains affordable in newly developing layouts, while developed premium structures in choice urban sections can be costly. These figures are general estimates only.</p>
+        <div class="price-table-wrap">
+          <table class="price-table">
+            <caption class="visually-hidden">Estimated property prices in Orlu Zone, in Nigerian naira</caption>
+            <thead>
+              <tr><th scope="col">Property type</th><th scope="col">Typical location</th><th scope="col">Estimated price (NGN)</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Standard land plots</th><td data-label="Typical location">Developing layouts and communities</td><td data-label="Estimated price">₦2,500,000 – ₦15,000,000</td></tr>
+              <tr><th scope="row">Prime commercial land</th><td data-label="Typical location">Main expressways and town centres</td><td data-label="Estimated price">₦30,000,000 – ₦90,000,000+</td></tr>
+              <tr><th scope="row">Multi-family blocks of flats</th><td data-label="Typical location">Close to institutions and urban centres</td><td data-label="Estimated price">₦100,000,000 – ₦250,000,000</td></tr>
+              <tr><th scope="row">Luxury 4 to 5-bedroom duplexes</th><td data-label="Typical location">Gated areas and residential layouts</td><td data-label="Estimated price">₦150,000,000 – ₦250,000,000+</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="about-subtitle">Smart investment paths</h3>
+        <ul class="driver-list">
+          <li>
+            <h4>Residential rental yields</h4>
+            <p>Building or buying blocks of flats and mini-estates near Okporo, Eziachi or Orlu town targets medical students, doctors, civil servants and business merchants.</p>
+          </li>
+          <li>
+            <h4>Gated estate land banking</h4>
+            <p>Buying plots in planned private layouts, such as Arugo Gardens Estate, or on developing suburban borders offers a lower entry cost and helps shield an investment from local land disputes.</p>
+          </li>
+          <li>
+            <h4>Commercial real estate</h4>
+            <p>Land facing major connecting roads, such as the Orlu–Owerri or Mgbidi–Okporo expressways, offers long-term value for plazas, hospitality and corporate offices.</p>
+          </li>
+        </ul>
+
+        <div class="invest-cta">
+          <div>
+            <h3>The Compendium's home investment programme</h3>
+            <p>Documenting greatness, honouring legacies and inspiring generations: the Compendium's home investment programme encourages Ndi Orlu at home and abroad to build at home, creating jobs and wealth.</p>
+          </div>
+          <a class="button" href="/contact.html">Talk to the Secretariat</a>
+        </div>
+
+        <p class="invest-disclaimer">Prices and projects are general estimates and may change. Always verify land titles and documents with qualified professionals before you buy.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" data-site-footer></footer>
+
+  <script type="module" src="/js/pages/about.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<!-- Location: admin/events.html
+     Opened as events.html, with optional ?view=upcoming|past|draft|cancelled&q=<words>&page=<n> -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Events | Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+  <link rel="preconnect" href="https://orlu-land-community-api.onrender.com" crossorigin>
+
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin admin-pending" data-admin-page="events">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="admin-shell">
+    <aside class="admin-nav" data-admin-nav></aside>
+
+    <main class="admin-main" id="main">
+      <header class="admin-head">
+        <div>
+          <h1 class="admin-head__title">Events</h1>
+          <p class="admin-head__lead">Meetings, festivals and gatherings. Published and cancelled events appear on the website.</p>
+        </div>
+        <div class="admin-head__actions">
+          <a class="button" href="/admin/event-edit.html">New event</a>
+        </div>
+      </header>
+
+      <section class="toolbar" aria-label="Filter events">
+        <nav class="status-tabs" aria-label="Filter events" data-view-tabs></nav>
+        <div class="toolbar__fields">
+          <div class="field field--inline field--grow">
+            <label class="field__label" for="filter-q">Find by title or place</label>
+            <input class="field__input" id="filter-q" type="search" placeholder="Type part of a title or location" data-filter-q>
+          </div>
+        </div>
+      </section>
+
+      <p class="list-meta" aria-live="polite" data-count></p>
+      <div data-events></div>
+      <nav class="pagination" aria-label="Event pages" data-pagination></nav>
+    </main>
+  </div>
+
+  <script type="module" src="/js/admin/events.js"></script>
+</body>
+</html>
