@@ -13,6 +13,7 @@
  *   all       - everything: upcoming first, then past
  */
 
+import { SITE_BASE } from "../config.js";
 import { admin, adapters } from "../api.js";
 import { escapeHtml, urls, eventWhen, paginationHtml, showLoading, showError } from "../ui.js";
 import { requireAdmin } from "./guard.js";
@@ -38,7 +39,7 @@ const els = {
 
 const state = { events: [] };
 
-const editUrl = (id) => `/admin/event-edit.html?id=${encodeURIComponent(id)}`;
+const editUrl = (id) => `${SITE_BASE}admin/event-edit.html?id=${encodeURIComponent(id)}`;
 
 /* ---------------- Grouping ---------------- */
 
@@ -78,7 +79,7 @@ function hrefFor(f) {
   if (f.q) p.set("q", f.q);
   if (f.page > 1) p.set("page", String(f.page));
   const qs = p.toString();
-  return `/admin/events.html${qs ? `?${qs}` : ""}`;
+  return `${SITE_BASE}admin/events.html${qs ? `?${qs}` : ""}`;
 }
 
 function update(changes, { push = true } = {}) {
@@ -146,7 +147,7 @@ function render() {
     els.list.innerHTML = `
       <div class="empty-block">
         <p>No events yet. Published events appear on the website's Events page and homepage.</p>
-        <a class="button" href="/admin/event-edit.html">Add the first event</a>
+        <a class="button" href="${SITE_BASE}admin/event-edit.html">Add the first event</a>
       </div>`;
     return;
   }
@@ -163,7 +164,7 @@ function render() {
       ? `<div class="empty-block"><p>No events match “${escapeHtml(f.q)}” here.</p>
            <button class="button button--quiet" type="button" data-clear>Clear search</button></div>`
       : `<div class="empty-block"><p>${EMPTY[f.view]}</p>
-           ${f.view === "upcoming" ? '<a class="button" href="/admin/event-edit.html">New event</a>' : ""}</div>`;
+           ${f.view === "upcoming" ? `<a class="button" href="${SITE_BASE}admin/event-edit.html">New event</a>` : ""}</div>`;
     return;
   }
 

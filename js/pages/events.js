@@ -9,6 +9,7 @@
  * newest first, 10 per page.
  */
 
+import { SITE_BASE } from "../config.js";
 import { api, adapters, formatDate } from "../api.js";
 import {
   escapeHtml,
@@ -50,7 +51,7 @@ function hrefFor({ when = "upcoming", page = 1 }) {
   if (when === "past") params.set("when", "past");
   if (when === "past" && page > 1) params.set("page", String(page));
   const qs = params.toString();
-  return `/events.html${qs ? `?${qs}` : ""}`;
+  return `${SITE_BASE}events.html${qs ? `?${qs}` : ""}`;
 }
 
 function go(next) {

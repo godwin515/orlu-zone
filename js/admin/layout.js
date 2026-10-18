@@ -13,25 +13,26 @@
  *   renderAdminLayout(user);
  */
 
+import { SITE_BASE } from "../config.js";
 import { api } from "../api.js";
 import { escapeHtml } from "../ui.js";
 import { signOut } from "./guard.js";
 
 export const ADMIN_NAV = [
-  { key: "dashboard", label: "Dashboard", href: "/admin/index.html" },
+  { key: "dashboard", label: "Dashboard", href: `${SITE_BASE}admin/index.html` },
   { group: "Content" },
-  { key: "posts", label: "Posts", href: "/admin/posts.html" },
-  { key: "events", label: "Events", href: "/admin/events.html" },
-  { key: "categories", label: "Categories", href: "/admin/categories.html" },
-  { key: "authors", label: "Authors", href: "/admin/authors.html" },
-  { key: "profiles", label: "Leadership", href: "/admin/profiles.html" },
-  { key: "documents", label: "Documents", href: "/admin/documents.html" },
+  { key: "posts", label: "Posts", href: `${SITE_BASE}admin/posts.html` },
+  { key: "events", label: "Events", href: `${SITE_BASE}admin/events.html` },
+  { key: "categories", label: "Categories", href: `${SITE_BASE}admin/categories.html` },
+  { key: "authors", label: "Authors", href: `${SITE_BASE}admin/authors.html` },
+  { key: "profiles", label: "Leadership", href: `${SITE_BASE}admin/profiles.html` },
+  { key: "documents", label: "Documents", href: `${SITE_BASE}admin/documents.html` },
   { group: "Photos" },
-  { key: "media", label: "Media library", href: "/admin/media.html" },
-  { key: "gallery", label: "Gallery", href: "/admin/gallery.html" },
+  { key: "media", label: "Media library", href: `${SITE_BASE}admin/media.html` },
+  { key: "gallery", label: "Gallery", href: `${SITE_BASE}admin/gallery.html` },
   { group: "Website" },
-  { key: "pages", label: "Pages", href: "/admin/pages.html" },
-  { key: "settings", label: "Site settings", href: "/admin/settings.html" },
+  { key: "pages", label: "Pages", href: `${SITE_BASE}admin/pages.html` },
+  { key: "settings", label: "Site settings", href: `${SITE_BASE}admin/settings.html` },
 ];
 
 let communityName = "Orlu Community";
@@ -43,8 +44,8 @@ export function renderAdminLayout(user) {
 
   nav.innerHTML = `
     <div class="admin-nav__top">
-      <a class="admin-brand" href="/admin/index.html">
-        <img src="/assets/logo.png" alt="" width="34" height="34">
+      <a class="admin-brand" href="${SITE_BASE}admin/index.html">
+        <img src="${SITE_BASE}assets/logo.png" alt="" width="34" height="34">
         <span class="admin-brand__text">
           <span class="admin-brand__name" data-admin-name>${escapeHtml(communityName)}</span>
           <span class="admin-brand__role">Admin</span>
@@ -70,7 +71,7 @@ export function renderAdminLayout(user) {
       </nav>
 
       <div class="admin-nav__footer">
-        <a class="admin-nav__site" href="/index.html" target="_blank" rel="noopener">View the website</a>
+        <a class="admin-nav__site" href="${SITE_BASE}index.html" target="_blank" rel="noopener">View the website</a>
         <p class="admin-nav__user">
           Signed in as<br><strong>${escapeHtml(user?.email || "admin")}</strong>
         </p>

@@ -8,6 +8,7 @@
  * the bottom. When the backend adds a fix, change the adapter only.
  */
 
+import { SITE_BASE } from "./config.js";
 import { API_ORIGIN, API_PREFIX } from "./config.js";
 
 // Kept as exports for older imports; the values live in js/config.js.
@@ -550,7 +551,7 @@ let categoryCache = null;
 
 export const adapters = {
   // GAP: SiteResponse has no logo_url. Replace with site.logo_url later.
-  LOGO_FALLBACK: "/assets/logo.png",
+  LOGO_FALLBACK: `${SITE_BASE}assets/logo.png`,
   logoUrl(site) {
     return site?.logo_url || this.LOGO_FALLBACK;
   },

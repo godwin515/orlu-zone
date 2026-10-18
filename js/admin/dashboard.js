@@ -6,6 +6,7 @@
  * its own, so one slow or broken endpoint doesn't blank the whole page.
  */
 
+import { SITE_BASE } from "../config.js";
 import { admin, adapters, formatDate } from "../api.js";
 import { escapeHtml, eventWhen, showLoading, showError } from "../ui.js";
 import { requireAdmin } from "./guard.js";
@@ -22,8 +23,8 @@ const els = {
   events: document.querySelector("[data-events]"),
 };
 
-const editPost = (id) => `/admin/post-edit.html?id=${encodeURIComponent(id)}`;
-const editEvent = (id) => `/admin/event-edit.html?id=${encodeURIComponent(id)}`;
+const editPost = (id) => `${SITE_BASE}admin/post-edit.html?id=${encodeURIComponent(id)}`;
+const editEvent = (id) => `${SITE_BASE}admin/event-edit.html?id=${encodeURIComponent(id)}`;
 
 /* ---------------- Rendering ---------------- */
 
@@ -49,10 +50,10 @@ function renderTotals({ posts, events, media, gallery }) {
   const upcoming = events ? adapters.splitEvents(events.filter((e) => e.status !== "draft")).upcoming.length : null;
 
   els.totals.innerHTML = [
-    total("Published posts", published, "/admin/posts.html", drafts ? `${drafts} not published yet` : ""),
-    total("Upcoming events", upcoming, "/admin/events.html"),
-    total("Photos uploaded", media ? media.length : null, "/admin/media.html"),
-    total("In the gallery", gallery ? gallery.length : null, "/admin/gallery.html"),
+    total("Published posts", published, `${SITE_BASE}admin/posts.html`, drafts ? `${drafts} not published yet` : ""),
+    total("Upcoming events", upcoming, `${SITE_BASE}admin/events.html`),
+    total("Photos uploaded", media ? media.length : null, `${SITE_BASE}admin/media.html`),
+    total("In the gallery", gallery ? gallery.length : null, `${SITE_BASE}admin/gallery.html`),
   ].join("");
 }
 
@@ -64,7 +65,7 @@ function renderDrafts(posts) {
 
   if (!pending.length) {
     els.drafts.innerHTML = `
-      <p class="panel__empty">Everything is published. <a href="/admin/post-edit.html">Write a new post</a>.</p>`;
+      <p class="panel__empty">Everything is published. <a href="${SITE_BASE}admin/post-edit.html">Write a new post</a>.</p>`;
     return;
   }
 
@@ -92,7 +93,7 @@ function renderEvents(events) {
 
   if (!upcoming.length) {
     els.events.innerHTML = `
-      <p class="panel__empty">No upcoming events. <a href="/admin/event-edit.html">Add one</a>.</p>`;
+      <p class="panel__empty">No upcoming events. <a href="${SITE_BASE}admin/event-edit.html">Add one</a>.</p>`;
     return;
   }
 

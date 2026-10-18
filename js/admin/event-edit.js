@@ -10,6 +10,7 @@
  * Times are typed in Nigerian time and sent to the API in UTC.
  */
 
+import { SITE_BASE } from "../config.js";
 import { admin, ApiError } from "../api.js";
 import { escapeHtml, safeUrl, urls, eventWhen, showLoading, showError } from "../ui.js";
 import { renderContent, enhanceContent } from "../content.js";
@@ -386,7 +387,7 @@ form.addEventListener("submit", async (e) => {
 
     if (isNew) {
       flash(message);
-      window.location.replace(`/admin/event-edit.html?id=${encodeURIComponent(saved.id)}`);
+      window.location.replace(`${SITE_BASE}admin/event-edit.html?id=${encodeURIComponent(saved.id)}`);
       return;
     }
 
@@ -418,7 +419,7 @@ async function deleteEvent() {
     await admin.events.remove(eventId);
     state.dirty = false;
     flash("Event deleted");
-    window.location.replace("/admin/events.html");
+    window.location.replace(`${SITE_BASE}admin/events.html`);
   } catch (error) {
     toast(error.message || "Couldn't delete the event.", "error");
   }
@@ -491,7 +492,7 @@ async function load() {
       els.loadState.innerHTML = `
         <div class="empty-block">
           <p>This event doesn't exist. It may have been deleted.</p>
-          <a class="button" href="/admin/events.html">Back to events</a>
+          <a class="button" href="${SITE_BASE}admin/events.html">Back to events</a>
         </div>`;
       return;
     }

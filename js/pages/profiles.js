@@ -25,6 +25,7 @@
  *   - lines starting with "- " or "• " become bullet points
  */
 
+import { SITE_BASE } from "../config.js";
 import { api } from "../api.js";
 import { escapeHtml, safeUrl, renderShell, initShell, showLoading, showEmpty, showError } from "../ui.js";
 
@@ -420,7 +421,7 @@ async function load() {
       showEmpty(els.list, wanted
         ? `No profiles have been added for ${wanted} yet. Profiles of the community's leaders will appear here soon.`
         : "Profiles of the community's leaders will appear here soon.", {
-        href: "/about.html",
+        href: `${SITE_BASE}about.html`,
         label: "Read about the community",
       });
       return;

@@ -7,6 +7,7 @@
  * total_pages), so page links are ordinary links.
  */
 
+import { SITE_BASE } from "../config.js";
 import { api, formatDate } from "../api.js";
 import {
   escapeHtml,
@@ -33,7 +34,7 @@ const params = new URLSearchParams(window.location.search);
 const query = (params.get("q") || "").trim();
 const page = Math.max(1, parseInt(params.get("page"), 10) || 1);
 
-const hrefFor = (n) => `/search.html?q=${encodeURIComponent(query)}${n > 1 ? `&page=${n}` : ""}`;
+const hrefFor = (n) => `${SITE_BASE}search.html?q=${encodeURIComponent(query)}${n > 1 ? `&page=${n}` : ""}`;
 
 /* ---------------- Highlighting ---------------- */
 

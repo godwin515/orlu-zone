@@ -12,6 +12,7 @@
  * stay shareable and the back button works.
  */
 
+import { SITE_BASE } from "../config.js";
 import { api, adapters } from "../api.js";
 import {
   escapeHtml,
@@ -57,7 +58,7 @@ function hrefFor({ category = "", page = 1 }) {
   if (category) params.set("category", category);
   if (page > 1) params.set("page", String(page));
   const qs = params.toString();
-  return `/posts.html${qs ? `?${qs}` : ""}`;
+  return `${SITE_BASE}posts.html${qs ? `?${qs}` : ""}`;
 }
 
 function go(next) {

@@ -11,6 +11,7 @@
  * The link stays a real link, so "open in new tab" and right-click work too.
  */
 
+import { SITE_BASE } from "../config.js";
 import { api, formatDate, documentDownloadUrl, downloadDocument } from "../api.js";
 import { escapeHtml, renderShell, initShell, showLoading, showEmpty, showError } from "../ui.js";
 
@@ -157,7 +158,7 @@ async function load() {
     if (!state.docs.length) {
       els.tools.hidden = true;
       showEmpty(els.list, "No documents have been published yet. Please check back soon.", {
-        href: "/contact.html",
+        href: `${SITE_BASE}contact.html`,
         label: "Contact us for a document",
       });
       return;

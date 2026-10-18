@@ -1,23 +1,31 @@
 <!doctype html>
 <!-- Location: 404.html (project root)
      Hosts like Netlify, Vercel and GitHub Pages show this file automatically for
-     any address that doesn't exist. All paths here start with "/" so it works
-     at any depth (e.g. /old/news/page). -->
+     any address that doesn't exist. A small script sets <base> so relative paths work
+     at any depth (e.g. /old/news/page), locally or on GitHub Pages. -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <script>
+    // Site root: "/repo-name/" on GitHub Pages project sites, "/" elsewhere.
+    (function () {
+      var seg = location.pathname.split("/")[1];
+      var base = location.hostname.endsWith(".github.io") && seg ? "/" + seg + "/" : "/";
+      document.write('<base href="' + base + '">');
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Page not found</title>
   <meta name="robots" content="noindex">
-  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
 
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -33,7 +41,7 @@
         It may have been moved, or the link may be mistyped.
       </p>
 
-      <form class="search-page-form lost__search" action="/search.html" method="get" role="search">
+      <form class="search-page-form lost__search" action="search.html" method="get" role="search">
         <label class="visually-hidden" for="lost-search">Search news and events</label>
         <input id="lost-search" name="q" type="search" placeholder="Search news and events"
           autocomplete="off" required data-search-input>
@@ -41,15 +49,15 @@
       </form>
 
       <nav class="lost__links" aria-label="Popular pages">
-        <a class="button button--quiet" href="/index.html">Go to the homepage</a>
-        <a class="button button--quiet" href="/posts.html">Read the latest news</a>
-        <a class="button button--quiet" href="/events.html">See upcoming events</a>
+        <a class="button button--quiet" href="index.html">Go to the homepage</a>
+        <a class="button button--quiet" href="posts.html">Read the latest news</a>
+        <a class="button button--quiet" href="events.html">See upcoming events</a>
       </nav>
     </div>
   </main>
 
   <footer class="site-footer" data-site-footer></footer>
 
-  <script type="module" src="/js/pages/not-found.js"></script>
+  <script type="module" src="js/pages/not-found.js"></script>
 </body>
 </html>
