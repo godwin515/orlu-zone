@@ -18,6 +18,7 @@ import { requireAdmin } from "./guard.js";
 import { renderAdminLayout, setAdminTitle } from "./layout.js";
 import { confirmDialog, toast } from "./admin-ui.js";
 import { pickMedia } from "./media-picker.js";
+import { splitPosition, joinPosition } from "../profile-position.js";
 
 const form = document.querySelector("[data-profile-form]");
 const f = (name) => form.elements.namedItem(name);
@@ -323,7 +324,11 @@ async function startEdit(id) {
   clearErrors();
   f("name").value = p.name || "";
   f("category").value = p.category || "";
-  f("biography").value = p.biography || "";
+  // The position is kept as the biography's first line ("Position: …") until
+  // the API has its own field; show it in its own box.
+  const parts = splitPosition(p.biography);
+  f("position").value = parts.position;
+  f("biography").value = parts.biography;
   f("is_published").checked = Boolean(p.is_published);
   state.photo = p.profile_media_id ? { id: p.profile_media_id, public_url: p.profile_media_url } : null;
   state.formDirty = false;
@@ -350,7 +355,7 @@ function formValues() {
   return {
     name: f("name").value.trim(),
     category: normaliseCategory(f("category").value),
-    biography: f("biography").value.trim() || null,
+    biography: joinPosition(f("position").value, f("biography").value) || null,
     profile_media_id: state.photo?.id || null,
     is_published: f("is_published").checked,
   };

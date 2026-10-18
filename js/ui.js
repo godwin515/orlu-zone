@@ -317,7 +317,7 @@ function renderHeader(site) {
   header.innerHTML = `
     <div class="header__inner">
       <a class="brand" href="${urls.home()}">
-        <img class="brand__logo" src="${safeUrl(adapters.logoUrl(site))}" alt="" width="40" height="40">
+        <img class="brand__logo" src="${safeUrl(adapters.logoUrl(site))}" alt="" width="46" height="46">
         <span class="brand__name">${escapeHtml(name)}</span>
       </a>
 

@@ -44,7 +44,7 @@ export function renderAdminLayout(user) {
   nav.innerHTML = `
     <div class="admin-nav__top">
       <a class="admin-brand" href="/admin/index.html">
-        <img src="/assets/logo.svg" alt="" width="34" height="34">
+        <img src="/assets/logo.png" alt="" width="34" height="34">
         <span class="admin-brand__text">
           <span class="admin-brand__name" data-admin-name>${escapeHtml(communityName)}</span>
           <span class="admin-brand__role">Admin</span>

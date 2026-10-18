@@ -177,9 +177,10 @@ main .section.band--light {
 
 .brand__logo {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(227, 167, 47, 0.6);
 }
 
 .brand__name {
@@ -1257,6 +1258,15 @@ html:has(.drawer[open]) {
   background: var(--surface);
 }
 
+.objectives {
+  margin: 0;
+}
+
+/* Objective titles in gold, matching the gold line at the top of each box */
+.objective .objective__verb {
+  color: var(--gold);
+}
+
 .objective__verb {
   margin-bottom: var(--space-2);
   color: var(--ink);
@@ -1266,10 +1276,9 @@ html:has(.drawer[open]) {
 }
 
 .objective p {
-  max-width: 34ch;
-  color: var(--muted);
+  color: var(--ink);
   font-size: var(--step--1);
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 @media (max-width: 900px) {
@@ -1298,7 +1307,7 @@ html:has(.drawer[open]) {
 
 .whoswho__list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-4);
   padding: 0;
   list-style: none;
@@ -1344,6 +1353,39 @@ html:has(.drawer[open]) {
   color: var(--muted);
   font-size: var(--step--1);
   line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .whoswho__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .whoswho__list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Posthumous Honours: a quieter, memorial look, across the whole last row */
+.whoswho__list > li:has(.whoswho__item--memorial) {
+  grid-column: 1 / -1;
+}
+
+.whoswho__item--memorial {
+  border-left-color: #8a8f88;
+  background: #f4f6f2;
+}
+
+.whoswho__item--memorial .whoswho__name::before {
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.55rem;
+  border: 1.5px solid #6b7068;
+  transform: rotate(45deg);
+  vertical-align: 0.12em;
 }
 
 /* ---------------- Invest at home (Aku Ruo Ulo) ---------------- */
@@ -2710,6 +2752,164 @@ html:has(.drawer[open]) {
   margin-top: var(--space-5);
 }
 
+/* A person's position: gold small capitals between two diamonds,
+   with a thin gold line underneath, like an engraved title */
+.position {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  margin: 0;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid rgba(227, 167, 47, 0.45);
+}
+
+.position > span {
+  display: inline-block;
+  color: #f3d98b;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Diamonds sit right against the first and last words, even when wrapped */
+.position .position__last {
+  white-space: nowrap;
+}
+
+.position > span::before,
+.position .position__last::after {
+  content: "";
+  display: inline-block;
+  width: 0.38rem;
+  height: 0.38rem;
+  margin: 0 0.5rem 0.12em;
+  background: var(--gold);
+  transform: rotate(45deg);
+  vertical-align: middle;
+}
+
+.position--large span {
+  font-size: var(--step--1);
+}
+
+.person__position {
+  width: 100%;
+  max-width: 22rem;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+/* Category titles on the Leadership page: a small crest, the name in serif
+   between gold lines that end in diamonds, and a count underneath */
+.group-title {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+
+.group-title__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.group-title__rule {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+.group-title__rule:last-child {
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+/* A small gold diamond where each line meets the title */
+.group-title__rule::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.group-title__rule:last-child::after {
+  right: auto;
+  left: -4px;
+}
+
+.group-title__name {
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: var(--step-3);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.group-title__count {
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+  .group-title__name {
+    font-size: var(--step-2);
+    white-space: normal;
+  }
+
+  .group-title__row {
+    gap: var(--space-3);
+  }
+}
+
+/* Arriving from a homepage category link: the section glows gold briefly */
+.profile-group.is-target .group-title__name {
+  animation: group-glow 2.4s ease-out;
+}
+
+@keyframes group-glow {
+  0%, 40% { color: var(--gold); text-shadow: 0 0 18px rgba(227, 167, 47, 0.6); }
+  100% { color: #fff; text-shadow: none; }
+}
+
+.group-missing {
+  margin-bottom: var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid rgba(227, 167, 47, 0.5);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-group.is-target .group-title__name {
+    animation: none;
+  }
+}
+
+/* The Leadership page uses a narrower column so the cards stay compact */
+.container--narrow {
+  max-width: 62rem;
+}
+
 .profile-group {
   scroll-margin-top: 5.5rem;
 }
@@ -2720,39 +2920,72 @@ html:has(.drawer[open]) {
 
 .profile-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
-  gap: var(--space-7) var(--space-6);
-}
-
-.profile {
-  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-4);
-  align-content: start;
 }
 
-.profile__photo {
+/* Each person is one card, styled like the Compendium's team cards:
+   deep green gradient, fine gold border, gold circles in two corners,
+   an arch-shaped photo in a gold frame, a gold tag, then name and bio. */
+.profile {
   position: relative;
-  aspect-ratio: 4 / 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
   overflow: hidden;
-  border-radius: var(--radius);
-  background: var(--palm-tint);
+  padding: var(--space-5) var(--space-4) var(--space-4);
+  border: 1px solid rgba(227, 167, 47, 0.55);
+  border-radius: 16px;
+  background: linear-gradient(165deg, #0a3825, #0f4d34 70%, #17644a);
+  color: #fff;
+  text-align: center;
 }
 
-/* A thin gold rule under each portrait ties the set together */
-.profile__photo::after {
+.profile::before,
+.profile::after {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 4px;
-  background: var(--gold);
+  width: 90px;
+  height: 90px;
+  border: 2px solid rgba(227, 167, 47, 0.35);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.profile::before {
+  top: -45px;
+  left: -45px;
+}
+
+.profile::after {
+  right: -45px;
+  bottom: -45px;
+}
+
+/* Block portrait, framed like the full profile */
+.profile__photo {
+  position: relative;
+  z-index: 1;
+  width: 104px;
+  height: 130px;
+  margin-bottom: var(--space-2);
+  overflow: hidden;
+  border: 3px solid var(--gold);
+  border-radius: 12px;
+  background: #14202b;
+  /* Same frame as the full profile: gold border, thin outer gold ring, shadow */
+  box-shadow:
+    0 0 0 5px rgba(15, 77, 52, 0.9),
+    0 0 0 7px rgba(227, 167, 47, 0.55),
+    0 12px 26px rgba(0, 0, 0, 0.4);
 }
 
 .profile__photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
 }
 
 .profile__initials {
@@ -2760,67 +2993,374 @@ html:has(.drawer[open]) {
   place-items: center;
   width: 100%;
   height: 100%;
-  background: var(--palm-tint);
-  color: var(--gold);
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  color: #f3d98b;
+  font-family: var(--font-body);
+  font-size: 2rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
 }
 
-.profile__body {
-  display: grid;
-  gap: var(--space-2);
-  align-content: start;
+.profile__role {
+  position: relative;
+  z-index: 1;
+  padding: 0.25rem 0.85rem;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #1a1405;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .profile__name {
-  font-size: var(--step-1);
+  position: relative;
+  z-index: 1;
+  margin-top: var(--space-1);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .profile__bio {
-  color: var(--muted);
+  position: relative;
+  z-index: 1;
+  max-width: 46ch;
+  color: #dfeee4;
+  font-family: var(--font-display);
   font-size: var(--step--1);
   line-height: 1.6;
 }
 
-.profile__bio p + p {
-  margin-top: 0.7em;
-}
-
-.profile__bio.is-folded {
+/* The card shows the summary, up to four lines */
+.profile__bio {
   display: -webkit-box;
-  -webkit-line-clamp: 6;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .profile__more {
-  justify-self: start;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--palm);
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  margin-top: auto;
+  text-decoration: none;
+  padding: 0.45rem 0.9rem;
+  border: 1.5px solid var(--gold);
+  border-radius: 999px;
+  background: transparent;
+  color: #f3d98b;
   font-family: var(--font-display);
   font-size: var(--step--1);
   font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 0.18em;
   cursor: pointer;
 }
 
 .profile__more:hover {
-  color: var(--palm-deep);
+  background: rgba(227, 167, 47, 0.18);
+  color: #f3d98b;
 }
 
-@media (max-width: 520px) {
-  .profile-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-6) var(--space-4);
+/* ---- Full profile: "dossier" layout ----
+ * Left: a dark green panel with the arch photo, tag, name and summary,
+ * which stays in place on desktop. Right: light green, with each section
+ * (Overview, Personal Details…) in its own white box.
+ */
+.person {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--light-green);
+  color: #143d27;
+}
+
+.person::backdrop {
+  background: rgba(6, 20, 12, 0.6);
+}
+
+.person[open] {
+  animation: person-in 0.25s ease-out;
+}
+
+@keyframes person-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+html:has(.person[open]) {
+  overflow: hidden;
+}
+
+.person__layout {
+  display: grid;
+  grid-template-columns: minmax(20rem, 0.85fr) minmax(0, 1.4fr);
+  min-height: 100%;
+}
+
+.person__side {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  height: 100dvh;
+  overflow-y: auto;
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  border-right: 3px solid var(--gold);
+  background: linear-gradient(165deg, #0a3825, #0f4d34 70%, #17644a);
+  color: #fff;
+  text-align: center;
+}
+
+/* Gold circles in the corners, as on the cards */
+.person__side::before,
+.person__side::after {
+  content: "";
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border: 2px solid rgba(227, 167, 47, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.person__side::before {
+  top: -70px;
+  left: -70px;
+}
+
+.person__side::after {
+  right: -70px;
+  bottom: -70px;
+}
+
+.person__close {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  border: 1.5px solid var(--gold);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.15);
+  color: #f3d98b;
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.person__close:hover {
+  background: rgba(227, 167, 47, 0.18);
+}
+
+/* Block portrait: gold border, a thin outer gold ring, soft shadow */
+.person__photo {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 220px;
+  height: 275px;
+  margin: var(--space-2) 0 var(--space-4);
+  overflow: hidden;
+  border: 3px solid var(--gold);
+  border-radius: 12px;
+  background: #14202b;
+  box-shadow:
+    0 0 0 6px rgba(15, 77, 52, 0.9),
+    0 0 0 8px rgba(227, 167, 47, 0.6),
+    0 16px 34px rgba(0, 0, 0, 0.45);
+}
+
+.person__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.person__photo .profile__initials {
+  font-size: 3.6rem;
+}
+
+.person__role {
+  position: relative;
+  z-index: 1;
+  padding: 0.25rem 0.85rem;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #1a1405;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.person__name {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: var(--step-3);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.person__lead {
+  position: relative;
+  z-index: 1;
+  max-width: 32ch;
+  padding-top: var(--space-3);
+  border-top: 1px solid rgba(227, 167, 47, 0.4);
+  color: #dfeee4;
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  line-height: 1.55;
+}
+
+.person__main {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+  max-width: 48rem;
+  padding: var(--space-8) var(--space-7);
+}
+
+.person__section {
+  padding: var(--space-5) var(--space-6);
+  border: 1px solid rgba(20, 61, 39, 0.12);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  background: #fff;
+  font-family: var(--font-display);
+  line-height: 1.65;
+}
+
+.person__section h3 {
+  margin-bottom: var(--space-3);
+  color: #143d27;
+  font-family: var(--font-body);
+  font-size: var(--step-1);
+  font-weight: 700;
+}
+
+.person__section p + p,
+.person__section ul + p,
+.person__section p + ul {
+  margin-top: var(--space-3);
+}
+
+.person__section p {
+  color: #2f4a39;
+}
+
+/* Gold diamond bullets */
+.person__section ul {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.person__section li {
+  position: relative;
+  padding-left: 1.4rem;
+  color: #2f4a39;
+}
+
+.person__section li::before {
+  content: "";
+  position: absolute;
+  top: 0.62em;
+  left: 0.2rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+
+.person__back {
+  margin-top: var(--space-4);
+}
+
+.person .button--quiet {
+  border-color: rgba(20, 61, 39, 0.4);
+  color: var(--brand);
+}
+
+.person .button--quiet:hover {
+  background: rgba(20, 61, 39, 0.06);
+  color: var(--brand);
+}
+
+.person__main :focus-visible {
+  outline-color: var(--brand);
+}
+
+/* Tablets and phones: the green panel on top, sections below */
+@media (max-width: 860px) {
+  .person__layout {
+    grid-template-columns: 1fr;
   }
 
-  .profile__name {
-    font-size: var(--step-0);
+  .person__side {
+    position: relative;
+    height: auto;
+    overflow: hidden;
+    padding: var(--space-8) var(--gutter) var(--space-6);
+    border-right: 0;
+    border-bottom: 3px solid var(--gold);
+  }
+
+  .person__main {
+    padding: var(--space-6) var(--gutter) var(--space-8);
+  }
+
+  .person__section {
+    padding: var(--space-4) var(--space-4);
+  }
+}
+
+@media (max-width: 600px) {
+  .person__name {
+    font-size: var(--step-2);
+  }
+
+  .person__photo {
+    width: 180px;
+    height: 225px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .person[open] {
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .profile-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
   }
 }
 

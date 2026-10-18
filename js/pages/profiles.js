@@ -8,14 +8,28 @@
  * order within each group.
  *
  * Photos use profile_media_url as the contract says; profiles without one
- * get their initials instead. There's no separate page per person: the
- * full bio shows on the card, with "Read more" for long ones.
+ * get their initials instead.
+ *
+ * Each card shows a short summary; "Read full profile" opens the whole
+ * profile full-screen, like the Compendium's profile pages. Each profile
+ * has its own link: profiles.html#person-<id>.
+ *
+ * A person's position ("Chief Project Director") shows under their name in
+ * gold small capitals between two diamonds. It
+ * comes from the first line of the biography, "Position: …" (see
+ * js/profile-position.js), until the API has a field for it.
+ *
+ * The biography is plain text. Simple formatting is read from it:
+ *   - the first paragraph is the bold summary
+ *   - a short line on its own (e.g. "Overview") becomes a gold heading
+ *   - lines starting with "- " or "• " become bullet points
  */
 
 import { api } from "../api.js";
 import { escapeHtml, safeUrl, renderShell, initShell, showLoading, showEmpty, showError } from "../ui.js";
 
-const LONG_BIO = 320; // characters before a bio is folded behind "Read more"
+const PERSON_HASH = "#person-";
+let current = []; // profiles on the page, for opening by id
 
 const els = {
   list: document.querySelector("[data-profiles]"),
@@ -39,12 +53,116 @@ function initials(name) {
   return ((real.length ? real : words).slice(0, 2).map((w) => w[0].toUpperCase()).join("")) || "?";
 }
 
-/** Plain-text bio -> paragraphs. Bios are shown as text, never as HTML. */
-function bioHtml(text) {
-  return String(text || "")
-    .trim()
-    .split(/\n{2,}/)
-    .map((p) => `<p>${escapeHtml(p.trim()).replace(/\n/g, "<br>")}</p>`)
+/* ---------------- Position ---------------- */
+
+// The API has no position field yet, so it is stored as the biography's first
+// line: "Position: Chief Project Director". The admin Leadership form has a
+// Position box that writes it. A real position/title/role field wins if the
+// backend adds one. Same rules as js/profile-position.js (used by the admin).
+const POSITION_LINE = /^\s*(?:position|title|role)\s*:\s*(.+?)\s*(?:\r?\n|$)/i;
+
+function positionOf(profile) {
+  const field = profile?.position || profile?.title || profile?.role;
+  const bio = String(profile?.biography || "");
+  if (field) return { position: String(field).trim(), biography: bio.trim() };
+  const m = POSITION_LINE.exec(bio);
+  if (!m) return { position: "", biography: bio.trim() };
+  return { position: m[1].trim(), biography: bio.slice(m[0].length).trim() };
+}
+
+/* ---------------- Biography formatting ---------------- */
+
+const BULLET = /^\s*(?:[-•*]|\d+[.)])\s+/;
+
+function isHeadingLine(line, next) {
+  const t = line.trim();
+  if (!t || BULLET.test(t) || t.length > 48 || /[.!?,;]$/.test(t)) return false;
+  // A short line followed by more text, or ending in ":" ("Education:")
+  return /:$/.test(t) || Boolean(next && next.trim());
+}
+
+/**
+ * Plain-text biography -> blocks: { type: "p" | "h" | "ul", text | items }.
+ * Never HTML: everything is escaped when rendered.
+ */
+function parseBio(text) {
+  const lines = String(text || "").replace(/\r/g, "").split("\n");
+  const blocks = [];
+  let para = [];
+  let list = null;
+
+  const flushPara = () => {
+    if (para.length) blocks.push({ type: "p", text: para.join(" ") });
+    para = [];
+  };
+  const flushList = () => {
+    if (list?.length) blocks.push({ type: "ul", items: list });
+    list = null;
+  };
+
+  lines.forEach((raw, i) => {
+    const line = raw.trim();
+    if (!line) {
+      flushPara();
+      flushList();
+      return;
+    }
+    if (BULLET.test(line)) {
+      flushPara();
+      (list ||= []).push(line.replace(BULLET, ""));
+      return;
+    }
+    flushList();
+    const startsBlock = para.length === 0;
+    if (startsBlock && blocks.length > 0 && isHeadingLine(line, lines[i + 1])) {
+      blocks.push({ type: "h", text: line.replace(/:$/, "") });
+      return;
+    }
+    para.push(line);
+  });
+  flushPara();
+  flushList();
+  return blocks;
+}
+
+/** The summary: the first paragraph of the biography. */
+function summaryOf(bio) {
+  const first = parseBio(bio).find((b) => b.type === "p");
+  return first ? first.text : "";
+}
+
+/** Group blocks under their headings; each heading starts a boxed section. */
+function sectionsHtml(blocks) {
+  if (!blocks.length) return "";
+  const sections = [];
+  let cur = { title: "", blocks: [] };
+  for (const b of blocks) {
+    if (b.type === "h") {
+      if (cur.title || cur.blocks.length) sections.push(cur);
+      cur = { title: b.text, blocks: [] };
+    } else {
+      cur.blocks.push(b);
+    }
+  }
+  if (cur.title || cur.blocks.length) sections.push(cur);
+  return sections
+    .map(
+      (sec) => `
+      <section class="person__section">
+        ${sec.title ? `<h3>${escapeHtml(sec.title)}</h3>` : ""}
+        ${blocksHtml(sec.blocks)}
+      </section>`,
+    )
+    .join("");
+}
+
+function blocksHtml(blocks) {
+  return blocks
+    .map((b) => {
+      if (b.type === "h") return `<h3>${escapeHtml(b.text)}</h3>`;
+      if (b.type === "ul") return `<ul>${b.items.map((it) => `<li>${escapeHtml(it)}</li>`).join("")}</ul>`;
+      return `<p>${escapeHtml(b.text)}</p>`;
+    })
     .join("");
 }
 
@@ -74,47 +192,55 @@ function groupByCategory(profiles) {
 
 /* ---------------- Rendering ---------------- */
 
-function cardHtml(p, i) {
-  const bio = (p.biography || "").trim();
-  const long = bio.length > LONG_BIO;
-  const bioId = `bio-${i}`;
+function photoHtml(p, { lazy = true } = {}) {
   const photo = safeUrl(p.profile_media_url);
+  return photo
+    ? `<img src="${photo}" alt="" ${lazy ? 'loading="lazy"' : ""}>`
+    : `<span class="profile__initials" aria-hidden="true">${escapeHtml(initials(p.name))}</span>`;
+}
 
+/** The position as an engraved line: gold small capitals between two diamonds. */
+function positionHtml(position, cls = "position") {
+  if (!position) return "";
+  // Keep the last word and the closing diamond together when the line wraps.
+  const words = escapeHtml(position).split(" ");
+  const last = words.pop();
+  const head = words.length ? `${words.join(" ")} ` : "";
+  return `<p class="${cls}"><span>${head}<span class="position__last">${last}</span></span></p>`;
+}
+
+function cardHtml(p) {
+  const { position, biography } = positionOf(p);
+  const summary = summaryOf(biography);
   return `
     <li class="profile">
-      <div class="profile__photo">
-        ${
-          photo
-            ? `<img src="${photo}" alt="" loading="lazy">`
-            : `<span class="profile__initials" aria-hidden="true">${escapeHtml(initials(p.name))}</span>`
-        }
-      </div>
-      <div class="profile__body">
-        <h3 class="profile__name">${escapeHtml(p.name)}</h3>
-        ${
-          bio
-            ? `
-          <div class="profile__bio${long ? " is-folded" : ""}" id="${bioId}">${bioHtml(bio)}</div>
-          ${long ? `<button type="button" class="profile__more" aria-expanded="false" aria-controls="${bioId}" data-more>Read more</button>` : ""}`
-            : ""
-        }
-      </div>
+      <div class="profile__photo">${photoHtml(p)}</div>
+      <h3 class="profile__name">${escapeHtml(p.name)}</h3>
+      ${positionHtml(position || (p.category || "").trim(), "position profile__position")}
+      ${summary ? `<p class="profile__bio">${escapeHtml(summary)}</p>` : ""}
+      <a class="profile__more" href="${PERSON_HASH}${encodeURIComponent(p.id)}" data-person="${escapeHtml(p.id)}"
+        aria-label="Read the full profile of ${escapeHtml(p.name)}">Read full profile</a>
     </li>`;
 }
 
 function render(profiles) {
+  current = profiles;
   const groups = groupByCategory(profiles);
-  let n = 0;
 
   els.list.innerHTML = groups
     .map(([category, people], gi) => {
       const anchor = anchorFor(category, gi);
       return `
         <section class="profile-group" id="${anchor}" aria-labelledby="${anchor}-title">
-          <div class="section-head">
-            <h2 id="${anchor}-title">${escapeHtml(category)}</h2>
-          </div>
-          <ul class="profile-grid">${people.map((p) => cardHtml(p, n++)).join("")}</ul>
+          <header class="group-title">
+            <div class="group-title__row">
+              <span class="group-title__rule" aria-hidden="true"></span>
+              <h2 class="group-title__name" id="${anchor}-title">${escapeHtml(category)}</h2>
+              <span class="group-title__rule" aria-hidden="true"></span>
+            </div>
+            <p class="group-title__count">${people.length} ${people.length === 1 ? "profile" : "profiles"}</p>
+          </header>
+          <ul class="profile-grid">${people.map((p) => cardHtml(p)).join("")}</ul>
         </section>`;
     })
     .join("");
@@ -133,14 +259,152 @@ function render(profiles) {
   }
 }
 
+/* ---------------- Links from the homepage's Who's Who categories ----------------
+ * The homepage links to profiles.html#cat=<key>. Admin category names vary
+ * ("Political Leaders", "Politics and Public Service"…), so each key matches
+ * any category whose name contains one of its keywords. The first match wins.
+ */
+const WHOSWHO = {
+  royal: { label: "Traditional Rulers & Titled Chiefs", words: ["royal", "traditional", "ruler", "eze", "igwe", "chief", "king", "monarch"] },
+  politics: { label: "Public Service & Politics", words: ["politic", "public service", "government", "legislat", "senat", "council"] },
+  business: { label: "Business & Industry", words: ["business", "industry", "industri", "captain", "entrepreneur", "enterprise", "commerce"] },
+  professionals: { label: "Professionals & Academics", words: ["professional", "academ", "scholar", "education", "lecturer", "professor"] },
+  clergy: { label: "Clergy & Faith Leaders", words: ["clergy", "faith", "church", "religio", "bishop", "pastor", "priest"] },
+  philanthropy: { label: "Philanthropy & Community Service", words: ["philanthrop", "community service", "charit", "humanitarian"] },
+  women: { label: "Women Leaders", words: ["women", "woman", "female", "mothers", "august meeting", "cwo"] },
+  youth: { label: "Youth, Arts & Sports", words: ["youth", "art", "sport", "young"] },
+  editorial: { label: "Editorial Board", words: ["editorial", "editor", "compendium team", "project team", "secretariat"] },
+  posthumous: { label: "Posthumous Honours", words: ["posthumous", "memoriam", "in memory", "late", "departed"] },
+};
+
+// Short keywords that must be whole words ("art" not "Partners", "late" not "Translate")
+const WHOLE_WORDS = new Set(["art", "late"]);
+
+const SKIP_WORDS = new Set(["and", "the", "of", "leaders", "leader", "titled", "service"]);
+
+function findGroup(key) {
+  const entry = WHOSWHO[key];
+  if (!entry) return null;
+  const sections = [...els.list.querySelectorAll(".profile-group")];
+  const nameOf = (section) => (section.querySelector("h2")?.textContent || "").toLowerCase();
+  // 1. Keywords for this tile
+  for (const section of sections) {
+    const name = nameOf(section);
+    if (entry.words.some((w) => (WHOLE_WORDS.has(w) ? new RegExp(`\\b${w}s?\\b`).test(name) : name.includes(w)))) return section;
+  }
+  // 2. Any word from the tile's own label ("Industry", "Faith", "Sports"…)
+  const labelWords = entry.label
+    .toLowerCase()
+    .split(/[^a-z]+/)
+    .filter((w) => w.length > 3 && !SKIP_WORDS.has(w));
+  for (const section of sections) {
+    const name = nameOf(section);
+    if (labelWords.some((w) => name.includes(w.slice(0, Math.max(5, w.length - 2))))) return section;
+  }
+  return null;
+}
+
+function openCategory(key) {
+  const section = findGroup(key);
+  els.list.querySelector(".group-missing")?.remove();
+  if (section) {
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
+    section.classList.remove("is-target");
+    void section.offsetWidth; // restart the highlight
+    section.classList.add("is-target");
+    return;
+  }
+  // No category for it yet: say so at the top of the list.
+  const label = WHOSWHO[key]?.label;
+  if (!label) return;
+  const note = document.createElement("p");
+  note.className = "group-missing";
+  note.setAttribute("role", "status");
+  note.textContent = `No profiles have been added for ${label} yet. Here are all the profiles.`;
+  els.list.prepend(note);
+  note.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+/** The category key from a #cat=… link, if the page was opened with one. */
+function categoryFromHash() {
+  const hash = window.location.hash;
+  return hash.startsWith("#cat=") ? decodeURIComponent(hash.slice(5)) : "";
+}
+
+/* ---------------- Full profile ---------------- */
+
+let view = null;
+let returnFocus = null;
+
+function buildView() {
+  view = document.createElement("dialog");
+  view.className = "person";
+  view.setAttribute("aria-labelledby", "person-name");
+  document.body.appendChild(view);
+  view.addEventListener("close", () => {
+    // Drop the #person-… link from the address bar, keep the page where it was.
+    if (window.location.hash.startsWith(PERSON_HASH)) {
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+    returnFocus?.focus({ preventScroll: true });
+  });
+  view.addEventListener("click", (e) => {
+    if (e.target.closest("[data-close]")) view.close();
+  });
+  return view;
+}
+
+function openPerson(id, { updateHash = true } = {}) {
+  const p = current.find((x) => String(x.id) === String(id));
+  if (!p) return false;
+  const dialog = view || buildView();
+  const { position, biography } = positionOf(p);
+  const blocks = parseBio(biography);
+  const firstPara = blocks.findIndex((b) => b.type === "p");
+  const lead = firstPara >= 0 ? blocks.splice(firstPara, 1)[0].text : "";
+
+  dialog.innerHTML = `
+    <div class="person__layout">
+      <aside class="person__side">
+        <button type="button" class="person__close" data-close>
+          <span aria-hidden="true">✕</span> Close
+        </button>
+        <div class="person__photo">${photoHtml(p, { lazy: false })}</div>
+        <h2 class="person__name" id="person-name">${escapeHtml(p.name)}</h2>
+        ${positionHtml(position, "position position--large person__position")}
+        ${lead ? `<p class="person__lead">${escapeHtml(lead)}</p>` : ""}
+      </aside>
+      <div class="person__main">
+        ${sectionsHtml(blocks)}
+        <p class="person__back"><button type="button" class="button button--quiet" data-close>Back to all profiles</button></p>
+      </div>
+    </div>`;
+
+  if (updateHash) history.replaceState(null, "", `${PERSON_HASH}${encodeURIComponent(p.id)}`);
+  document.title = `${p.name} | Leadership`;
+  if (!dialog.open) dialog.showModal();
+  dialog.scrollTop = 0;
+  dialog.querySelector(".person__close").focus();
+  return true;
+}
+
 els.list.addEventListener("click", (e) => {
-  const button = e.target.closest("[data-more]");
-  if (!button) return;
-  const bio = document.getElementById(button.getAttribute("aria-controls"));
-  const open = button.getAttribute("aria-expanded") === "true";
-  bio.classList.toggle("is-folded", open);
-  button.setAttribute("aria-expanded", String(!open));
-  button.textContent = open ? "Read more" : "Show less";
+  const link = e.target.closest("[data-person]");
+  if (!link || e.metaKey || e.ctrlKey || e.shiftKey) return;
+  e.preventDefault();
+  returnFocus = link;
+  openPerson(link.dataset.person);
+});
+
+// Opened (or navigated) with a #person-… link
+window.addEventListener("hashchange", () => {
+  if (window.location.hash.startsWith("#cat=")) {
+    openCategory(decodeURIComponent(window.location.hash.slice(5)));
+    return;
+  }
+  if (window.location.hash.startsWith(PERSON_HASH)) {
+    openPerson(decodeURIComponent(window.location.hash.slice(PERSON_HASH.length)), { updateHash: false });
+  }
 });
 
 /* ---------------- Load ---------------- */
@@ -152,16 +416,26 @@ async function load() {
     stop();
     if (!profiles?.length) {
       els.jump.hidden = true;
-      showEmpty(els.list, "Profiles of the community's leaders will appear here soon.", {
+      const wanted = WHOSWHO[categoryFromHash()]?.label;
+      showEmpty(els.list, wanted
+        ? `No profiles have been added for ${wanted} yet. Profiles of the community's leaders will appear here soon.`
+        : "Profiles of the community's leaders will appear here soon.", {
         href: "/about.html",
         label: "Read about the community",
       });
       return;
     }
     render(profiles);
-    // Opened with a #group link? Scroll there now that it exists.
+    // Opened with a #person-… link? Show that profile. A #group link? Scroll there.
     try {
-      if (window.location.hash) document.getElementById(decodeURIComponent(window.location.hash.slice(1)))?.scrollIntoView();
+      const hash = window.location.hash;
+      if (hash.startsWith(PERSON_HASH)) {
+        openPerson(decodeURIComponent(hash.slice(PERSON_HASH.length)), { updateHash: false });
+      } else if (hash.startsWith("#cat=")) {
+        openCategory(decodeURIComponent(hash.slice(5)));
+      } else if (hash) {
+        document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView();
+      }
     } catch {
       /* odd hash: ignore */
     }

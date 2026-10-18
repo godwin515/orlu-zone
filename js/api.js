@@ -550,7 +550,7 @@ let categoryCache = null;
 
 export const adapters = {
   // GAP: SiteResponse has no logo_url. Replace with site.logo_url later.
-  LOGO_FALLBACK: "/assets/logo.svg",
+  LOGO_FALLBACK: "/assets/logo.png",
   logoUrl(site) {
     return site?.logo_url || this.LOGO_FALLBACK;
   },

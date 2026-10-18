@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Leadership | Admin</title>
   <meta name="robots" content="noindex, nofollow">
-  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -76,9 +76,17 @@
             </div>
 
             <div class="field">
+              <label class="field__label" for="position">Position <span class="field__optional">optional</span></label>
+              <input class="field__input" id="position" name="position" type="text" maxlength="120"
+                aria-describedby="position-hint" placeholder="For example: Chief Project Director">
+              <p class="field__hint" id="position-hint">The office or title they hold. Shown as a gold ribbon under their photo.</p>
+            </div>
+
+            <div class="field">
               <label class="field__label" for="biography">Biography <span class="field__optional">optional</span></label>
-              <textarea class="field__input" id="biography" name="biography" rows="6"></textarea>
-              <p class="field__hint">Their role and background. Leave a blank line between paragraphs. Long bios fold behind “Read more”. <span data-bio-count></span></p>
+              <textarea class="field__input" id="biography" name="biography" rows="10"
+                placeholder="Chief Project Director, Compendium of Honour.&#10;&#10;Overview&#10;- Journalist and publisher&#10;- Community leader from Uzoubi-Umuna, Orlu LGA&#10;&#10;Education&#10;- St. Joseph's School, Umuna"></textarea>
+              <p class="field__hint">The first paragraph is the short summary shown on the card. For the full profile, put a section name on its own line (for example <em>Overview</em> or <em>Education</em>) and start list items with “- ”. Leave a blank line between sections. <span data-bio-count></span></p>
               <p class="field__error" data-error-for="biography" hidden></p>
             </div>
 
