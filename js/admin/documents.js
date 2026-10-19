@@ -361,7 +361,9 @@ async function startEdit(id) {
   f("description").value = doc.description || "";
   setMode();
   renderList();
-  if (window.matchMedia("(max-width: 1000px)").matches) {
+  // Bring the form into view whenever it's off screen (it sits above the list on smaller screens).
+  const top = els.panel.getBoundingClientRect().top;
+  if (top < 0 || top > window.innerHeight * 0.5) {
     els.panel.scrollIntoView({ behavior: "smooth", block: "start" });
   }
   f("title").focus({ preventScroll: true });

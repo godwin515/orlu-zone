@@ -2517,8 +2517,22 @@ button.status-tabs__tab {
 }
 
 /* Documents: the table needs the full width on laptops, so the upload form
-   moves above the list below 1200px (other split pages switch at 1000px) */
-@media (max-width: 1200px) {
+   moves above the list below 1440px (other split pages switch at 1000px).
+   The list column may never grow under the form, so its Edit / Withdraw /
+   Open buttons are never covered. */
+.split:has([data-documents]) > .split__main {
+  min-width: 0;
+}
+
+.split:has([data-documents]) .doc-table {
+  width: 100%;
+}
+
+.split:has([data-documents]) .split__side {
+  z-index: 0;
+}
+
+@media (max-width: 1440px) {
   .split:has(.doc-table),
   .split:has([data-documents]) {
     grid-template-columns: minmax(0, 1fr);
