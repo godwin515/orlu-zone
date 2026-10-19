@@ -7,13 +7,11 @@
  * header and footer.
  */
 
-import { SITE_BASE } from "../config.js";
 import { renderShell, initShell } from "../ui.js";
 import { attachSuggestions } from "../search-suggest.js";
 
 const pathEl = document.querySelector("[data-missing-path]");
 let path = window.location.pathname + window.location.search;
-if (path.startsWith(SITE_BASE)) path = `/${path.slice(SITE_BASE.length)}`;
 try {
   path = decodeURIComponent(path); // show "/my page", not "/my%20page"
 } catch {

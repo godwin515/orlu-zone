@@ -14,10 +14,9 @@
  * nobody sees admin screens flash before a redirect.
  */
 
-import { SITE_BASE } from "../config.js";
 import { auth, session, setOnUnauthorized, ApiError } from "../api.js";
 
-const LOGIN_PATH = `${SITE_BASE}admin/login.html`;
+const LOGIN_PATH = "/admin/login.html";
 const USER_KEY = "orlu_admin_user";
 
 /** Login URL that returns to the current page afterwards. */
@@ -98,13 +97,13 @@ export async function requireAdmin() {
 
 /** Safe "next" target from the login URL: only admin pages on this site. */
 export function safeNext(raw) {
-  if (!raw) return `${SITE_BASE}admin/index.html`;
+  if (!raw) return "/admin/index.html";
   try {
     const url = new URL(raw, window.location.origin);
-    if (url.origin !== window.location.origin) return `${SITE_BASE}admin/index.html`;
-    if (!url.pathname.startsWith(`${SITE_BASE}admin/`) || url.pathname === LOGIN_PATH) return `${SITE_BASE}admin/index.html`;
+    if (url.origin !== window.location.origin) return "/admin/index.html";
+    if (!url.pathname.startsWith("/admin/") || url.pathname === LOGIN_PATH) return "/admin/index.html";
     return url.pathname + url.search;
   } catch {
-    return `${SITE_BASE}admin/index.html`;
+    return "/admin/index.html";
   }
 }

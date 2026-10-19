@@ -10,7 +10,6 @@
  * in the backend yet, the page says so.
  */
 
-import { SITE_BASE } from "../config.js";
 import { admin, ApiError } from "../api.js";
 import { urls, showLoading, showError } from "../ui.js";
 import { renderContent, enhanceContent } from "../content.js";
@@ -76,7 +75,7 @@ function renderTabs() {
     <ul class="status-tabs__list">
       ${PAGES.map(
         (p) => `
-        <li><a class="status-tabs__tab" href="${SITE_BASE}admin/pages.html?page=${p.slug}" data-slug="${p.slug}"
+        <li><a class="status-tabs__tab" href="/admin/pages.html?page=${p.slug}" data-slug="${p.slug}"
           ${p.slug === state.slug ? 'aria-current="page"' : ""}>${p.label}</a></li>`,
       ).join("")}
     </ul>`;

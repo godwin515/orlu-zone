@@ -7,7 +7,6 @@
  * full-screen viewer from js/lightbox.js.
  */
 
-import { SITE_BASE } from "../config.js";
 import { api } from "../api.js";
 import { renderShell, initShell, showLoading, showEmpty, showError } from "../ui.js";
 import { photoGrid, attachLightbox } from "../lightbox.js";
@@ -57,7 +56,7 @@ async function load() {
 
     if (!state.images.length) {
       showEmpty(els.gallery, "No photos have been added to the gallery yet.", {
-        href: `${SITE_BASE}events.html`,
+        href: "/events.html",
         label: "See upcoming events",
       });
       return;

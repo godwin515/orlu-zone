@@ -8,7 +8,6 @@
  * Delete uses DELETE /admin/posts/{id} after a confirmation.
  */
 
-import { SITE_BASE } from "../config.js";
 import { admin, adapters, formatDate } from "../api.js";
 import { escapeHtml, urls, paginationHtml, showLoading, showError } from "../ui.js";
 import { requireAdmin } from "./guard.js";
@@ -38,7 +37,7 @@ const state = {
   authors: new Map(),
 };
 
-const editUrl = (id) => `${SITE_BASE}admin/post-edit.html?id=${encodeURIComponent(id)}`;
+const editUrl = (id) => `/admin/post-edit.html?id=${encodeURIComponent(id)}`;
 
 /* ---------------- URL state ---------------- */
 
@@ -59,7 +58,7 @@ function hrefFor(f) {
   if (f.q) p.set("q", f.q);
   if (f.page > 1) p.set("page", String(f.page));
   const qs = p.toString();
-  return `${SITE_BASE}admin/posts.html${qs ? `?${qs}` : ""}`;
+  return `/admin/posts.html${qs ? `?${qs}` : ""}`;
 }
 
 function update(changes, { push = true } = {}) {
@@ -151,7 +150,7 @@ function render() {
     els.list.innerHTML = `
       <div class="empty-block">
         <p>No posts yet. Your first post will appear on the website once you publish it.</p>
-        <a class="button" href="${SITE_BASE}admin/post-edit.html">Write the first post</a>
+        <a class="button" href="/admin/post-edit.html">Write the first post</a>
       </div>`;
     return;
   }
@@ -163,7 +162,7 @@ function render() {
     els.list.innerHTML = `
       <div class="empty-block">
         <p>No posts match these filters.</p>
-        <a class="button button--quiet" href="${SITE_BASE}admin/posts.html" data-clear>Clear filters</a>
+        <a class="button button--quiet" href="/admin/posts.html" data-clear>Clear filters</a>
       </div>`;
     return;
   }

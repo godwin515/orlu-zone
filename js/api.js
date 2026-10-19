@@ -1,5 +1,5 @@
 /**
- * Orlu Community API client
+ * Orlu Zone API client
  * Framework-free ES module. Import it with:
  *   <script type="module"> import { api } from "./api.js"; </script>
  *
@@ -8,7 +8,6 @@
  * the bottom. When the backend adds a fix, change the adapter only.
  */
 
-import { SITE_BASE } from "./config.js";
 import { API_ORIGIN, API_PREFIX } from "./config.js";
 
 // Kept as exports for older imports; the values live in js/config.js.
@@ -494,7 +493,12 @@ export function documentDownloadUrl(doc) {
  * reading the file (e.g. CORS), resolves "fallback" so the caller can just
  * open the link instead.
  */
-export async function downloadDocument(doc, { fallbackName = "document" } = {}) {
+/**
+ * Fetch a document's PDF. Resolves { blob, filename }, or "missing" (404:
+ * withdrawn or unpublished since the list loaded), or "fallback" when the
+ * browser can't read the file (e.g. CORS). Throws ApiError for other failures.
+ */
+export async function fetchDocumentFile(doc, { fallbackName = "document" } = {}) {
   const href = documentDownloadUrl(doc);
   if (!href) return "missing";
 
@@ -516,8 +520,8 @@ export async function downloadDocument(doc, { fallbackName = "document" } = {}) 
   if (!response.ok) {
     const message =
       response.status === 503
-        ? "Downloads are temporarily unavailable. Please try again shortly."
-        : `The download failed (${response.status}). Please try again.`;
+        ? "Documents are temporarily unavailable. Please try again shortly."
+        : `The document couldn't be loaded (${response.status}). Please try again.`;
     throw new ApiError(response.status, message);
   }
 
@@ -530,7 +534,14 @@ export async function downloadDocument(doc, { fallbackName = "document" } = {}) 
     filename = /\.pdf$/i.test(safe) ? safe : `${safe}.pdf`;
   }
 
-  const blob = await response.blob();
+  // Label it as a PDF so the browser's viewer opens it, whatever the server said.
+  const raw = await response.blob();
+  const blob = raw.type === "application/pdf" ? raw : new Blob([raw], { type: "application/pdf" });
+  return { blob, filename };
+}
+
+/** Save a fetched PDF to the visitor's device. */
+export function saveDocumentFile({ blob, filename }) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -539,6 +550,16 @@ export async function downloadDocument(doc, { fallbackName = "document" } = {}) 
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+/**
+ * Download a document's PDF without leaving the page.
+ * Resolves "downloaded", "missing" or "fallback" (see fetchDocumentFile).
+ */
+export async function downloadDocument(doc, opts = {}) {
+  const file = await fetchDocumentFile(doc, opts);
+  if (typeof file === "string") return file;
+  saveDocumentFile(file);
   return "downloaded";
 }
 
@@ -551,7 +572,7 @@ let categoryCache = null;
 
 export const adapters = {
   // GAP: SiteResponse has no logo_url. Replace with site.logo_url later.
-  LOGO_FALLBACK: `${SITE_BASE}assets/logo.png`,
+  LOGO_FALLBACK: "/assets/logo.png",
   logoUrl(site) {
     return site?.logo_url || this.LOGO_FALLBACK;
   },

@@ -6,7 +6,6 @@
  * footer from the site settings so contact details live in one place.
  */
 
-import { SITE_BASE } from "./config.js";
 import { api, adapters, ApiError, formatDate } from "./api.js";
 
 /* ------------------------------------------------------------------ */
@@ -37,19 +36,19 @@ export function safeUrl(url) {
 /* ------------------------------------------------------------------ */
 
 export const urls = {
-  home: () => `${SITE_BASE}index.html`,
-  posts: () => `${SITE_BASE}posts.html`,
-  post: (slug) => `${SITE_BASE}post.html?slug=${encodeURIComponent(slug)}`,
-  events: () => `${SITE_BASE}events.html`,
-  event: (slug) => `${SITE_BASE}event.html?slug=${encodeURIComponent(slug)}`,
+  home: () => "/index.html",
+  posts: () => "/posts.html",
+  post: (slug) => `/post.html?slug=${encodeURIComponent(slug)}`,
+  events: () => "/events.html",
+  event: (slug) => `/event.html?slug=${encodeURIComponent(slug)}`,
   // Category pages are the news list filtered by category.
-  category: (slug) => `${SITE_BASE}posts.html?category=${encodeURIComponent(slug)}`,
-  gallery: () => `${SITE_BASE}gallery.html`,
-  about: () => `${SITE_BASE}about.html`,
-  profiles: () => `${SITE_BASE}profiles.html`,
-  documents: () => `${SITE_BASE}documents.html`,
-  contact: () => `${SITE_BASE}contact.html`,
-  search: (q) => `${SITE_BASE}search.html?q=${encodeURIComponent(q)}`,
+  category: (slug) => `/posts.html?category=${encodeURIComponent(slug)}`,
+  gallery: () => "/gallery.html",
+  about: () => "/about.html",
+  profiles: () => "/profiles.html",
+  documents: () => "/documents.html",
+  contact: () => "/contact.html",
+  search: (q) => `/search.html?q=${encodeURIComponent(q)}`,
 };
 
 export function getParam(name) {
@@ -62,8 +61,8 @@ export function getParam(name) {
 
 // The public site is green, so it uses the dark placeholder; the admin keeps the light one.
 export const PLACEHOLDER_IMAGE = document.body?.classList.contains("admin")
-  ? `${SITE_BASE}assets/images/placeholder.svg`
-  : `${SITE_BASE}assets/images/placeholder-dark.svg`;
+  ? "/assets/images/placeholder.svg"
+  : "/assets/images/placeholder-dark.svg";
 
 /** Featured image for a post or event, with a placeholder fallback. */
 export function featuredImage(item) {
@@ -290,8 +289,8 @@ const NAV = [
 ];
 
 const MENU_EXTRA = [
-  { label: "Invest at home", href: `${SITE_BASE}about.html#invest` },
-  { label: "Who's Who categories", href: `${SITE_BASE}index.html#whoswho-title` },
+  { label: "Invest at home", href: "/about.html#invest" },
+  { label: "Who's Who categories", href: "/index.html#whoswho-title" },
 ];
 
 let searchListenerAdded = false;
@@ -299,11 +298,8 @@ let searchListenerAdded = false;
 function renderHeader(site) {
   const header = document.querySelector("[data-site-header]");
   if (!header) return;
-  // Page address relative to the site root ("/events.html"), so menu
-  // highlighting works on GitHub Pages (/orlu-zone/...) as well as locally.
-  const fullPath = window.location.pathname;
-  const path = fullPath.startsWith(SITE_BASE) ? `/${fullPath.slice(SITE_BASE.length)}` : fullPath;
-  const name = site?.community_name || "Orlu Community";
+  const path = window.location.pathname;
+  const name = site?.community_name || "Orlu Zone";
   const currentQ = path === "/search.html" ? getParam("q") || "" : "";
 
   // The header renders twice (defaults, then real site settings). Remember
@@ -349,7 +345,7 @@ function renderHeader(site) {
         </button>
       </div>
 
-      <form class="search-box" id="site-search-form" action="${SITE_BASE}search.html" method="get" role="search">
+      <form class="search-box" id="site-search-form" action="/search.html" method="get" role="search">
         <label class="visually-hidden" for="site-search">Search news and events</label>
         <input id="site-search" name="q" type="search" placeholder="Search news and events"
           value="${escapeHtml(currentQ)}" autocomplete="off" required>
@@ -458,13 +454,13 @@ const FOOTER_LINKS = {
     { label: "News", href: urls.posts() },
     { label: "Events", href: urls.events() },
     { label: "Gallery", href: urls.gallery() },
-    { label: "Search", href: `${SITE_BASE}search.html` },
+    { label: "Search", href: "/search.html" },
   ],
   community: [
     { label: "About Orlu Zone", href: urls.about() },
     { label: "Leadership", href: urls.profiles() },
     { label: "Documents", href: urls.documents() },
-    { label: "Invest at home", href: `${SITE_BASE}about.html#invest` },
+    { label: "Invest at home", href: "/about.html#invest" },
     { label: "Contact", href: urls.contact() },
   ],
 };
@@ -479,7 +475,7 @@ const MOTTO = "Documenting historical greatness, legacies that inspire generatio
 function renderFooter(site) {
   const footer = document.querySelector("[data-site-footer]");
   if (!footer) return;
-  const name = site?.community_name || "Orlu Community";
+  const name = site?.community_name || "Orlu Zone";
   const whatsapp = site?.whatsapp_url && safeUrl(site.whatsapp_url);
   // Contact details come from Site settings in the admin; only what's filled in shows.
   const contact = [
@@ -529,7 +525,7 @@ function renderFooter(site) {
     </div>
 
     <div class="footer__bottom">
-      <p>&copy; ${new Date().getFullYear()} ${escapeHtml(name)}. Orlu Zone, Imo West Senatorial District, Imo State.</p>
+      <p>&copy; ${new Date().getFullYear()} ${escapeHtml(name)}. Imo West Senatorial District, Imo State, Nigeria.</p>
       <a class="footer__top-link" href="#main">Back to top</a>
     </div>`;
 }

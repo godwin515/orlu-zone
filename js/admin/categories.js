@@ -11,7 +11,6 @@
  * to warn before deleting one that's in use.
  */
 
-import { SITE_BASE } from "../config.js";
 import { admin, ApiError } from "../api.js";
 import { escapeHtml, urls, showLoading, showError } from "../ui.js";
 import { requireAdmin } from "./guard.js";
@@ -137,7 +136,7 @@ function renderList() {
                   ${c.description ? `<span class="cell-desc">${escapeHtml(c.description)}</span>` : ""}
                 </td>
                 <td data-label="Posts">
-                  ${count ? `<a href="${SITE_BASE}admin/posts.html?category=${encodeURIComponent(c.id)}">${count}</a>` : "0"}
+                  ${count ? `<a href="/admin/posts.html?category=${encodeURIComponent(c.id)}">${count}</a>` : "0"}
                 </td>
                 <td class="cell-actions">
                   <button class="link-button" type="button" data-edit="${escapeHtml(c.id)}">Edit</button>

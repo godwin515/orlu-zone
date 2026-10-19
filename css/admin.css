@@ -229,6 +229,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  overflow-y: auto; /* short screens: the sidebar scrolls so Sign out is reachable */
   background: var(--palm-deep);
   color: #fff;
 }
@@ -400,7 +401,7 @@
 /* Phones and small tablets: sidebar becomes a top bar with a menu */
 @media (max-width: 900px) {
   .admin-shell {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .admin-nav {
@@ -857,6 +858,7 @@ select.field__input {
 
   .data-table thead {
     position: absolute;
+    display: block; /* so its hidden cells can't widen the page */
     width: 1px;
     height: 1px;
     overflow: hidden;
@@ -2511,5 +2513,36 @@ button.status-tabs__tab {
 
   .doc-table td {
     border-bottom: 0;
+  }
+}
+
+/* Documents: the table needs the full width on laptops, so the upload form
+   moves above the list below 1200px (other split pages switch at 1000px) */
+@media (max-width: 1200px) {
+  .split:has(.doc-table),
+  .split:has([data-documents]) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .split:has([data-documents]) .split__side {
+    position: static;
+    order: -1;
+  }
+}
+
+@media (max-width: 720px) {
+  .doc-table .cell-title {
+    min-width: 0;
+  }
+
+  /* Edit / Publish / Open wrap onto two lines on the narrowest phones */
+  .doc-table .cell-actions {
+    flex-wrap: wrap;
+    row-gap: 0;
+    white-space: normal;
+  }
+
+  .doc-table .cell-actions .link-button {
+    margin-bottom: 0.15rem;
   }
 }

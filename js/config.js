@@ -13,10 +13,3 @@
 
 export const API_ORIGIN = "https://orlu-land-community-api.onrender.com";
 export const API_PREFIX = "/api/v1";
-
-/**
- * Where the website itself lives: "/" locally or on a custom domain,
- * "/orlu-zone/" on GitHub Pages. Worked out from this file's own address,
- * so it never needs editing. Use it for every link to a page or asset.
- */
-export const SITE_BASE = new URL("../", import.meta.url).pathname;

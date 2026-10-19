@@ -11,7 +11,6 @@
  * media picker (choose from the library or upload).
  */
 
-import { SITE_BASE } from "../config.js";
 import { admin, ApiError } from "../api.js";
 import { escapeHtml, safeUrl, urls, showLoading, showError } from "../ui.js";
 import { renderContent, enhanceContent } from "../content.js";
@@ -399,7 +398,7 @@ form.addEventListener("submit", async (e) => {
 
     if (isNew) {
       flash(message);
-      window.location.replace(`${SITE_BASE}admin/post-edit.html?id=${encodeURIComponent(saved.id)}`);
+      window.location.replace(`/admin/post-edit.html?id=${encodeURIComponent(saved.id)}`);
       return;
     }
 
@@ -431,7 +430,7 @@ async function deletePost() {
     await admin.posts.remove(postId);
     state.dirty = false;
     flash("Post deleted");
-    window.location.replace(`${SITE_BASE}admin/posts.html`);
+    window.location.replace("/admin/posts.html");
   } catch (error) {
     toast(error.message || "Couldn't delete the post.", "error");
   }
@@ -550,7 +549,7 @@ async function load() {
       els.loadState.innerHTML = `
         <div class="empty-block">
           <p>This post doesn't exist. It may have been deleted.</p>
-          <a class="button" href="${SITE_BASE}admin/posts.html">Back to posts</a>
+          <a class="button" href="/admin/posts.html">Back to posts</a>
         </div>`;
       return;
     }
