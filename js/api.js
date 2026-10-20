@@ -1,5 +1,5 @@
 /**
- * Orlu Zone API client
+ * Orlu Land Compendium API client
  * Framework-free ES module. Import it with:
  *   <script type="module"> import { api } from "./api.js"; </script>
  *

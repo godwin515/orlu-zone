@@ -7,6 +7,8 @@
  */
 
 import { api, adapters, ApiError, formatDate } from "./api.js";
+import { SOCIAL, socialLinks, handleFrom } from "./social.js";
+import { initEmailChooser } from "./email-chooser.js";
 
 /* ------------------------------------------------------------------ */
 /* Safety                                                              */
@@ -299,7 +301,7 @@ function renderHeader(site) {
   const header = document.querySelector("[data-site-header]");
   if (!header) return;
   const path = window.location.pathname;
-  const name = site?.community_name || "Orlu Zone";
+  const name = site?.community_name || "Orlu Land Compendium";
   const currentQ = path === "/search.html" ? getParam("q") || "" : "";
 
   // The header renders twice (defaults, then real site settings). Remember
@@ -475,7 +477,7 @@ const MOTTO = "Documenting historical greatness, legacies that inspire generatio
 function renderFooter(site) {
   const footer = document.querySelector("[data-site-footer]");
   if (!footer) return;
-  const name = site?.community_name || "Orlu Zone";
+  const name = site?.community_name || "Orlu Land Compendium";
   const whatsapp = site?.whatsapp_url && safeUrl(site.whatsapp_url);
   // Contact details come from Site settings in the admin; only what's filled in shows.
   const contact = [
@@ -485,6 +487,17 @@ function renderFooter(site) {
     `<li><span class="footer__label">Address</span>${escapeHtml(site?.address || "Orlu Zone, Imo State, Nigeria")}</li>`,
   ].filter(Boolean);
   const links = (list) => list.map((i) => `<li><a href="${i.href}">${i.label}</a></li>`).join("");
+  // Social media logos (WhatsApp from Site settings, the rest from js/config.js).
+  const social = socialLinks(site);
+  const socialRow = social.length
+    ? `<ul class="footer__social" aria-label="Follow us">${social
+        .map(
+          ([network, url]) => `<li><a class="footer__social-link footer__social-link--${network}" href="${escapeHtml(url)}"
+            target="_blank" rel="noopener" aria-label="${escapeHtml(SOCIAL[network].name)}: ${escapeHtml(handleFrom(network, url))}"
+            title="${escapeHtml(SOCIAL[network].name)}">${SOCIAL[network].svg}</a></li>`,
+        )
+        .join("")}</ul>`
+    : "";
 
   footer.innerHTML = `
     <svg class="footer__wave" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true">
@@ -504,6 +517,7 @@ function renderFooter(site) {
       <div class="footer__about">
         <h2 class="footer__heading">About us</h2>
         <p>${escapeHtml(site?.description || "News, events and the people of Orlu Zone, for everyone at home and in the diaspora.")}</p>
+        ${socialRow ? `<p class="footer__label footer__social-label">Follow us</p>${socialRow}` : ""}
       </div>
       <nav class="footer__col" aria-labelledby="footer-explore">
         <h2 class="footer__heading" id="footer-explore">Explore</h2>
@@ -534,6 +548,7 @@ function renderFooter(site) {
 export function renderShell(site = null) {
   renderHeader(site);
   renderFooter(site);
+  initEmailChooser(); // email links open a Gmail / Outlook / app / copy menu
 }
 
 /**
@@ -551,6 +566,7 @@ export async function initShell(site = null) {
   }
   renderHeader(site);
   renderFooter(site);
+  initEmailChooser();
   if (site?.community_name) {
     const page = document.title.split("|")[0].trim();
     document.title = page && page !== site.community_name ? `${page} | ${site.community_name}` : site.community_name;

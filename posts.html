@@ -23,7 +23,7 @@
 
   <header class="site-header" data-site-header></header>
 
-  <main id="main">
+  <main id="main" class="news-page">
     <header class="page-header">
       <div class="container">
         <h1 class="page-header__title" data-page-title>News</h1>
@@ -32,8 +32,15 @@
     </header>
 
     <div class="section container">
+      <div class="group-title page-intro">
+        <div class="group-title__row">
+          <span class="group-title__rule" aria-hidden="true"></span>
+          <h2 class="group-title__name" data-section-title>Latest from the Zone</h2>
+          <span class="group-title__rule" aria-hidden="true"></span>
+        </div>
+      </div>
       <nav class="filters" aria-label="Filter news by category" data-filters></nav>
-      <p class="list-count" aria-live="polite" data-count></p>
+      <p class="visually-hidden" aria-live="polite" data-count></p>
       <div data-posts></div>
       <nav class="pagination" aria-label="News pages" data-pagination></nav>
     </div>

@@ -36,7 +36,7 @@ const els = {
 /* ---------------- Rendering ---------------- */
 
 function renderHero(site) {
-  if (site?.community_name) els.heroTitle.textContent = site.community_name;
+  // The hero title stays "Orlu Zone" (set in index.html); the site name shows in the header and footer.
   if (site?.description) els.heroDescription.textContent = site.description;
 }
 

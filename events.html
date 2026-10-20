@@ -23,7 +23,7 @@
 
   <header class="site-header" data-site-header></header>
 
-  <main id="main">
+  <main id="main" class="events-page">
     <header class="page-header">
       <div class="container">
         <h1 class="page-header__title">Events</h1>
@@ -32,13 +32,20 @@
     </header>
 
     <div class="section container">
+      <div class="group-title page-intro">
+        <div class="group-title__row">
+          <span class="group-title__rule" aria-hidden="true"></span>
+          <h2 class="group-title__name" data-section-title>Gatherings of the Zone</h2>
+          <span class="group-title__rule" aria-hidden="true"></span>
+        </div>
+      </div>
       <nav class="filters" aria-label="Show upcoming or past events" data-tabs>
         <ul class="filters__list">
           <li><a class="chip" href="/events.html" data-when="upcoming">Upcoming</a></li>
           <li><a class="chip" href="/events.html?when=past" data-when="past">Past</a></li>
         </ul>
       </nav>
-      <p class="list-count" aria-live="polite" data-count></p>
+      <p class="visually-hidden" aria-live="polite" data-count></p>
       <div data-events></div>
       <nav class="pagination" aria-label="Past event pages" data-pagination></nav>
     </div>

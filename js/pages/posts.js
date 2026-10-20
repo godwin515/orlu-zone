@@ -12,11 +12,13 @@
  * stay shareable and the back button works.
  */
 
-import { api, adapters } from "../api.js";
+import { api, adapters, formatDate } from "../api.js";
 import {
   escapeHtml,
+  safeUrl,
   urls,
-  postEntry,
+  summary,
+  featuredImage,
   paginationHtml,
   renderShell,
   initShell,
@@ -34,6 +36,7 @@ const els = {
   filters: document.querySelector("[data-filters]"),
   count: document.querySelector("[data-count]"),
   posts: document.querySelector("[data-posts]"),
+  sectionTitle: document.querySelector("[data-section-title]"),
   pagination: document.querySelector("[data-pagination]"),
 };
 
@@ -85,7 +88,31 @@ function renderFilters(activeSlug) {
   els.filters.innerHTML = `<ul class="filters__list">${chip("All news", "")}${cats.map((c) => chip(c.name, c.slug)).join("")}</ul>`;
 }
 
+/* One news card. The lead card (newest story on the first page of
+   "All news") is wider, with the photo beside the text. */
+function newsCard(post, category, { lead = false } = {}) {
+  const date = post.published_at || post.created_at;
+  const href = urls.post(post.slug);
+  return `
+    <article class="news-card${lead ? " news-card--lead" : ""}">
+      <a class="news-card__media" href="${href}" tabindex="-1" aria-hidden="true">
+        <img src="${safeUrl(featuredImage(post))}" alt="" loading="${lead ? "eager" : "lazy"}">
+        ${lead ? `<span class="news-card__flag">Latest story</span>` : ""}
+      </a>
+      <div class="news-card__body">
+        <p class="news-card__meta">
+          ${category ? `<a class="news-card__category" href="${urls.category(category.slug)}">${escapeHtml(category.name)}</a>` : ""}
+          ${date ? `<time datetime="${escapeHtml(date)}">${escapeHtml(formatDate(date))}</time>` : ""}
+        </p>
+        <h3 class="news-card__title"><a class="news-card__link" href="${href}">${escapeHtml(post.title)}</a></h3>
+        <p class="news-card__summary">${escapeHtml(summary(post, lead ? 260 : 150))}</p>
+        <span class="news-card__more" aria-hidden="true">Read story <span class="news-card__arrow">→</span></span>
+      </div>
+    </article>`;
+}
+
 function renderHeading(category) {
+  if (els.sectionTitle) els.sectionTitle.textContent = category ? category.name : "Latest from the Zone";
   els.title.textContent = category ? category.name : "News";
   els.lead.textContent = category?.description || (category ? "" : DEFAULT_LEAD);
   els.lead.hidden = !els.lead.textContent;
@@ -162,9 +189,12 @@ function render({ scroll = false } = {}) {
       ? `Showing ${from}–${to} of ${result.total} posts`
       : `${result.total} ${result.total === 1 ? "post" : "posts"}`;
 
+  const withLead = !slug && result.page === 1 && result.results.length > 2;
   els.posts.innerHTML = `
-    <div class="post-grid">
-      ${result.results.map((p) => postEntry(p, state.categoryById.get(p.category_id) || null)).join("")}
+    <div class="news-grid">
+      ${result.results
+        .map((p, i) => newsCard(p, state.categoryById.get(p.category_id) || null, { lead: withLead && i === 0 }))
+        .join("")}
     </div>`;
 
   els.pagination.innerHTML = paginationHtml(result, (n) => hrefFor({ category: slug, page: n }));

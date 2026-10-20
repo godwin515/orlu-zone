@@ -27,19 +27,45 @@
 
   <header class="site-header" data-site-header></header>
 
-  <main id="main">
+  <main id="main" class="contact-page">
     <header class="page-header">
       <div class="container">
         <h1 class="page-header__title" data-page-title>Contact us</h1>
+        <p class="page-header__lead">Questions about the Compendium of Honour, nominations, events or investing at home? We'd love to hear from you.</p>
       </div>
     </header>
 
-    <div class="section container page-body page-body--contact">
-      <section class="contact-panel" aria-labelledby="reach-us">
-        <h2 id="reach-us" class="contact-panel__title">Reach us</h2>
-        <div data-contact></div>
+    <div class="section container">
+      <div class="group-title page-intro">
+        <div class="group-title__row">
+          <span class="group-title__rule" aria-hidden="true"></span>
+          <h2 class="group-title__name">Get in touch</h2>
+          <span class="group-title__rule" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <!-- WhatsApp, email, phone and address cards, from Site settings -->
+      <div data-contact></div>
+
+      <!-- Map of the address -->
+      <div data-contact-map></div>
+
+      <!-- Social media: WhatsApp from Site settings, the rest from js/config.js -->
+      <div data-social></div>
+
+      <!-- Quick links -->
+      <section class="contact-help" aria-labelledby="help-title">
+        <h2 class="contact-help__title" id="help-title">Looking for something?</h2>
+        <ul class="contact-help__list">
+          <li><a class="contact-help__link" href="/documents.html"><span>Nomination and data capture forms</span><span aria-hidden="true">→</span></a></li>
+          <li><a class="contact-help__link" href="/about.html#compendium"><span>About the Compendium of Honour</span><span aria-hidden="true">→</span></a></li>
+          <li><a class="contact-help__link" href="/events.html"><span>Upcoming events</span><span aria-hidden="true">→</span></a></li>
+          <li><a class="contact-help__link" href="/about.html#invest"><span>Invest at home: Aku Ruo Ulo</span><span aria-hidden="true">→</span></a></li>
+        </ul>
       </section>
-      <div data-page-content></div>
+
+      <!-- Text from Admin → Pages → "contact" (opening hours, notes) -->
+      <div class="contact-note" data-page-content></div>
     </div>
   </main>
 

@@ -60,29 +60,37 @@ function go(next) {
 
 /* ---------------- Rendering ---------------- */
 
+const ICON_CLOCK = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`;
+const ICON_PIN = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>`;
+
+/* One event: a gold date tablet, the details, and the photo (if any). */
 function eventCard(event) {
   const cancelled = event.status === "cancelled";
   const day = formatDate(event.start_at, { dateStyle: undefined, day: "numeric" });
   const month = formatDate(event.start_at, { dateStyle: undefined, month: "short" });
+  const weekday = formatDate(event.start_at, { dateStyle: undefined, weekday: "short" });
   const blurb = summary(event, 200);
+  const href = urls.event(event.slug);
 
   return `
-    <article class="event-card${cancelled ? " is-cancelled" : ""}">
-      <time class="date-badge" datetime="${escapeHtml(event.start_at)}">
-        <span class="date-badge__day">${escapeHtml(day)}</span>
-        <span class="date-badge__month">${escapeHtml(month)}</span>
+    <article class="ev-card${cancelled ? " is-cancelled" : ""}${event.featured_media_url ? " has-media" : ""}">
+      <time class="ev-date" datetime="${escapeHtml(event.start_at)}">
+        <span class="ev-date__weekday">${escapeHtml(weekday)}</span>
+        <span class="ev-date__day">${escapeHtml(day)}</span>
+        <span class="ev-date__month">${escapeHtml(month)}</span>
       </time>
-      <div class="event-card__body">
-        <h3 class="event-card__title"><a href="${urls.event(event.slug)}">${escapeHtml(event.title)}</a></h3>
-        <dl class="event-card__details">
-          ${cancelled ? `<div><dt class="visually-hidden">Status</dt><dd class="event-card__status">Cancelled</dd></div>` : ""}
-          <div><dt class="visually-hidden">When</dt><dd>${escapeHtml(eventWhen(event))}</dd></div>
-          ${event.location ? `<div><dt class="visually-hidden">Where</dt><dd>${escapeHtml(event.location)}</dd></div>` : ""}
+      <div class="ev-card__body">
+        ${cancelled ? `<p class="ev-card__status">Cancelled</p>` : ""}
+        <h3 class="ev-card__title"><a class="ev-card__link" href="${href}">${escapeHtml(event.title)}</a></h3>
+        <dl class="ev-card__details">
+          <div><dt class="visually-hidden">When</dt><dd>${ICON_CLOCK}<span>${escapeHtml(eventWhen(event))}</span></dd></div>
+          ${event.location ? `<div><dt class="visually-hidden">Where</dt><dd>${ICON_PIN}<span>${escapeHtml(event.location)}</span></dd></div>` : ""}
         </dl>
-        ${blurb ? `<p class="event-card__summary">${escapeHtml(blurb)}</p>` : ""}
+        ${blurb ? `<p class="ev-card__summary">${escapeHtml(blurb)}</p>` : ""}
+        <span class="ev-card__more" aria-hidden="true">View details <span class="ev-card__arrow">→</span></span>
       </div>
       ${event.featured_media_url ? `
-        <a class="event-card__media" href="${urls.event(event.slug)}" tabindex="-1" aria-hidden="true">
+        <a class="ev-card__media" href="${href}" tabindex="-1" aria-hidden="true">
           <img src="${safeUrl(event.featured_media_url)}" alt="" loading="lazy">
         </a>` : ""}
     </article>`;
@@ -99,15 +107,19 @@ function byMonth(events) {
   return [...groups.entries()]
     .map(
       ([month, list]) => `
-      <section class="month-group">
-        <h2 class="month-group__title">${escapeHtml(month)}</h2>
-        <div class="event-stack">${list.map(eventCard).join("")}</div>
+      <section class="ev-month">
+        <h2 class="ev-month__title"><span>${escapeHtml(month)}</span>
+          <span class="ev-month__count">${list.length} ${list.length === 1 ? "event" : "events"}</span></h2>
+        <div class="ev-stack">${list.map(eventCard).join("")}</div>
       </section>`,
     )
     .join("");
 }
 
+const sectionTitle = document.querySelector("[data-section-title]");
+
 function setTabs(when) {
+  if (sectionTitle) sectionTitle.textContent = when === "past" ? "Past gatherings" : "Upcoming gatherings";
   els.tabs.querySelectorAll("a[data-when]").forEach((a) => {
     if (a.dataset.when === when) a.setAttribute("aria-current", "page");
     else a.removeAttribute("aria-current");
@@ -147,7 +159,7 @@ function render({ scroll = false } = {}) {
         result.total_pages > 1
           ? `Showing ${from}–${to} of ${result.total} past events`
           : `${result.total} past ${result.total === 1 ? "event" : "events"}`;
-      els.events.innerHTML = `<div class="event-stack">${result.results.map(eventCard).join("")}</div>`;
+      els.events.innerHTML = `<div class="ev-stack">${result.results.map(eventCard).join("")}</div>`;
       els.pagination.innerHTML = paginationHtml(result, (n) => hrefFor({ when, page: n }));
     }
   }
