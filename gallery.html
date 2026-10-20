@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Gallery</title>
-  <meta name="description" content="Photos from events and everyday life in the Orlu community.">
+  <meta name="description" content="Photos from events and everyday life across Orlu Zone.">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,7 +31,14 @@
     </header>
 
     <div class="section container">
-      <p class="list-count" aria-live="polite" data-count></p>
+      <div class="group-title gallery-intro">
+        <div class="group-title__row">
+          <span class="group-title__rule" aria-hidden="true"></span>
+          <h2 class="group-title__name">Moments of the Zone</h2>
+          <span class="group-title__rule" aria-hidden="true"></span>
+        </div>
+        <p class="group-title__count" aria-live="polite" data-count></p>
+      </div>
       <div class="gallery-page" data-gallery></div>
       <div class="load-more" data-load-more hidden>
         <button type="button" class="button button--quiet" data-load-more-button>Show more photos</button>

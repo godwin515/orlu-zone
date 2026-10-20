@@ -455,7 +455,8 @@ export const admin = {
     update: (id, data) => request(`/admin/documents/${enc(id)}`, { method: "PATCH", body: data, authed: true }),
     publish: (id) => request(`/admin/documents/${enc(id)}/publish`, { method: "POST", authed: true }),
     withdraw: (id) => request(`/admin/documents/${enc(id)}/withdraw`, { method: "POST", authed: true }),
-    // There is no permanent-delete endpoint.
+    // Permanently delete: removes the record and its stored PDF (204). Can't be undone.
+    remove: (id) => request(`/admin/documents/${enc(id)}`, { method: "DELETE", authed: true }),
   },
 
   site: {

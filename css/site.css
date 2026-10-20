@@ -4167,6 +4167,247 @@ html:has(.pdf-viewer[open]) {
   display: none;
 }
 
+/* ---------------- Gallery page ----------------
+ * Every photo gets the same frame, whatever its shape: a square window
+ * (the full photo shows in the viewer), a gold border with a thin outer
+ * gold ring like the Leadership portraits, a numbered caption plate, and
+ * a gentle rise into view. New uploads pick this up automatically.
+ */
+.gallery-intro {
+  margin-bottom: var(--space-7);
+}
+
+.gallery-wall {
+  --gap: clamp(1.5rem, 3vw, 2.5rem);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gallery-card {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 calc((100% - 2 * var(--gap)) / 3);
+  min-width: 0;
+}
+
+/* The box around each photo and its caption plate: no border line,
+   a white shadow glowing all round */
+.gallery-card__box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: clamp(1rem, 2vw, 1.4rem) clamp(1rem, 2vw, 1.4rem) var(--space-5);
+  border: 0;
+  border-radius: 36px;
+  background: var(--brand); /* the same dark green as the homepage */
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 0 26px rgba(255, 255, 255, 0.35),
+    0 12px 28px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 0.35s;
+}
+
+.gallery-card:hover .gallery-card__box,
+.gallery-card:focus-within .gallery-card__box {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.3),
+    0 0 38px rgba(255, 255, 255, 0.5),
+    0 16px 34px rgba(0, 0, 0, 0.32);
+}
+
+@media (max-width: 960px) {
+  .gallery-card {
+    flex-basis: calc((100% - var(--gap)) / 2);
+  }
+}
+
+@media (max-width: 560px) {
+  .gallery-card {
+    flex-basis: 100%;
+    max-width: 26rem;
+  }
+}
+
+/* The frame: one thin white line around the photo */
+.gallery-wall .gallery-card__frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  margin: 8px; /* room for the outer ring */
+  overflow: hidden;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  border-radius: 24px;
+  background: #0f2f1e;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
+  transition: box-shadow 0.35s, transform 0.35s;
+}
+
+.gallery-wall .gallery-card__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%; /* keeps faces in view on tall photos */
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Shade and "View" badge, shown on hover and keyboard focus */
+.gallery-card__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 45%, rgba(8, 28, 18, 0.75));
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.gallery-card__view {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--brand);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 10px);
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+.gallery-card__view svg {
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.gallery-card__frame:hover,
+.gallery-card__frame:focus-visible {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 24px 6px rgba(255, 255, 255, 0.22),
+    0 24px 44px rgba(0, 0, 0, 0.5);
+}
+
+.gallery-card__frame:hover img,
+.gallery-card__frame:focus-visible img {
+  transform: scale(1.06);
+}
+
+.gallery-card__frame:hover::after,
+.gallery-card__frame:focus-visible::after,
+.gallery-card__frame:hover .gallery-card__view,
+.gallery-card__frame:focus-visible .gallery-card__view {
+  opacity: 1;
+}
+
+.gallery-card__frame:hover .gallery-card__view,
+.gallery-card__frame:focus-visible .gallery-card__view {
+  transform: translate(-50%, 0);
+}
+
+/* Caption plate: gold number between diamonds, then the caption */
+.gallery-card__plate {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-4);
+  text-align: center;
+}
+
+.gallery-card__number {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.gallery-card__number::before,
+.gallery-card__number::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+
+.gallery-card__caption {
+  max-width: 30ch;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.45;
+}
+
+/* Rise into view as you scroll (skipped for reduced motion) */
+.gallery-wall.is-animated .gallery-card {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--delay, 0s);
+}
+
+.gallery-wall.is-animated .gallery-card.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-wall .gallery-card__frame,
+  .gallery-wall .gallery-card__frame img,
+  .gallery-card__view {
+    transition: none;
+  }
+
+  .gallery-card__frame:hover,
+  .gallery-card__frame:focus-visible,
+  .gallery-card__frame:hover img,
+  .gallery-card__frame:focus-visible img {
+    transform: none;
+  }
+}
+
+/* Touch screens have no hover: keep a small badge visible */
+@media (hover: none) {
+  .gallery-card__view {
+    left: auto;
+    right: var(--space-3);
+    bottom: var(--space-3);
+    padding: 0.5rem;
+    opacity: 0.92;
+    transform: none;
+  }
+
+  .gallery-card__view span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+}
+
 /* ---------------- Phone type standard ----------------
  * On small screens, big bold display text looks heavy. Headings step down
  * to semi-bold and smaller sizes; buttons, labels and links to medium.

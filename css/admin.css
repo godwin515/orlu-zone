@@ -2490,6 +2490,12 @@ button.status-tabs__tab {
   font-size: var(--step--1);
 }
 
+.doc-state__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
 /* Wide enough titles beside the form: actions stack instead of taking a wide column */
 .doc-table .cell-title {
   min-width: 15rem;

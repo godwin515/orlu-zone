@@ -7,9 +7,10 @@
  * PATCH /admin/documents/{id}               edit title / description (only what changed)
  * POST  /admin/documents/{id}/publish       show it on the website (200)
  * POST  /admin/documents/{id}/withdraw      take it off the website; it stays stored (200)
+ * DELETE /admin/documents/{id}              delete it and its PDF for good (204)
  *
- * There is no delete, and the PDF of an existing document can't be replaced:
- * to update a file, upload the new version and withdraw the old one.
+ * The PDF of an existing document can't be replaced: to update a file,
+ * upload the new version and withdraw or delete the old one.
  * After every change the list is reloaded from the server.
  */
 
@@ -60,7 +61,7 @@ const state = {
   titleTouched: false, // stop auto-filling the title once the admin types one
   formDirty: false,
   busy: false, // a save or upload is running
-  acting: new Set(), // ids with a publish/withdraw in flight
+  acting: new Set(), // ids with a publish/withdraw/delete in flight
 };
 
 const editing = () => state.docs.find((d) => d.id === state.editingId) || null;
@@ -194,6 +195,8 @@ function actionsHtml(doc) {
     <button type="button" class="link-button" data-edit="${escapeHtml(doc.id)}"
       aria-label="Edit ${escapeHtml(doc.title)}">Edit</button>
     ${toggle}
+    <button type="button" class="link-button link-button--danger" data-delete="${escapeHtml(doc.id)}" ${dis}
+      aria-label="Delete ${escapeHtml(doc.title)} permanently">Delete</button>
     ${open}`;
 }
 
@@ -293,7 +296,10 @@ function renderDocState() {
         }</button>`;
   els.docState.innerHTML = `
     <p class="doc-state__line">${statusTag(doc.status)} <span>${escapeHtml(text)}</span></p>
-    ${button}`;
+    <div class="doc-state__buttons">
+      ${button}
+      <button type="button" class="button button--danger-quiet" data-delete="${escapeHtml(doc.id)}" ${busy}>Delete permanently</button>
+    </div>`;
 }
 
 function renderStored() {
@@ -633,6 +639,52 @@ async function changeStatus(id, action) {
   }
 }
 
+async function deleteDoc(id) {
+  const doc = state.docs.find((d) => d.id === id);
+  if (!doc || state.acting.has(id)) return;
+
+  const ok = await confirmDialog({
+    title: `Delete “${doc.title}” permanently?`,
+    message:
+      "The document and its PDF file will be removed for good. It will disappear from the website and its download link will stop working. This can't be undone. To only hide it from visitors, use Withdraw instead.",
+    confirmLabel: "Delete permanently",
+    danger: true,
+  });
+  if (!ok) return;
+
+  state.acting.add(id);
+  renderList();
+  renderDocState();
+  const gone = () => {
+    state.docs = state.docs.filter((d) => d.id !== id);
+    if (state.editingId === id) {
+      state.formDirty = false;
+      resetForm();
+    }
+  };
+  try {
+    await admin.documents.remove(id);
+    gone();
+    toast(`“${doc.title}” deleted`);
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      gone(); // already deleted elsewhere
+      toast(`“${doc.title}” was already deleted`);
+    } else {
+      const msg =
+        error instanceof ApiError && error.status === 503
+          ? "Document storage is unavailable right now, so it wasn't deleted. Please try again in a few minutes."
+          : explain(error, { action: "delete it" });
+      toast(msg, "error");
+    }
+  } finally {
+    state.acting.delete(id);
+    renderList();
+    renderDocState();
+    refresh();
+  }
+}
+
 /* ---------------- Clicks ---------------- */
 
 function onClick(e) {
@@ -649,6 +701,8 @@ function onClick(e) {
   if (pub) return changeStatus(pub.dataset.publish, "publish");
   const wd = e.target.closest("[data-withdraw]");
   if (wd) return changeStatus(wd.dataset.withdraw, "withdraw");
+  const del = e.target.closest("[data-delete]");
+  if (del) return deleteDoc(del.dataset.delete);
 }
 
 els.list.addEventListener("click", onClick);
