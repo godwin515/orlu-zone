@@ -301,7 +301,7 @@ function renderHeader(site) {
   const header = document.querySelector("[data-site-header]");
   if (!header) return;
   const path = window.location.pathname;
-  const name = site?.community_name || "Orlu Zone";
+  const name = site?.community_name || "Orlu Land Compendium";
   const currentQ = path === "/search.html" ? getParam("q") || "" : "";
 
   // The header renders twice (defaults, then real site settings). Remember
@@ -477,7 +477,7 @@ const MOTTO = "Documenting historical greatness, legacies that inspire generatio
 function renderFooter(site) {
   const footer = document.querySelector("[data-site-footer]");
   if (!footer) return;
-  const name = site?.community_name || "Orlu Zone";
+  const name = site?.community_name || "Orlu Land Compendium";
   const whatsapp = site?.whatsapp_url && safeUrl(site.whatsapp_url);
   // Contact details come from Site settings in the admin; only what's filled in shows.
   const contact = [

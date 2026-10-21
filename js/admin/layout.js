@@ -34,7 +34,7 @@ export const ADMIN_NAV = [
   { key: "settings", label: "Site settings", href: "/admin/settings.html" },
 ];
 
-let communityName = "Orlu Zone";
+let communityName = "Orlu Land Compendium";
 
 export function renderAdminLayout(user) {
   const nav = document.querySelector("[data-admin-nav]");

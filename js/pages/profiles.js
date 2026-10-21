@@ -177,6 +177,20 @@ function anchorFor(category, index) {
 }
 
 /** Group profiles by category, keeping the API's order. */
+/*
+ * Category names to show differently from how they were typed in the admin.
+ * Left: the name saved in Admin → Leadership (any capitals). Right: what the
+ * website shows. Once the admin name is changed, the line can be removed.
+ */
+const CATEGORY_RENAMES = {
+  "board of editorial members": "Editorial Board Members",
+};
+
+function displayCategory(name) {
+  const clean = String(name || "").trim();
+  return CATEGORY_RENAMES[clean.toLowerCase()] || clean;
+}
+
 function groupByCategory(profiles) {
   const groups = new Map();
   for (const p of profiles) {
@@ -239,7 +253,6 @@ function render(profiles) {
               <span class="group-title__rule" aria-hidden="true"></span>
             </div>
             <p class="group-title__caption">${escapeHtml(captionFor(category))}</p>
-            <p class="group-title__count">${people.length} ${people.length === 1 ? "profile" : "profiles"}</p>
           </header>
           <ul class="profile-grid">${people.map((p) => cardHtml(p)).join("")}</ul>
         </section>`;
@@ -439,7 +452,7 @@ window.addEventListener("hashchange", () => {
 async function load() {
   const stop = showLoading(els.list, { lines: 5 });
   try {
-    const profiles = await api.listProfiles();
+    const profiles = ((await api.listProfiles()) || []).map((p) => ({ ...p, category: displayCategory(p.category) }));
     stop();
     if (!profiles?.length) {
       els.jump.hidden = true;

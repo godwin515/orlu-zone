@@ -83,7 +83,7 @@ function downloadIcs(event) {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Orlu Zone//Events//EN",
+    "PRODID:-//Orlu Land Compendium//Events//EN",
     "CALSCALE:GREGORIAN",
     "BEGIN:VEVENT",
     `UID:${event.id}@orlu-community`,
