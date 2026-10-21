@@ -4602,7 +4602,7 @@ html:has(.pdf-viewer[open]) {
 }
 
 .gallery-wall {
-  --gap: clamp(1.5rem, 3vw, 2.5rem);
+  --gap: clamp(1rem, 2.6vw, 2.5rem);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -4644,13 +4644,15 @@ html:has(.pdf-viewer[open]) {
     0 16px 34px rgba(0, 0, 0, 0.32);
 }
 
-@media (max-width: 960px) {
+/* 3 a row on desktops and laptops (700px and wider), 2 on large phones
+   and small tablets, 1 on phones */
+@media (max-width: 699px) {
   .gallery-card {
     flex-basis: calc((100% - var(--gap)) / 2);
   }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 520px) {
   .gallery-card {
     flex-basis: 100%;
     max-width: 26rem;
@@ -5533,6 +5535,37 @@ html:has(.pdf-viewer[open]) {
 .site-footer .footer__brand,
 .site-footer .footer__brand:hover {
   color: var(--gold);
+}
+
+/* ---------------- 3 a row on every desktop and laptop ----------------
+ * Card grids that are 3 across stay 3 across on any screen or browser
+ * window 700px and wider (smaller laptops, display zoom, narrow windows).
+ * Tablets and phones below 700px keep their 2- and 1-column layouts.
+ */
+@media (min-width: 700px) and (max-width: 960px) {
+  .zone__facts,
+  .objectives,
+  .whoswho__list,
+  .explore,
+  .profile-grid,
+  .doc-list,
+  .news-grid,
+  .post-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .contact-cards {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  }
+
+  /* A little less padding inside the narrower cards */
+  .news-card__body {
+    padding-inline: var(--space-1);
+  }
+
+  .contact-card {
+    padding-inline: var(--space-4);
+  }
 }
 
 /* ---------------- Phone type standard ----------------

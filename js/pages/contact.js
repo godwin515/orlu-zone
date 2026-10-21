@@ -121,7 +121,7 @@ function socialHtml(site) {
   return `
     <section class="contact-social" aria-labelledby="social-title">
       <h2 class="contact-help__title" id="social-title">Follow us</h2>
-      <p class="contact-social__lead">Stay up to date with Orlu Land Compendium news, honours and events.</p>
+      <p class="contact-social__lead">Stay up to date with Orlu Zone news, honours and events.</p>
       <ul class="contact-social__list">
         ${links
           .map(

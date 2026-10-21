@@ -11,7 +11,7 @@
  * Ctrl/Cmd-click and middle-click still open the plain link.
  */
 
-const SUBJECT = "Enquiry from the Orlu Land Compendium website";
+const SUBJECT = "Enquiry from the Orlu Zone website";
 
 let dialog = null;
 let returnFocus = null;
