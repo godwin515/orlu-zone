@@ -185,6 +185,7 @@ main .section.band--light {
 
 .brand__name {
   overflow: hidden;
+  color: var(--gold);
   font-family: var(--font-display);
   font-size: var(--step-1);
   font-weight: 700;
@@ -291,9 +292,9 @@ main .section.band--light {
   color: #fff;
 }
 
-/* Desktop (1151px and wider): links in the header, no Menu button.
-   Smaller screens: the links move into the Menu sidebar. */
-@media (min-width: 1151px) {
+/* Desktops and laptops (1024px and wider): all page links in the header,
+   no Menu button. Tablets and phones: the links move into the Menu sidebar. */
+@media (min-width: 1024px) {
   .nav-toggle {
     display: none;
   }
@@ -303,7 +304,51 @@ main .section.band--light {
   }
 }
 
-@media (max-width: 1150px) {
+/* Smaller laptops (and laptops with display zoom): a tighter header so
+   every link still fits beside the name */
+@media (min-width: 1024px) and (max-width: 1240px) {
+  .nav__list {
+    gap: 0;
+  }
+
+  .nav__link {
+    padding-inline: 0.45rem;
+    font-size: 0.95rem;
+  }
+
+  .brand {
+    gap: var(--space-2);
+  }
+
+  .brand__logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand__name {
+    max-width: 9.5rem;
+    overflow: visible;
+    font-size: 1rem;
+    line-height: 1.15;
+    white-space: normal;
+  }
+
+  .search-toggle {
+    justify-content: center;
+    width: 2.75rem;
+    padding: 0;
+  }
+
+  .search-toggle__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+}
+
+@media (max-width: 1023px) {
   .nav {
     display: none;
   }
@@ -2973,7 +3018,7 @@ html:has(.drawer[open]) {
   width: 22rem;
 }
 
-@media (max-width: 1150px) {
+@media (max-width: 1240px) {
   .site-header .suggest {
     left: 0;
     width: auto;
@@ -5449,6 +5494,12 @@ html:has(.pdf-viewer[open]) {
 }
 
 .email-chooser__arrow {
+  color: var(--gold);
+}
+
+/* The site name in gold, in the header and the footer */
+.site-footer .footer__brand,
+.site-footer .footer__brand:hover {
   color: var(--gold);
 }
 
