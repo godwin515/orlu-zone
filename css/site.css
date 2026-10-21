@@ -5659,3 +5659,48 @@ html:has(.pdf-viewer[open]) {
     font-weight: 500;
   }
 }
+
+/* ---------------- Normal weight text on every screen ----------------
+ * Text is normal weight (400) everywhere. Headings and titles are only a
+ * touch heavier (500) so they still stand out. Sizes are unchanged.
+ */
+body,
+body *:not(svg):not(svg *) {
+  font-weight: 400 !important; /* wins over every earlier bold setting */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.hero__title,
+.page-header__title,
+.brand__name,
+.footer__brand,
+.entry__title,
+.event-row__title,
+.group-title__name,
+.news-card__title,
+.news-card__title *,
+.ev-card__title,
+.ev-card__title *,
+.ev-month__title,
+.ev-date__day,
+.contact-help__title,
+.email-chooser__title,
+.about-title,
+.zone__title,
+.invest__title,
+.person__name,
+.profile__name,
+.date-badge__day,
+.doc__title,
+.footer__heading,
+strong,
+b,
+th,
+dt {
+  font-weight: 500 !important;
+}
