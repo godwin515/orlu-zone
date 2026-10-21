@@ -348,7 +348,39 @@ main .section.band--light {
   }
 }
 
-@media (max-width: 1023px) {
+/* Narrower desktop windows and tablets (700–1023px): the links get their
+   own row under the name, so every page is still one click away */
+@media (min-width: 700px) and (max-width: 1023px) {
+  .header__inner {
+    flex-wrap: wrap;
+    row-gap: 0;
+    padding-bottom: 0;
+  }
+
+  .nav {
+    order: 3;
+    width: 100%;
+    margin-top: var(--space-2);
+    border-top: 1px solid rgba(227, 167, 47, 0.25);
+  }
+
+  .nav__list {
+    justify-content: space-between;
+    gap: 0;
+  }
+
+  .nav__link {
+    padding: 0.7rem 0.45rem;
+    font-size: 0.95rem;
+  }
+
+  .nav-toggle {
+    display: none;
+  }
+}
+
+/* Phones: the links move into the Menu sidebar */
+@media (max-width: 699px) {
   .nav {
     display: none;
   }
