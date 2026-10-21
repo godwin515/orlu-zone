@@ -28,7 +28,7 @@ export const API_PREFIX = "/api/v1";
  *   linkedin:  "https://www.linkedin.com/company/yourname"
  */
 export const SOCIAL_LINKS = {
-  facebook: "",
+  facebook: "https://www.facebook.com/Chris.Maes.687",
   instagram: "",
   x: "",
   youtube: "",
