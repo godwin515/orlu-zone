@@ -16,6 +16,7 @@ import { escapeHtml, safeUrl, showLoading, showError } from "../ui.js";
 import { requireAdmin } from "./guard.js";
 import { renderAdminLayout, setAdminTitle } from "./layout.js";
 import { toast } from "./admin-ui.js";
+import { editCaption } from "./caption-editor.js";
 import { pickMedia } from "./media-picker.js";
 
 const els = {
@@ -63,7 +64,9 @@ function render({ focusId } = {}) {
         <li class="sort-grid__item" draggable="true" data-id="${escapeHtml(item.media_id)}">
           <span class="sort-grid__number" aria-hidden="true">${i + 1}</span>
           <img src="${safeUrl(item.public_url)}" alt="${escapeHtml(item.alt_text || "")}" draggable="false" loading="lazy">
-          ${item.caption ? `<p class="sort-grid__caption">${escapeHtml(item.caption)}</p>` : ""}
+          ${item.caption ? `<p class="sort-grid__caption">${escapeHtml(item.caption)}</p>` : `<p class="sort-grid__caption sort-grid__caption--none">No caption</p>`}
+          <button type="button" class="link-button sort-grid__edit" data-edit-caption="${escapeHtml(item.media_id)}"
+            aria-label="${item.caption ? "Edit" : "Add"} caption for photo ${i + 1}">${item.caption ? "Edit caption" : "Add caption"}</button>
           <div class="thumb-list__actions">
             <button type="button" class="icon-button" data-move="${i}" data-dir="-1" ${i === 0 ? "disabled" : ""}
               aria-label="Move photo ${i + 1} earlier">&larr;</button>
@@ -95,6 +98,11 @@ els.grid.addEventListener("click", (e) => {
     const id = state.items[i].media_id;
     [state.items[i], state.items[j]] = [state.items[j], state.items[i]];
     render({ focusId: { id, dir: move.dataset.dir } });
+    return;
+  }
+  const editBtn = e.target.closest("[data-edit-caption]");
+  if (editBtn) {
+    editPhotoCaption(editBtn.dataset.editCaption);
     return;
   }
   const remove = e.target.closest("[data-remove]");
@@ -161,6 +169,19 @@ els.undo.addEventListener("click", () => {
   render();
   toast("Order changes undone");
 });
+
+/* ---------------- Caption ---------------- */
+
+async function editPhotoCaption(id) {
+  const item = state.items.find((x) => x.media_id === id);
+  if (!item) return;
+  const updated = await editCaption({ id, public_url: item.public_url, caption: item.caption, alt_text: item.alt_text });
+  if (!updated) return;
+  item.caption = updated.caption ?? null;
+  item.alt_text = updated.alt_text ?? null;
+  render();
+  toast(item.caption ? "Caption saved. It now shows under the photo on the website." : "Caption removed");
+}
 
 /* ---------------- Add ---------------- */
 

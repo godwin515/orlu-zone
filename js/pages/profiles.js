@@ -238,6 +238,7 @@ function render(profiles) {
               <h2 class="group-title__name" id="${anchor}-title">${escapeHtml(category)}</h2>
               <span class="group-title__rule" aria-hidden="true"></span>
             </div>
+            <p class="group-title__caption">${escapeHtml(captionFor(category))}</p>
             <p class="group-title__count">${people.length} ${people.length === 1 ? "profile" : "profiles"}</p>
           </header>
           <ul class="profile-grid">${people.map((p) => cardHtml(p)).join("")}</ul>
@@ -265,22 +266,48 @@ function render(profiles) {
  * any category whose name contains one of its keywords. The first match wins.
  */
 const WHOSWHO = {
-  royal: { label: "Traditional Rulers & Titled Chiefs", words: ["royal", "traditional", "ruler", "eze", "igwe", "chief", "king", "monarch"] },
-  politics: { label: "Public Service & Politics", words: ["politic", "public service", "government", "legislat", "senat", "council"] },
-  business: { label: "Business & Industry", words: ["business", "industry", "industri", "captain", "entrepreneur", "enterprise", "commerce"] },
-  professionals: { label: "Professionals & Academics", words: ["professional", "academ", "scholar", "education", "lecturer", "professor"] },
-  clergy: { label: "Clergy & Faith Leaders", words: ["clergy", "faith", "church", "religio", "bishop", "pastor", "priest"] },
-  philanthropy: { label: "Philanthropy & Community Service", words: ["philanthrop", "community service", "charit", "humanitarian"] },
-  women: { label: "Women Leaders", words: ["women", "woman", "female", "mothers", "august meeting", "cwo"] },
-  youth: { label: "Youth, Arts & Sports", words: ["youth", "art", "sport", "young"] },
-  editorial: { label: "Editorial Board", words: ["editorial", "editor", "compendium team", "project team", "secretariat"] },
-  posthumous: { label: "Posthumous Honours", words: ["posthumous", "memoriam", "in memory", "late", "departed"] },
+  royal: { label: "Traditional Rulers & Titled Chiefs", words: ["royal", "traditional", "ruler", "eze", "igwe", "chief", "king", "monarch"],
+    caption: "Ndi Eze, royal fathers and titled chiefs: custodians of our customs, culture and heritage across Orlu Zone." },
+  politics: { label: "Public Service & Politics", words: ["politic", "public service", "government", "legislat", "senat", "council"],
+    caption: "Governors, senators, legislators and public office holders who have served Orlu Zone, Imo State and Nigeria." },
+  business: { label: "Business & Industry", words: ["business", "industry", "industri", "captain", "entrepreneur", "enterprise", "commerce"],
+    caption: "Entrepreneurs, bankers and industrialists whose enterprise creates jobs and wealth at home and abroad." },
+  professionals: { label: "Professionals & Academics", words: ["professional", "academ", "scholar", "education", "lecturer", "professor"],
+    caption: "Professors, doctors, engineers, lawyers and scholars whose knowledge and skill bring honour to Orlu Zone." },
+  clergy: { label: "Clergy & Faith Leaders", words: ["clergy", "faith", "church", "religio", "bishop", "pastor", "priest"],
+    caption: "Bishops, priests, pastors and faith leaders who guide our people in faith, service and good conscience." },
+  philanthropy: { label: "Philanthropy & Community Service", words: ["philanthrop", "community service", "charit", "humanitarian"],
+    caption: "Sons and daughters who give their time and wealth to build schools, roads, hospitals and hope at home." },
+  women: { label: "Women Leaders", words: ["women", "woman", "female", "mothers", "august meeting", "cwo"],
+    caption: "Women who lead in business, public service, faith and community across Orlu Zone and the diaspora." },
+  youth: { label: "Youth, Arts & Sports", words: ["youth", "art", "sport", "young"],
+    caption: "Young achievers, artists and sportsmen and women carrying the name of Orlu Zone forward." },
+  editorial: { label: "Editorial Board", words: ["editorial", "editor", "compendium team", "project team", "secretariat"],
+    caption: "The team behind the Compendium of Honour: research, writing, verification and records." },
+  posthumous: { label: "Posthumous Honours", words: ["posthumous", "memoriam", "in memory", "late", "departed"],
+    caption: "In loving memory of the departed patriarchs, matriarchs and illustrious sons and daughters of Orlu Land." },
 };
 
 // Short keywords that must be whole words ("art" not "Partners", "late" not "Translate")
 const WHOLE_WORDS = new Set(["art", "late"]);
 
 const SKIP_WORDS = new Set(["and", "the", "of", "leaders", "leader", "titled", "service"]);
+
+/** Which Who's Who category a category name from the admin belongs to (or null). */
+function keyForName(name) {
+  const lower = String(name || "").toLowerCase();
+  for (const [key, entry] of Object.entries(WHOSWHO)) {
+    if (entry.words.some((w) => (WHOLE_WORDS.has(w) ? new RegExp(`\\b${w}s?\\b`).test(lower) : lower.includes(w)))) return key;
+  }
+  return null;
+}
+
+const DEFAULT_CAPTION = "Distinguished sons and daughters of Orlu Zone, honoured for their service and achievements.";
+
+/** The short write-up shown under a category's title. */
+function captionFor(category) {
+  return WHOSWHO[keyForName(category)]?.caption || DEFAULT_CAPTION;
+}
 
 function findGroup(key) {
   const entry = WHOSWHO[key];

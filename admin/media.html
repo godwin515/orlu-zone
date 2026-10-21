@@ -13,9 +13,9 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
   <link rel="preconnect" href="https://orlu-land-community-api.onrender.com" crossorigin>
 
-  <link rel="stylesheet" href="/css/base.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/base.css?v=20261021">
+  <link rel="stylesheet" href="/css/components.css?v=20261021">
+  <link rel="stylesheet" href="/css/admin.css?v=20261021">
 </head>
 <body class="admin admin-pending" data-admin-page="media">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -39,9 +39,14 @@
           <span class="dropzone__main">Drag photos here, or <span class="dropzone__link">choose from your device</span></span>
           <span class="dropzone__hint">JPEG, PNG or WebP, up to 5 MB each. You can add several at once.</span>
         </label>
+        <p class="notice notice--info upload-caption-note">
+          <strong>Writing a caption for the Gallery?</strong> Choose the photo first. A <strong>Caption</strong> box then
+          appears under it here: type the write-up you want visitors to see under the photo, then click Upload.
+          For a photo that's already uploaded, click it below and choose <strong>Edit caption</strong>.
+        </p>
 
         <div data-queue hidden>
-          <p class="field__hint">Describe each photo for people using screen readers, and add a caption if it should show under the photo.</p>
+          <p class="field__hint">For each photo: <strong>Caption</strong> is the write-up shown under it on the website (Gallery, posts, events). <strong>Description</strong> is read aloud to people using screen readers.</p>
           <ul class="queue" data-queue-list></ul>
           <div class="form__actions">
             <button type="button" class="button" data-upload-all>Upload</button>
@@ -78,6 +83,7 @@
         <dl class="media-details__facts" data-details-facts></dl>
         <div class="media-details__usage" data-details-usage></div>
         <div class="form__actions">
+          <button type="button" class="button" data-edit-caption>Edit caption</button>
           <button type="button" class="button button--quiet" data-copy-url>Copy image link</button>
           <a class="button button--quiet" target="_blank" rel="noopener" data-open-url>Open full size</a>
           <button type="button" class="button button--danger" data-delete-media>Delete image</button>

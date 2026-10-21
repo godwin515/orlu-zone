@@ -2566,3 +2566,90 @@ button.status-tabs__tab {
     margin-bottom: 0.15rem;
   }
 }
+
+/* Help note under the Media library upload area */
+.upload-caption-note {
+  margin: var(--space-3) 0 0;
+  padding: var(--space-3) var(--space-4);
+  border-left: 4px solid var(--gold);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: #fbf3df;
+  color: #3d3215;
+  font-size: var(--step--1);
+  line-height: 1.55;
+}
+
+/* ---------------- Edit caption window ---------------- */
+.caption-editor {
+  width: min(94vw, 40rem);
+  padding: 0;
+  border: 0;
+  border-top: 5px solid var(--gold);
+  border-radius: 0 0 var(--radius) var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 20px 60px rgba(10, 18, 14, 0.35);
+}
+
+.caption-editor::backdrop {
+  background: rgba(10, 18, 14, 0.55);
+}
+
+.caption-editor__body {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-5);
+}
+
+.caption-editor__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.caption-editor__title {
+  font-size: var(--step-1);
+}
+
+.caption-editor__layout {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.caption-editor__img {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius);
+  object-fit: cover;
+  background: #e8eee9;
+}
+
+.caption-editor__fields {
+  display: grid;
+  gap: var(--space-3);
+}
+
+@media (max-width: 560px) {
+  .caption-editor__layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .caption-editor__img {
+    max-width: 10rem;
+  }
+}
+
+/* Gallery admin: caption line and its Edit / Add button under each photo */
+.sort-grid__caption--none {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.sort-grid__edit {
+  justify-self: start;
+  margin: 0 var(--space-2) var(--space-1);
+  font-size: var(--step--1);
+}

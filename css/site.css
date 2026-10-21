@@ -1,3 +1,4 @@
+/* Orlu Zone site styles, version 2026-10-21 (normal-weight text, one-line header, 3 a row) */
 /*
  * Location: css/site.css
  * Public-site layout: header, footer, and page sections.
@@ -3247,6 +3248,17 @@ html:has(.drawer[open]) {
   font-weight: 700;
   letter-spacing: 0.01em;
   white-space: nowrap;
+}
+
+/* A short write-up under each category title (Leadership page) */
+.group-title__caption {
+  max-width: 44rem;
+  margin: 0 auto;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-style: italic;
+  line-height: 1.55;
 }
 
 .group-title__count {

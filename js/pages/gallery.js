@@ -41,10 +41,7 @@ function cardHtml(img, i) {
           ${img.width && img.height ? `width="${Number(img.width)}" height="${Number(img.height)}"` : ""}>
         <span class="gallery-card__view" aria-hidden="true">${VIEW_ICON}<span>View photo</span></span>
       </a>
-      <div class="gallery-card__plate">
-        <span class="gallery-card__number">Photo ${number}</span>
-        ${caption ? `<p class="gallery-card__caption">${escapeHtml(caption)}</p>` : ""}
-      </div>
+      ${caption ? `<div class="gallery-card__plate"><p class="gallery-card__caption">${escapeHtml(caption)}</p></div>` : ""}
      </div>
     </li>`;
 }

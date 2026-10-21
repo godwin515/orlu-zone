@@ -391,6 +391,10 @@ export const admin = {
     list: () => request("/admin/media", { authed: true }),
     get: (id) => request(`/admin/media/${enc(id)}`, { authed: true }),
     remove: (id) => request(`/admin/media/${enc(id)}`, { method: "DELETE", authed: true }),
+    // Change the caption and/or description of an uploaded photo.
+    // Needs PATCH /admin/media/{id} in the backend (see docs/backend-edit-caption.md).
+    update: (id, { caption, alt_text }) =>
+      request(`/admin/media/${enc(id)}`, { method: "PATCH", body: { caption, alt_text }, authed: true }),
     /**
      * @param {File} file
      * @param {{caption?: string, alt_text?: string}} [meta]

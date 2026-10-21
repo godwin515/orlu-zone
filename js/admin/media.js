@@ -22,6 +22,7 @@ import { escapeHtml, safeUrl, showLoading, showError } from "../ui.js";
 import { requireAdmin } from "./guard.js";
 import { renderAdminLayout, setAdminTitle } from "./layout.js";
 import { confirmDialog, toast } from "./admin-ui.js";
+import { editCaption } from "./caption-editor.js";
 
 const BATCH = 40;
 
@@ -103,8 +104,9 @@ function renderQueue() {
               placeholder="For example: Women's wing members at the clinic handover" ${q.status === "done" || q.status === "uploading" ? "disabled" : ""}>
           </div>
           <div class="field">
-            <label class="field__label field__label--small" for="caption-${q.key}">Caption <span class="field__optional">optional</span></label>
+            <label class="field__label field__label--small" for="caption-${q.key}">Caption: the write-up shown under the photo <span class="field__optional">optional</span></label>
             <input class="field__input" id="caption-${q.key}" data-caption value="${escapeHtml(q.caption)}"
+              placeholder="For example: Royal fathers at the Orlu Zone honours night, Orlu Civic Centre"
               ${q.status === "done" || q.status === "uploading" ? "disabled" : ""}>
           </div>
           ${q.status === "error" ? `<p class="field__error">${escapeHtml(q.error)}</p>` : ""}
@@ -325,6 +327,7 @@ const d = {
   copy: els.details.querySelector("[data-copy-url]"),
   open: els.details.querySelector("[data-open-url]"),
   del: els.details.querySelector("[data-delete-media]"),
+  edit: els.details.querySelector("[data-edit-caption]"),
 };
 
 async function openDetails(id) {
@@ -340,8 +343,8 @@ async function openDetails(id) {
 
   const fact = (label, value) => (value ? `<div><dt>${label}</dt><dd>${escapeHtml(String(value))}</dd></div>` : "");
   d.facts.innerHTML = [
-    fact("Description", m.alt_text || "None. Add one next time you upload."),
-    fact("Caption", m.caption),
+    fact("Caption", m.caption || "None yet. Click Edit caption to add one."),
+    fact("Description", m.alt_text || "None yet."),
     fact("File", m.original_filename),
     fact("Size", [m.width && m.height ? `${m.width} × ${m.height} pixels` : "", fileSize(m.file_size)].filter(Boolean).join(", ")),
     fact("Uploaded", m.created_at ? formatDate(m.created_at, { dateStyle: "medium", timeStyle: "short" }) : ""),
@@ -370,6 +373,20 @@ els.library.addEventListener("click", (e) => {
 els.details.querySelector("[data-details-close]").addEventListener("click", () => els.details.close());
 els.details.addEventListener("click", (e) => {
   if (e.target === els.details) els.details.close();
+});
+
+d.edit.addEventListener("click", async () => {
+  const m = state.current;
+  if (!m) return;
+  els.details.close();
+  const updated = await editCaption(m);
+  if (updated) {
+    const i = state.media.findIndex((x) => x.id === m.id);
+    if (i >= 0) state.media[i] = { ...state.media[i], ...updated };
+    renderLibrary();
+    toast("Caption saved");
+  }
+  openDetails(m.id);
 });
 
 d.copy.addEventListener("click", async () => {
