@@ -5578,6 +5578,627 @@ html:has(.pdf-viewer[open]) {
   color: var(--gold);
 }
 
+/* ---------------- Event details page ----------------
+ * Opens from "View details" on the Events page (event.html).
+ * Same look as the Events page: gold frames, rounded boxes, gold glow.
+ */
+.ev-hero {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(2rem, 5vw, 4rem) clamp(2.5rem, 6vw, 4.5rem);
+  border-bottom: 3px solid var(--gold);
+  background:
+    radial-gradient(circle at 85% 20%, rgba(227, 167, 47, 0.12), transparent 45%),
+    linear-gradient(180deg, #123a25, var(--brand));
+}
+
+.ev-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.ev-hero__text {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+}
+
+.ev-hero__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  text-decoration: none;
+}
+
+.ev-hero__back:hover {
+  text-decoration: underline;
+}
+
+.ev-status {
+  margin: var(--space-2) 0 0;
+  padding: 0.3rem 0.9rem;
+  border: 1px solid rgba(227, 167, 47, 0.6);
+  border-radius: 999px;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ev-status--happening {
+  border-color: var(--palm);
+  background: rgba(143, 208, 166, 0.15);
+  color: var(--palm);
+}
+
+.ev-status--ended {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--muted);
+}
+
+.ev-status--cancelled {
+  border-color: rgba(255, 165, 155, 0.5);
+  background: rgba(255, 165, 155, 0.12);
+  color: var(--danger);
+}
+
+.ev-hero__title {
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: clamp(2rem, 1.2rem + 3vw, 3.4rem);
+  line-height: 1.1;
+}
+
+.ev-hero.is-cancelled .ev-hero__title {
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 255, 255, 0.45);
+}
+
+.ev-hero__facts {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+}
+
+.ev-hero__facts dd {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+}
+
+.ev-hero__facts small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.ev-hero__facts svg,
+.ev-info svg {
+  flex-shrink: 0;
+  width: 1.15em;
+  height: 1.15em;
+  margin-top: 0.15em;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ev-hero__countdown {
+  margin: var(--space-1) 0 0;
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--gold);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: var(--step-1);
+  font-style: italic;
+}
+
+.ev-hero__actions,
+.ev-info__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.ev-detail__calendar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+}
+
+.ev-detail__calendar svg {
+  width: 1.1em;
+  height: 1.1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.event-page .share__button,
+.story-page .share__button {
+  border-color: rgba(227, 167, 47, 0.55);
+  background: transparent;
+  color: var(--ink);
+}
+
+.event-page .share__button:hover,
+.story-page .share__button:hover {
+  border-color: var(--gold);
+  background: rgba(227, 167, 47, 0.1);
+  color: var(--gold);
+}
+
+/* The photo, in a thin gold frame, with the gold date block over its corner */
+.ev-hero__media {
+  position: relative;
+  padding: 0 0 var(--space-5) var(--space-5);
+}
+
+.ev-hero__frame {
+  margin: 0;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border: 1.5px solid var(--gold);
+  border-radius: 36px;
+  background: #0f2f1e;
+  box-shadow:
+    0 0 0 8px rgba(15, 47, 30, 0.9),
+    0 0 0 9.5px rgba(227, 167, 47, 0.5),
+    0 24px 50px rgba(0, 0, 0, 0.45);
+}
+
+.ev-hero__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ev-hero.is-cancelled .ev-hero__frame img {
+  filter: grayscale(0.7);
+  opacity: 0.75;
+}
+
+.ev-date--big {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 7.5rem;
+  padding: 0.9rem 0.5rem 1rem;
+  border-radius: 26px;
+}
+
+.ev-date--big .ev-date__day {
+  font-size: 2.9rem;
+}
+
+.ev-date--big .ev-date__month {
+  font-size: 0.78rem;
+}
+
+.ev-hero.is-cancelled .ev-date {
+  background: #2c5a41;
+  color: var(--muted);
+}
+
+/* About this event + details card */
+.ev-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
+  align-items: start;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding-block: clamp(2.5rem, 6vw, 4rem);
+}
+
+.ev-detail__main {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  min-width: 0;
+}
+
+.ev-detail__about,
+.ev-detail__photos,
+.ev-info {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1.5px solid rgba(227, 167, 47, 0.7);
+  border-radius: 36px;
+  background: var(--brand);
+  box-shadow:
+    0 0 20px rgba(227, 167, 47, 0.16),
+    0 12px 28px rgba(0, 0, 0, 0.25);
+}
+
+.ev-detail__heading,
+.ev-info__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-4);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: var(--step-2);
+}
+
+.ev-detail__heading::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(227, 167, 47, 0.6), transparent);
+}
+
+.ev-detail__empty {
+  margin: 0;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.ev-detail__about .prose {
+  max-width: none;
+}
+
+.ev-detail__side {
+  position: sticky;
+  top: 6rem;
+}
+
+.ev-info__title {
+  font-size: var(--step-1);
+}
+
+.ev-info__list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.ev-info__list > div {
+  display: grid;
+  gap: 0.2rem;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid rgba(227, 167, 47, 0.25);
+}
+
+.ev-info__list dt {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ev-info__list dt svg {
+  margin-top: 0;
+}
+
+.ev-info__list dd {
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.45;
+}
+
+.ev-info__list small {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.ev-info__map {
+  margin-top: var(--space-4);
+  overflow: hidden;
+  border: 1.5px solid var(--gold);
+  border-radius: 22px;
+  clip-path: inset(0 round 22px);
+}
+
+.ev-info__map iframe {
+  display: block;
+  width: 100%;
+  height: 11rem;
+  border: 0;
+  border-radius: 20px;
+}
+
+.ev-info__directions {
+  display: inline-flex;
+  gap: 0.4rem;
+  margin-top: var(--space-2);
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  text-decoration: none;
+}
+
+.ev-info__directions:hover {
+  text-decoration: underline;
+}
+
+.ev-info__actions .button,
+.ev-info__actions .share {
+  width: 100%;
+}
+
+.ev-info__actions .button {
+  justify-content: center;
+}
+
+.ev-info__actions .share__button {
+  flex: 1;
+  justify-content: center;
+}
+
+/* Photos from the event */
+.ev-photos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ev-photos .ev-photos__item {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1.5px solid var(--gold);
+  border-radius: 20px;
+}
+
+.ev-photos__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.ev-photos__item:hover img {
+  transform: scale(1.05);
+}
+
+.ev-photos__caption {
+  margin: var(--space-2) 0 0;
+  color: var(--muted);
+  font-size: var(--step--1);
+  text-align: center;
+}
+
+/* News and other events below */
+.ev-related + .ev-related {
+  padding-top: 0;
+}
+
+.ev-related__all {
+  display: flex;
+  justify-content: center;
+  margin: var(--space-6) 0 0;
+}
+
+.ev-related__all .button {
+  border-radius: 999px;
+}
+
+.ev-missing {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+  padding-block: var(--space-8, 4rem);
+}
+
+/* Tablets and phones */
+@media (max-width: 900px) {
+  .ev-hero__inner,
+  .ev-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ev-hero__media {
+    order: -1;
+    max-width: 34rem;
+  }
+
+  .ev-detail__side {
+    position: static;
+  }
+
+  /* On one column the details card comes first; buttons are in the top section */
+  .ev-detail__side {
+    order: -1;
+  }
+
+  .ev-info__actions {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .ev-hero__frame,
+  .ev-detail__about,
+  .ev-detail__photos,
+  .ev-info {
+    border-radius: 28px;
+  }
+
+  .ev-hero__media {
+    padding: 0 0 var(--space-4) var(--space-4);
+  }
+
+  .ev-date--big {
+    width: 6rem;
+  }
+
+  .ev-date--big .ev-date__day {
+    font-size: 2.3rem;
+  }
+
+  .ev-photos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ev-photos__item img {
+    transition: none;
+  }
+}
+
+/* ---------------- Story page (one news post) ----------------
+ * Opens from "Read story". Reuses the event details page layout
+ * (.ev-hero, .ev-detail, .ev-info, .ev-photos) with a few extras.
+ */
+a.story-hero__category {
+  text-decoration: none;
+}
+
+a.story-hero__category:hover {
+  border-color: var(--gold);
+  background: rgba(227, 167, 47, 0.12);
+}
+
+.story-hero__standfirst {
+  max-width: 40rem;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-1);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.story-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: var(--space-1) 0 0;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+}
+
+.story-hero__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.story-hero__meta svg {
+  width: 1.1em;
+  height: 1.1em;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* No main photo: the title area takes the full width */
+.story-hero--no-image .ev-hero__inner {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 52rem;
+}
+
+.story-hero__media {
+  padding: 0;
+}
+
+/* The story text: a gold first letter */
+.story-body .prose {
+  font-size: var(--step-0);
+  line-height: 1.8;
+}
+
+.story-body .prose > p:first-of-type::first-letter {
+  float: left;
+  margin: 0.08em 0.12em 0 0;
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 3.4em;
+  line-height: 0.85;
+}
+
+.story-body .prose img {
+  border: 1.5px solid var(--gold);
+  border-radius: 20px;
+}
+
+.story-body .prose blockquote {
+  margin-inline: 0;
+  padding: var(--space-3) var(--space-5);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 18px 18px 0;
+  background: rgba(227, 167, 47, 0.08);
+  font-style: italic;
+}
+
+.story-video {
+  overflow: hidden;
+  border: 1.5px solid var(--gold);
+  border-radius: 22px;
+  clip-path: inset(0 round 22px);
+}
+
+.story-video iframe,
+.story-video video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border: 0;
+}
+
+.story-info__link {
+  color: #fff;
+}
+
+.story-info__share-title {
+  margin: var(--space-4) 0 var(--space-2);
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.story-info__share .share {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.story-info__share .share__button {
+  justify-content: center;
+}
+
+/* On one column the share buttons are already in the top section */
+@media (max-width: 900px) {
+  .story-page .ev-detail__side {
+    order: 1;
+  }
+
+  .story-info__share-title,
+  .story-info__share {
+    display: none;
+  }
+}
+
 /* ---------------- 3 a row on every desktop and laptop ----------------
  * Card grids that are 3 across stay 3 across on any screen or browser
  * window 700px and wider (smaller laptops, display zoom, narrow windows).

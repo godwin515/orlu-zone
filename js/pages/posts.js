@@ -13,6 +13,7 @@
  */
 
 import { api, adapters, formatDate } from "../api.js";
+import { newsCard } from "../news-card.js";
 import {
   escapeHtml,
   safeUrl,
@@ -86,29 +87,6 @@ function renderFilters(activeSlug) {
   };
 
   els.filters.innerHTML = `<ul class="filters__list">${chip("All news", "")}${cats.map((c) => chip(c.name, c.slug)).join("")}</ul>`;
-}
-
-/* One news card. The lead card (newest story on the first page of
-   "All news") is wider, with the photo beside the text. */
-function newsCard(post, category, { lead = false } = {}) {
-  const date = post.published_at || post.created_at;
-  const href = urls.post(post.slug);
-  return `
-    <article class="news-card${lead ? " news-card--lead" : ""}">
-      <a class="news-card__media" href="${href}" tabindex="-1" aria-hidden="true">
-        <img src="${safeUrl(featuredImage(post))}" alt="" loading="${lead ? "eager" : "lazy"}">
-        ${lead ? `<span class="news-card__flag">Latest story</span>` : ""}
-      </a>
-      <div class="news-card__body">
-        <p class="news-card__meta">
-          ${category ? `<a class="news-card__category" href="${urls.category(category.slug)}">${escapeHtml(category.name)}</a>` : ""}
-          ${date ? `<time datetime="${escapeHtml(date)}">${escapeHtml(formatDate(date))}</time>` : ""}
-        </p>
-        <h3 class="news-card__title"><a class="news-card__link" href="${href}">${escapeHtml(post.title)}</a></h3>
-        <p class="news-card__summary">${escapeHtml(summary(post, lead ? 260 : 150))}</p>
-        <span class="news-card__more" aria-hidden="true">Read story <span class="news-card__arrow">→</span></span>
-      </div>
-    </article>`;
 }
 
 function renderHeading(category) {

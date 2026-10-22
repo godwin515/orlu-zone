@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Event</title>
-  <meta name="description" content="An event in the Orlu community.">
+  <meta name="description" content="An event in Orlu Zone.">
   <link rel="icon" href="/assets/favicon.png" type="image/png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,24 +26,31 @@
 
   <header class="site-header" data-site-header></header>
 
-  <main id="main">
-    <article class="article" data-article>
-      <div class="container article__container" data-event-body></div>
-    </article>
+  <main id="main" class="event-page">
+    <!-- The event itself: top section, About box and details card (built by js/pages/event.js) -->
+    <div data-event-body></div>
 
-    <section class="section container band--light band--bleed" aria-labelledby="event-news-title" data-news-section hidden>
-      <div class="section-head">
-        <h2 id="event-news-title">News about this event</h2>
+    <section class="section container ev-related" aria-labelledby="event-news-title" data-news-section hidden>
+      <div class="group-title page-intro">
+        <div class="group-title__row">
+          <span class="group-title__rule" aria-hidden="true"></span>
+          <h2 class="group-title__name" id="event-news-title">News about this event</h2>
+          <span class="group-title__rule" aria-hidden="true"></span>
+        </div>
       </div>
       <div data-event-news></div>
     </section>
 
-    <section class="section container band--light band--bleed" aria-labelledby="more-events-title" data-more-section hidden>
-      <div class="section-head">
-        <h2 id="more-events-title">Other upcoming events</h2>
-        <a href="/events.html">All events</a>
+    <section class="section container ev-related" aria-labelledby="more-events-title" data-more-section hidden>
+      <div class="group-title page-intro">
+        <div class="group-title__row">
+          <span class="group-title__rule" aria-hidden="true"></span>
+          <h2 class="group-title__name" id="more-events-title">Other upcoming events</h2>
+          <span class="group-title__rule" aria-hidden="true"></span>
+        </div>
       </div>
       <div data-more-events></div>
+      <p class="ev-related__all"><a class="button button--gold" href="/events.html">See all events</a></p>
     </section>
   </main>
 

@@ -26,17 +26,20 @@
 
   <header class="site-header" data-site-header></header>
 
-  <main id="main">
-    <article class="article" data-article>
-      <div class="container article__container" data-article-body></div>
-    </article>
+  <main id="main" class="story-page">
+    <!-- The story: top section, story box and details card (built by js/pages/post.js) -->
+    <div data-article-body></div>
 
-    <section class="section container band--light band--bleed" aria-labelledby="related-title" data-related-section hidden>
-      <div class="section-head">
-        <h2 id="related-title">More in <span data-related-category>this category</span></h2>
-        <a href="/posts.html" data-related-link>All news</a>
+    <section class="section container ev-related" aria-labelledby="related-title" data-related-section hidden>
+      <div class="group-title page-intro">
+        <div class="group-title__row">
+          <span class="group-title__rule" aria-hidden="true"></span>
+          <h2 class="group-title__name" id="related-title">More in <span data-related-category>this category</span></h2>
+          <span class="group-title__rule" aria-hidden="true"></span>
+        </div>
       </div>
       <div data-related-posts></div>
+      <p class="ev-related__all"><a class="button button--gold" href="/posts.html" data-related-link>See all news</a></p>
     </section>
   </main>
 
