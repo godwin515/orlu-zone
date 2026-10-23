@@ -1,0 +1,27 @@
+# Files Git should never upload for the Orlu Zone website
+
+# Operating system clutter
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor settings (keep your own VS Code settings local)
+.vscode/
+.idea/
+*.swp
+
+# Downloads and archives (don't commit the project zip)
+*.zip
+*.rar
+
+# Node tools, if ever used for testing or building
+node_modules/
+npm-debug.log*
+
+# Secrets: never commit passwords or API keys
+.env
+.env.*
+
+# Temporary files
+*.tmp
+*.log

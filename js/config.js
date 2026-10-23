@@ -35,3 +35,11 @@ export const SOCIAL_LINKS = {
   tiktok: "",
   linkedin: "",
 };
+
+/**
+ * The place shown on the Contact page map, and where "Get directions" goes.
+ * The street address from Admin → Site settings still shows as text; this
+ * is only what the map searches for. Change it here if the map should point
+ * somewhere else (a town, landmark or "latitude,longitude" all work).
+ */
+export const MAP_LOCATION = "Uzombi, Imo State, Nigeria";

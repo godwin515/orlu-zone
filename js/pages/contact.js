@@ -12,7 +12,8 @@
  */
 
 import { api } from "../api.js";
-import { SOCIAL, socialLinks, handleFrom, whatsappNumber } from "../social.js";
+import { SOCIAL, socialLinks, handleFrom } from "../social.js";
+import { MAP_LOCATION } from "../config.js";
 import { escapeHtml, renderShell, initShell, showLoading, showError } from "../ui.js";
 import { renderContent, enhanceContent } from "../content.js";
 
@@ -51,12 +52,11 @@ function contactHtml(site) {
   const whatsapp = site?.whatsapp_url && /^https:\/\//i.test(site.whatsapp_url) ? site.whatsapp_url : null;
 
   if (whatsapp) {
-    const number = whatsappNumber(whatsapp);
     cards.push(
       card({
         kind: "whatsapp",
         label: "WhatsApp",
-        value: number ? escapeHtml(number) : "Chat with us directly",
+        value: "Chat with us directly", // the number itself isn't shown; the button opens the chat
         href: whatsapp,
         action: "Chat on WhatsApp",
         external: true,
@@ -65,7 +65,8 @@ function contactHtml(site) {
   }
   if (site?.phone) {
     const tel = site.phone.replace(/[^\d+]/g, "");
-    cards.push(card({ kind: "phone", label: "Phone", value: escapeHtml(site.phone), href: `tel:${tel}`, action: "Call us" }));
+    // The number isn't shown; the button still calls it.
+    cards.push(card({ kind: "phone", label: "Phone", value: "Speak to us directly", href: `tel:${tel}`, action: "Call us" }));
   }
   if (site?.email) {
     cards.push(
@@ -79,7 +80,7 @@ function contactHtml(site) {
     );
   }
   if (site?.address) {
-    const map = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.address)}`;
+    const map = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(MAP_LOCATION || site.address)}`;
     cards.push(
       card({
         kind: "address",
@@ -101,10 +102,10 @@ function contactHtml(site) {
 /** A map of the address (Google Maps embed, no key needed). */
 function mapHtml(site) {
   if (!site?.address) return "";
-  const src = `https://www.google.com/maps?q=${encodeURIComponent(site.address)}&output=embed`;
+  const src = `https://www.google.com/maps?q=${encodeURIComponent(MAP_LOCATION || site.address)}&output=embed`;
   return `
     <figure class="contact-map">
-      <iframe src="${escapeHtml(src)}" title="Map: ${escapeHtml(site.address)}" loading="lazy"
+      <iframe src="${escapeHtml(src)}" title="Map: ${escapeHtml(MAP_LOCATION || site.address)}" loading="lazy"
         referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
       <figcaption class="contact-map__caption">
         <span class="contact-map__pin" aria-hidden="true">${ICONS.address}</span>

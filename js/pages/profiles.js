@@ -237,15 +237,26 @@ function cardHtml(p) {
     </li>`;
 }
 
+/* ---------------- One category at a time ----------------
+ * Only one category (section) shows at a time. "Next" shows the following
+ * one, "Previous" the one before; the category buttons at the top jump
+ * straight to any of them. Links from the homepage (#cat=…), a person's link
+ * (#person-…) and a category's own link (#group-…) open the right one.
+ */
+let groupsShown = []; // [[category, people], …] in page order
+let step = 0;
+
 function render(profiles) {
   current = profiles;
   const groups = groupByCategory(profiles);
+  groupsShown = groups;
 
-  els.list.innerHTML = groups
-    .map(([category, people], gi) => {
-      const anchor = anchorFor(category, gi);
-      return `
-        <section class="profile-group" id="${anchor}" aria-labelledby="${anchor}-title">
+  els.list.innerHTML =
+    groups
+      .map(([category, people], gi) => {
+        const anchor = anchorFor(category, gi);
+        return `
+        <section class="profile-group" id="${anchor}" aria-labelledby="${anchor}-title" data-step="${gi}"${gi === 0 ? "" : " hidden"}>
           <header class="group-title">
             <div class="group-title__row">
               <span class="group-title__rule" aria-hidden="true"></span>
@@ -256,21 +267,89 @@ function render(profiles) {
           </header>
           <ul class="profile-grid">${people.map((p) => cardHtml(p)).join("")}</ul>
         </section>`;
-    })
-    .join("");
+      })
+      .join("") + (groups.length > 1 ? `<nav class="group-pager" aria-label="Leadership categories" data-pager></nav>` : "");
 
-  // Jump links help when there are several groups.
+  // Category buttons at the top.
   if (groups.length > 1) {
     els.jump.innerHTML = `
       <ul class="filters__list">
         ${groups
-          .map(([category], gi) => `<li><a class="chip" href="#${anchorFor(category, gi)}">${escapeHtml(category)}</a></li>`)
+          .map(
+            ([category], gi) =>
+              `<li><a class="chip" href="#${anchorFor(category, gi)}" data-go-step="${gi}">${escapeHtml(category)}</a></li>`,
+          )
           .join("")}
       </ul>`;
     els.jump.hidden = false;
   } else {
     els.jump.hidden = true;
   }
+  showStep(0, { scroll: false, updateHash: false });
+}
+
+/** Show category number `index` (0-based) and hide the others. */
+function showStep(index, { scroll = true, updateHash = true } = {}) {
+  const sections = [...els.list.querySelectorAll(".profile-group")];
+  if (!sections.length) return null;
+  step = Math.max(0, Math.min(index, sections.length - 1));
+  sections.forEach((section, i) => (section.hidden = i !== step));
+
+  els.jump.querySelectorAll("[data-go-step]").forEach((chip) => {
+    if (Number(chip.dataset.goStep) === step) chip.setAttribute("aria-current", "true");
+    else chip.removeAttribute("aria-current");
+  });
+
+  const pager = els.list.querySelector("[data-pager]");
+  if (pager) {
+    const total = sections.length;
+    const prev = groupsShown[step - 1]?.[0];
+    const next = groupsShown[step + 1]?.[0];
+    pager.innerHTML = `
+      ${prev !== undefined
+        ? `<button type="button" class="group-pager__prev" data-step-prev>
+             <span aria-hidden="true">←</span> <span><small>Previous</small>${escapeHtml(prev)}</span>
+           </button>`
+        : `<span class="group-pager__spacer"></span>`}
+      <p class="group-pager__count" aria-live="polite">
+        <span class="visually-hidden">Showing category </span>${step + 1} of ${total}
+      </p>
+      ${next !== undefined
+        ? `<button type="button" class="button button--gold group-pager__next" data-step-next>
+             <span><small>Next</small>${escapeHtml(next)}</span> <span aria-hidden="true">→</span>
+           </button>`
+        : `<button type="button" class="button button--quiet group-pager__next group-pager__restart" data-step-first>
+             <span><small>That's everyone</small>Back to the first category</span> <span aria-hidden="true">↺</span>
+           </button>`}`;
+  }
+
+  const section = sections[step];
+  if (updateHash) history.replaceState(null, "", `#${section.id}`);
+  if (scroll) {
+    // Bring the category buttons and title into view, so the new section starts at the top.
+    (els.jump.hidden ? section : els.jump).scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  return section;
+}
+
+els.list.addEventListener("click", (e) => {
+  if (e.target.closest("[data-step-next]")) showStep(step + 1);
+  else if (e.target.closest("[data-step-prev]")) showStep(step - 1);
+  else if (e.target.closest("[data-step-first]")) showStep(0);
+});
+
+els.jump.addEventListener("click", (e) => {
+  const chip = e.target.closest("[data-go-step]");
+  if (!chip || e.metaKey || e.ctrlKey || e.shiftKey) return;
+  e.preventDefault();
+  showStep(Number(chip.dataset.goStep), { scroll: false });
+});
+
+/** Show the category a section element belongs to. */
+function showSection(section, opts) {
+  const sections = [...els.list.querySelectorAll(".profile-group")];
+  const i = sections.indexOf(section);
+  return i >= 0 ? showStep(i, opts) : null;
 }
 
 /* ---------------- Links from the homepage's Who's Who categories ----------------
@@ -348,6 +427,7 @@ function openCategory(key) {
   const section = findGroup(key);
   els.list.querySelector(".group-missing")?.remove();
   if (section) {
+    showSection(section, { scroll: false, updateHash: false });
     section.scrollIntoView({ behavior: "smooth", block: "start" });
     section.classList.remove("is-target");
     void section.offsetWidth; // restart the highlight
@@ -360,7 +440,7 @@ function openCategory(key) {
   const note = document.createElement("p");
   note.className = "group-missing";
   note.setAttribute("role", "status");
-  note.textContent = `No profiles have been added for ${label} yet. Here are all the profiles.`;
+  note.textContent = `No profiles have been added for ${label} yet. Use the buttons above or Next below to see the other categories.`;
   els.list.prepend(note);
   note.scrollIntoView({ behavior: "smooth", block: "center" });
 }
@@ -397,6 +477,9 @@ function buildView() {
 function openPerson(id, { updateHash = true } = {}) {
   const p = current.find((x) => String(x.id) === String(id));
   if (!p) return false;
+  const card = els.list.querySelector(`[data-person="${CSS.escape(String(p.id))}"]`);
+  const section = card?.closest(".profile-group");
+  if (section?.hidden) showSection(section, { scroll: false, updateHash: false });
   const dialog = view || buildView();
   const { position, biography } = positionOf(p);
   const blocks = parseBio(biography);
@@ -444,7 +527,10 @@ window.addEventListener("hashchange", () => {
   }
   if (window.location.hash.startsWith(PERSON_HASH)) {
     openPerson(decodeURIComponent(window.location.hash.slice(PERSON_HASH.length)), { updateHash: false });
+    return;
   }
+  const section = window.location.hash && document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+  if (section?.classList.contains("profile-group")) showSection(section, { updateHash: false });
 });
 
 /* ---------------- Load ---------------- */
@@ -474,7 +560,10 @@ async function load() {
       } else if (hash.startsWith("#cat=")) {
         openCategory(decodeURIComponent(hash.slice(5)));
       } else if (hash) {
-        document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView();
+        const target = document.getElementById(decodeURIComponent(hash.slice(1)));
+        const section = target?.closest(".profile-group");
+        if (section) showSection(section, { scroll: false, updateHash: false });
+        target?.scrollIntoView();
       }
     } catch {
       /* odd hash: ignore */

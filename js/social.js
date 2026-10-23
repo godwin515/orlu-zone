@@ -54,7 +54,7 @@ export const SOCIAL = {
 export function handleFrom(network, url) {
   try {
     const u = new URL(url);
-    if (network === "whatsapp") return whatsappNumber(url) || "Chat with us";
+    if (network === "whatsapp") return "Chat with us"; // the number itself isn't shown
     const parts = u.pathname.split("/").filter(Boolean);
     if (!parts.length) return u.hostname.replace(/^www\./, "");
     const last = network === "linkedin" ? parts[parts.length - 1] : parts[0];

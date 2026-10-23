@@ -33,7 +33,6 @@ function cardHtml(img, i) {
   const alt = img.alt_text || caption || `Orlu Zone photo ${number}`;
   return `
     <li class="gallery-card">
-     <div class="gallery-card__box">
       <a class="photo-grid__item gallery-card__frame" href="${safeUrl(img.public_url)}" data-index="${i}"
         data-caption="${escapeHtml(caption)}" data-alt="${escapeHtml(alt)}"
         aria-label="View photo ${number}${caption ? `: ${escapeHtml(caption)}` : ""} full size">
@@ -42,7 +41,6 @@ function cardHtml(img, i) {
         <span class="gallery-card__view" aria-hidden="true">${VIEW_ICON}<span>View photo</span></span>
       </a>
       ${caption ? `<div class="gallery-card__plate"><p class="gallery-card__caption">${escapeHtml(caption)}</p></div>` : ""}
-     </div>
     </li>`;
 }
 

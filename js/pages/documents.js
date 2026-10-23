@@ -6,8 +6,10 @@
  * download_url path. The download link is that path joined to the API
  * origin from js/config.js (never an R2 storage address).
  *
- * "View" opens the PDF inside the page (a full-screen viewer); on phones,
- * whose browsers can't show a PDF inside a page, it opens in a new tab.
+ * "View" opens the PDF inside the page (a full-screen viewer). Computers use
+ * the browser's own PDF viewer; phones, whose browsers can't show a PDF
+ * inside a page, use the built-in reader in js/pdf-reader.js. Nothing is
+ * saved to the device: only "Download" saves the file.
  *
  * Clicking Download fetches the file first, so a document withdrawn since
  * the list loaded shows a friendly message instead of a raw 404 page.
@@ -16,6 +18,7 @@
 
 import { api, formatDate, documentDownloadUrl, fetchDocumentFile, saveDocumentFile } from "../api.js";
 import { escapeHtml, renderShell, initShell, showLoading, showEmpty, showError } from "../ui.js";
+import { renderPdf, loadPdfJs } from "../pdf-reader.js";
 
 const SHOW_FILTER_FROM = 6; // show the "find a document" box once there are this many
 
@@ -142,17 +145,22 @@ async function getFile(doc, row, button, busyLabel) {
 
 /* ---------------- Viewer ---------------- */
 
-// Desktop browsers can show a PDF inside the page; most phone browsers can't.
-// iPhones/iPads show a PDF in a new tab. Android saves it and offers to open it
-// in a PDF app, so there "View" saves the file and says so.
-const isAndroid = /Android/i.test(navigator.userAgent);
-const canShowInline =
-  !isAndroid && (navigator.pdfViewerEnabled ?? !/iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent));
+// Computers can show a PDF inside the page with the browser's own viewer.
+// Phones and tablets (Android, iPhone, iPad) can't, so they get the built-in
+// reader instead, which draws the pages on the page and saves nothing.
+const isPhoneOrTablet =
+  /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); // iPadOS
+const useBrowserViewer = !isPhoneOrTablet && (navigator.pdfViewerEnabled ?? true);
+
+const ZOOMS = [1, 1.5, 2];
 
 let viewer = null;
 let viewerUrl = "";
 let viewerDoc = null;
 let viewerReturn = null;
+let reader = null;
+let zoomIndex = 0;
 
 function buildViewer() {
   viewer = document.createElement("dialog");
@@ -162,67 +170,124 @@ function buildViewer() {
     <div class="pdf-viewer__bar">
       <p class="pdf-viewer__title" id="pdf-viewer-title"></p>
       <div class="pdf-viewer__actions">
+        <div class="pdf-viewer__zoom" data-zoom-controls hidden>
+          <button type="button" class="pdf-viewer__zoom-btn" data-zoom-out aria-label="Zoom out">−</button>
+          <span class="pdf-viewer__zoom-level" data-zoom-level aria-live="polite">100%</span>
+          <button type="button" class="pdf-viewer__zoom-btn" data-zoom-in aria-label="Zoom in">+</button>
+        </div>
         <button type="button" class="button pdf-viewer__download" data-viewer-download>Download</button>
-        <button type="button" class="button button--quiet pdf-viewer__close" data-viewer-close>
-          <span aria-hidden="true">✕</span> Close
+        <button type="button" class="button button--quiet pdf-viewer__close" data-viewer-close aria-label="Close">
+          <span aria-hidden="true">✕</span><span class="pdf-viewer__close-text" aria-hidden="true"> Close</span>
         </button>
       </div>
     </div>
-    <iframe class="pdf-viewer__frame" title="Document preview"></iframe>`;
+    <iframe class="pdf-viewer__frame" title="Document preview" hidden></iframe>
+    <div class="pdf-viewer__scroll" data-pdf-scroll hidden>
+      <p class="pdf-viewer__status" data-pdf-status role="status"></p>
+      <div class="pdf-viewer__pages" data-pdf-pages></div>
+    </div>`;
   document.body.appendChild(viewer);
+
   viewer.addEventListener("click", (e) => {
     if (e.target.closest("[data-viewer-close]")) viewer.close();
     if (e.target.closest("[data-viewer-download]") && viewerDoc && files.has(viewerDoc.id)) {
       saveDocumentFile(files.get(viewerDoc.id));
+    }
+    const zoomIn = e.target.closest("[data-zoom-in]");
+    const zoomOut = e.target.closest("[data-zoom-out]");
+    if ((zoomIn || zoomOut) && reader) {
+      zoomIndex = Math.max(0, Math.min(ZOOMS.length - 1, zoomIndex + (zoomIn ? 1 : -1)));
+      applyZoom();
     }
   });
   viewer.addEventListener("close", () => {
     viewer.querySelector("iframe").src = "about:blank";
     if (viewerUrl) URL.revokeObjectURL(viewerUrl);
     viewerUrl = "";
+    reader?.destroy();
+    reader = null;
     viewerReturn?.focus();
   });
   return viewer;
 }
 
-function showInViewer(doc, file) {
+function applyZoom() {
+  const box = viewer;
+  box.querySelector("[data-zoom-level]").textContent = `${Math.round(ZOOMS[zoomIndex] * 100)}%`;
+  box.querySelector("[data-zoom-out]").disabled = zoomIndex === 0;
+  box.querySelector("[data-zoom-in]").disabled = zoomIndex === ZOOMS.length - 1;
+  reader?.setZoom(ZOOMS[zoomIndex]);
+}
+
+function openViewer(doc) {
   const dialog = viewer || buildViewer();
   viewerDoc = doc;
-  viewerUrl = URL.createObjectURL(file.blob);
   dialog.querySelector(".pdf-viewer__title").textContent = doc.title;
-  dialog.querySelector("iframe").title = `Preview of ${doc.title}`;
-  dialog.querySelector("iframe").src = viewerUrl;
-  dialog.showModal();
+  if (!dialog.open) dialog.showModal();
   dialog.querySelector("[data-viewer-close]").focus();
+  return dialog;
+}
+
+/** Computers: the browser's own PDF viewer, in a frame. */
+function showInBrowserViewer(doc, file) {
+  const dialog = openViewer(doc);
+  dialog.querySelector("[data-pdf-scroll]").hidden = true;
+  dialog.querySelector("[data-zoom-controls]").hidden = true;
+  const frame = dialog.querySelector("iframe");
+  frame.hidden = false;
+  viewerUrl = URL.createObjectURL(file.blob);
+  frame.title = `Preview of ${doc.title}`;
+  frame.src = viewerUrl;
+}
+
+/** Phones and tablets: the built-in reader. */
+async function showInReader(doc, file) {
+  const dialog = openViewer(doc);
+  dialog.querySelector("iframe").hidden = true;
+  const scroll = dialog.querySelector("[data-pdf-scroll]");
+  const pages = dialog.querySelector("[data-pdf-pages]");
+  const status = dialog.querySelector("[data-pdf-status]");
+  const zoom = dialog.querySelector("[data-zoom-controls]");
+  scroll.hidden = false;
+  scroll.scrollTop = 0;
+  zoom.hidden = true;
+  pages.innerHTML = "";
+  pages.style.removeProperty("--pdf-zoom");
+  status.hidden = false;
+  status.className = "pdf-viewer__status";
+  status.textContent = "Opening the document…";
+
+  try {
+    reader?.destroy();
+    reader = await renderPdf(pages, file.blob);
+    if (!dialog.open || viewerDoc !== doc) {
+      reader.destroy();
+      reader = null;
+      return;
+    }
+    status.hidden = true;
+    zoomIndex = 0;
+    zoom.hidden = false;
+    applyZoom();
+    pages.setAttribute("aria-label", `${doc.title}, ${reader.pages} ${reader.pages === 1 ? "page" : "pages"}`);
+  } catch {
+    status.className = "pdf-viewer__status pdf-viewer__status--error";
+    status.textContent = "This document couldn't be shown here. Tap Download to save it and open it on your phone.";
+  }
 }
 
 async function viewDocument(doc, row, button) {
   viewerReturn = button;
-  // Phones: open the browser's own PDF viewer in a new tab. The tab is opened
-  // now (during the tap) so pop-up blockers allow it, then filled in.
-  const tab = canShowInline || isAndroid ? null : window.open("", "_blank");
+  if (!useBrowserViewer) loadPdfJs().catch(() => {}); // start loading the reader while the file downloads
   const file = await getFile(doc, row, button, "Opening…");
-  if (!file) {
-    tab?.close();
-    return;
-  }
+  if (!file) return;
   if (file === "fallback") {
     // The browser couldn't fetch it here; open the file's address directly.
-    const href = documentDownloadUrl(doc);
-    if (tab) tab.location.href = href;
-    else window.open(href, "_blank", "noopener");
+    window.open(documentDownloadUrl(doc), "_blank", "noopener");
     return;
   }
-  if (isAndroid) {
-    saveDocumentFile(file);
-    setStatus(row, "Saved to your phone. Tap the download notification to open it.", "ok");
-    return;
-  }
-  if (tab) {
-    tab.location.href = URL.createObjectURL(file.blob);
-    return;
-  }
-  showInViewer(doc, file);
+  if (useBrowserViewer) showInBrowserViewer(doc, file);
+  else showInReader(doc, file);
 }
 
 /* ---------------- Clicks ---------------- */

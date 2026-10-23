@@ -3967,6 +3967,123 @@ html:has(.pdf-viewer[open]) {
   background: #525659; /* the grey behind PDF pages, so loading doesn't flash white */
 }
 
+/* Phones and tablets: the built-in reader (js/pdf-reader.js) */
+.pdf-viewer__frame[hidden],
+.pdf-viewer__scroll[hidden],
+.pdf-viewer__zoom[hidden],
+.pdf-viewer__status[hidden] {
+  display: none;
+}
+
+.pdf-viewer__scroll {
+  flex: 1;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #525659;
+}
+
+.pdf-viewer__pages {
+  --pdf-zoom: 1;
+  display: grid;
+  gap: 12px;
+  width: calc(100% * var(--pdf-zoom));
+  padding: 12px;
+}
+
+.pdf-page {
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+.pdf-page canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pdf-viewer__status {
+  margin: 0;
+  padding: var(--space-6) var(--gutter);
+  color: #fff;
+  font-family: var(--font-display);
+  text-align: center;
+}
+
+.pdf-viewer__status--error {
+  color: #ffd9d4;
+}
+
+.pdf-viewer__zoom {
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(227, 167, 47, 0.6);
+  border-radius: 999px;
+}
+
+.pdf-viewer__zoom-btn {
+  width: 2.5rem;
+  min-height: 2.5rem;
+  border: 0;
+  background: transparent;
+  color: var(--gold);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.pdf-viewer__zoom-btn:disabled {
+  color: rgba(255, 255, 255, 0.3);
+  cursor: default;
+}
+
+.pdf-viewer__zoom-level {
+  min-width: 3rem;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* Phones: the title on its own line, buttons underneath */
+@media (max-width: 600px) {
+  .pdf-viewer__bar {
+    padding-block: var(--space-2);
+  }
+
+  .pdf-viewer__title {
+    flex-basis: 100%;
+    font-size: var(--step--1);
+  }
+
+  .pdf-viewer__actions {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .pdf-viewer__actions .button {
+    min-height: 2.5rem;
+    padding-inline: 0.9rem;
+  }
+
+  .pdf-viewer__actions {
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  .pdf-viewer__close {
+    width: 2.5rem;
+    margin-left: auto;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .pdf-viewer__close-text {
+    display: none;
+  }
+}
+
 .doc__unavailable {
   color: var(--muted);
   font-family: var(--font-display);
@@ -4634,9 +4751,10 @@ html:has(.pdf-viewer[open]) {
 
 /* ---------------- Gallery page ----------------
  * Every photo gets the same frame, whatever its shape: a square window
- * (the full photo shows in the viewer), a gold border with a thin outer
- * gold ring like the Leadership portraits, a numbered caption plate, and
- * a gentle rise into view. New uploads pick this up automatically.
+ * (the full photo shows in the viewer) with a thin gold line and rounded
+ * corners, its caption underneath (if it has one), and a gentle rise into
+ * view. No box around them. 3 a row on computers, 2 on tablets and phones.
+ * New uploads pick this up automatically.
  */
 .gallery-intro {
   margin-bottom: var(--space-6);
@@ -4660,43 +4778,27 @@ html:has(.pdf-viewer[open]) {
   min-width: 0;
 }
 
-/* The box around each photo and its caption: a gold border with a
-   soft gold glow */
-.gallery-card__box {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: clamp(1rem, 2vw, 1.4rem);
-  border: 2px solid var(--gold);
-  border-radius: 36px;
-  background: var(--brand); /* the same dark green as the homepage */
-  box-shadow:
-    0 0 22px rgba(227, 167, 47, 0.25),
-    0 12px 28px rgba(0, 0, 0, 0.25);
-  transition: border-color 0.35s, box-shadow 0.35s;
-}
-
-.gallery-card:hover .gallery-card__box,
-.gallery-card:focus-within .gallery-card__box {
-  border-color: #f0bd52;
-  box-shadow:
-    0 0 34px rgba(227, 167, 47, 0.45),
-    0 16px 34px rgba(0, 0, 0, 0.32);
-}
-
-/* 3 a row on desktops and laptops (700px and wider), 2 on large phones
-   and small tablets, 1 on phones */
+/* 3 a row on desktops and laptops (700px and wider), 2 a row on
+   tablets and every phone */
 @media (max-width: 699px) {
+  .gallery-wall {
+    --gap: clamp(0.75rem, 3.5vw, 1.25rem);
+  }
+
   .gallery-card {
     flex-basis: calc((100% - var(--gap)) / 2);
   }
-}
 
-@media (max-width: 520px) {
-  .gallery-card {
-    flex-basis: 100%;
-    max-width: 26rem;
+  .gallery-wall .gallery-card__frame {
+    border-radius: 18px;
+  }
+
+  .gallery-wall .gallery-card__plate {
+    margin-top: var(--space-2);
+  }
+
+  .gallery-wall .gallery-card__caption {
+    font-size: var(--step--1);
   }
 }
 
@@ -4705,7 +4807,7 @@ html:has(.pdf-viewer[open]) {
   position: relative;
   display: block;
   aspect-ratio: 1;
-  margin: 8px; /* room for the outer ring */
+  margin: 0;
   overflow: hidden;
   border: 1.5px solid var(--gold);
   border-radius: 24px;
@@ -4816,6 +4918,12 @@ html:has(.pdf-viewer[open]) {
   height: 6px;
   background: var(--gold);
   transform: rotate(45deg);
+}
+
+/* Above the photo's shadow, so the whole caption is the same colour */
+.gallery-card__plate {
+  position: relative;
+  z-index: 1;
 }
 
 .gallery-card__caption {
@@ -6196,6 +6304,135 @@ a.story-hero__category:hover {
   .story-info__share-title,
   .story-info__share {
     display: none;
+  }
+}
+
+/* ---------------- Leadership: one category at a time ----------------
+ * Previous / "2 of 5" / Next under the category that's showing.
+ */
+.profile-group[hidden] {
+  display: none;
+}
+
+.profile-group:not([hidden]) {
+  animation: group-in 0.45s ease both;
+}
+
+@keyframes group-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+.profile-jump .chip[aria-current="true"] {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: var(--brand);
+}
+
+.group-pager {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: clamp(2rem, 5vw, 3rem);
+  padding-top: var(--space-5);
+  border-top: 1px solid rgba(227, 167, 47, 0.35);
+}
+
+.group-pager__prev,
+.group-pager__next {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 3.25rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  text-align: left;
+  cursor: pointer;
+}
+
+.group-pager__prev {
+  justify-self: start;
+  border: 1.5px solid rgba(227, 167, 47, 0.6);
+  background: transparent;
+  color: var(--ink);
+}
+
+.group-pager__prev:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.group-pager__next {
+  justify-self: end;
+  text-align: right;
+}
+
+.group-pager__prev small,
+.group-pager__next small {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.group-pager__prev > span:last-child,
+.group-pager__next > span:first-child {
+  display: grid;
+  max-width: 16rem;
+  line-height: 1.25;
+}
+
+.group-pager__restart {
+  border: 1.5px solid rgba(227, 167, 47, 0.6);
+  color: var(--ink);
+}
+
+.group-pager__count {
+  margin: 0;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+/* Phones: count on top, buttons side by side underneath */
+@media (max-width: 600px) {
+  .group-pager {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .group-pager__count {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    text-align: center;
+  }
+
+  .group-pager__prev,
+  .group-pager__next {
+    width: 100%;
+    padding-inline: 0.9rem;
+    font-size: var(--step--1);
+  }
+
+  .group-pager__spacer {
+    display: none;
+  }
+
+  .group-pager__next:only-of-type,
+  .group-pager__spacer + .group-pager__count + .group-pager__next {
+    grid-column: 1 / -1;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-group:not([hidden]) {
+    animation: none;
   }
 }
 
