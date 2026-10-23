@@ -4798,6 +4798,7 @@ html:has(.pdf-viewer[open]) {
   }
 
   .gallery-wall .gallery-card__caption {
+    padding: var(--space-2) var(--space-3);
     font-size: var(--step--1);
   }
 }
@@ -4926,13 +4927,97 @@ html:has(.pdf-viewer[open]) {
   z-index: 1;
 }
 
+/* Caption design: a short gold line with a diamond, a "View more" button,
+   and the write-up (hidden until "View more" is tapped) in italic serif. */
+.gallery-card__rule {
+  position: relative;
+  width: 3.5rem;
+  height: 1px;
+  margin-bottom: var(--space-1);
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.gallery-card__rule::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
 .gallery-card__caption {
-  max-width: 30ch;
-  margin: 0;
-  color: var(--ink);
+  position: relative;
+  width: 100%;
+  margin: var(--space-3) 0 0;
+  padding: var(--space-3) var(--space-4);
+  border-top: 3px solid var(--gold);
+  border-radius: 14px;
+  background: #ece8dd; /* soft off-white */
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
+  color: #143d27; /* dark green text */
   font-family: var(--font-body);
   font-size: var(--step-0);
-  line-height: 1.45;
+  font-style: italic;
+  line-height: 1.55;
+  text-align: center;
+  animation: caption-in 0.3s ease both;
+}
+
+/* A small pointer from the box up to the View less button */
+.gallery-card__caption::before {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-top: 3px solid var(--gold);
+  border-left: 3px solid var(--gold);
+  background: #ece8dd;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.gallery-card__caption[hidden] {
+  display: none;
+}
+
+@keyframes caption-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-card__caption {
+    animation: none;
+  }
+}
+
+.gallery-card__more {
+  margin-top: 0;
+  padding: 0.35rem 1rem;
+  border: 1px solid #e9c46a;
+  border-radius: 999px;
+  background: #f3dfa6; /* light gold */
+  color: #143d27;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.25s, border-color 0.25s;
+}
+
+.gallery-card__more:hover,
+.gallery-card__more[aria-expanded="true"] {
+  border-color: var(--gold);
+  background: #f7e7b9;
+}
+
+.gallery-card__more[hidden] {
+  display: none;
 }
 
 /* Rise into view as you scroll (skipped for reduced motion) */

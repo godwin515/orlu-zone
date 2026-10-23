@@ -40,7 +40,13 @@ function cardHtml(img, i) {
           ${img.width && img.height ? `width="${Number(img.width)}" height="${Number(img.height)}"` : ""}>
         <span class="gallery-card__view" aria-hidden="true">${VIEW_ICON}<span>View photo</span></span>
       </a>
-      ${caption ? `<div class="gallery-card__plate"><p class="gallery-card__caption">${escapeHtml(caption)}</p></div>` : ""}
+      ${caption ? `
+      <div class="gallery-card__plate">
+        <span class="gallery-card__rule" aria-hidden="true"></span>
+        <button type="button" class="gallery-card__more" data-caption-toggle aria-expanded="false"
+          aria-controls="gallery-caption-${i}">View more</button>
+        <p class="gallery-card__caption" id="gallery-caption-${i}" hidden>${escapeHtml(caption)}</p>
+      </div>` : ""}
     </li>`;
 }
 
@@ -84,6 +90,22 @@ function render() {
   state.seen = shown;
   els.more.hidden = shown >= total;
 }
+
+/* ---------------- Captions behind "View more" ----------------
+ * Every photo's write-up starts hidden. "View more" shows it and
+ * "View less" hides it again. The full-size viewer always shows it.
+ */
+els.gallery.addEventListener("click", (e) => {
+  const button = e.target.closest("[data-caption-toggle]");
+  if (!button) return;
+  const plate = button.closest(".gallery-card__plate");
+  const text = plate.querySelector(".gallery-card__caption");
+  const open = text.hidden;
+  text.hidden = !open;
+  plate.classList.toggle("is-open", open);
+  button.setAttribute("aria-expanded", String(open));
+  button.textContent = open ? "View less" : "View more";
+});
 
 els.moreButton.addEventListener("click", () => {
   const firstNew = state.shown;
