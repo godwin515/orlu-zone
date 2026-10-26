@@ -288,9 +288,52 @@ main .section.band--light {
   color: #fff;
 }
 
+.nav__link {
+  position: relative;
+  border-radius: 10px;
+  transition: color 0.2s, background 0.2s;
+}
+
+/* A gold bar under the link that grows in on hover and stays on the
+   current page */
+.nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0.6rem;
+  right: 0.6rem;
+  bottom: 0.15rem;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.25s ease;
+}
+
+.nav__link:hover::after {
+  transform: scaleX(0.6);
+}
+
+/* The page you're on: gold text, a soft gold glow behind it, full gold bar */
 .nav__link[aria-current="page"] {
-  box-shadow: inset 0 -3px 0 var(--gold);
-  color: #fff;
+  background: rgba(227, 167, 47, 0.12);
+  color: var(--gold);
+}
+
+.nav__link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+.nav__link[aria-current="page"]:hover {
+  background: rgba(227, 167, 47, 0.18);
+  color: var(--gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav__link,
+  .nav__link::after {
+    transition: none;
+  }
 }
 
 /* Desktops and laptops (1024px and wider): all page links in the header,

@@ -290,6 +290,25 @@ const NAV = [
   { label: "Contact", note: "Ask a question or share news", href: urls.contact(), match: ["/contact.html"] },
 ];
 
+/*
+ * Which menu link is the current page. The live site (Cloudflare) serves
+ * pages without ".html" ("/gallery" instead of "/gallery.html") and may add
+ * a trailing slash, so both sides are tidied the same way before comparing:
+ * "/gallery.html", "/gallery" and "/gallery/" all become "/gallery", and
+ * "/", "/index" and "/index.html" all become "/".
+ */
+export function cleanPath(path) {
+  let p = String(path || "/").toLowerCase().split(/[?#]/)[0];
+  p = p.replace(/\/+$/, "") || "/";
+  p = p.replace(/\.html$/, "");
+  if (p === "/index") p = "/";
+  return p;
+}
+
+function isCurrent(item, path) {
+  return item.match.some((m) => cleanPath(m) === path);
+}
+
 const MENU_EXTRA = [
   { label: "Invest at home", href: "/about.html#invest" },
   { label: "Who's Who categories", href: "/index.html#whoswho-title" },
@@ -300,9 +319,9 @@ let searchListenerAdded = false;
 function renderHeader(site) {
   const header = document.querySelector("[data-site-header]");
   if (!header) return;
-  const path = window.location.pathname;
+  const path = cleanPath(window.location.pathname);
   const name = site?.community_name || "Orlu Land Compendium";
-  const currentQ = path === "/search.html" ? getParam("q") || "" : "";
+  const currentQ = path === "/search" ? getParam("q") || "" : "";
 
   // The header renders twice (defaults, then real site settings). Remember
   // what the person was doing so the second render doesn't undo it.
@@ -328,7 +347,7 @@ function renderHeader(site) {
           ${NAV.map(
             (item) => `
             <li><a class="nav__link" href="${item.href}"
-              ${item.match.includes(path) ? 'aria-current="page"' : ""}>${item.label}</a></li>`,
+              ${isCurrent(item, path) ? 'aria-current="page"' : ""}>${item.label}</a></li>`,
           ).join("")}
         </ul>
       </nav>
@@ -370,7 +389,7 @@ function renderHeader(site) {
         <ul>
           ${NAV.map(
             (item) => `
-            <li><a class="drawer__link" href="${item.href}" ${item.match.includes(path) ? 'aria-current="page"' : ""}>
+            <li><a class="drawer__link" href="${item.href}" ${isCurrent(item, path) ? 'aria-current="page"' : ""}>
               <span class="drawer__label">${item.label}</span>
               <span class="drawer__note">${item.note}</span>
             </a></li>`,
