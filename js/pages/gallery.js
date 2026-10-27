@@ -43,9 +43,10 @@ function cardHtml(img, i) {
       ${caption ? `
       <div class="gallery-card__plate">
         <span class="gallery-card__rule" aria-hidden="true"></span>
-        <button type="button" class="gallery-card__more" data-caption-toggle aria-expanded="false"
-          aria-controls="gallery-caption-${i}">View more</button>
-        <p class="gallery-card__caption" id="gallery-caption-${i}" hidden>${escapeHtml(caption)}</p>
+        <div class="gallery-card__caption">
+          <p class="gallery-card__text" id="gallery-caption-${i}" data-full="${escapeHtml(caption)}"><span data-caption-words>${escapeHtml(caption)}</span><button type="button" class="gallery-card__more" data-caption-toggle aria-expanded="false"
+            aria-controls="gallery-caption-${i}" hidden>more</button></p>
+        </div>
       </div>` : ""}
     </li>`;
 }
@@ -87,25 +88,82 @@ function render() {
     .join("")}</ul>`;
   attachLightbox(els.gallery);
   animateIn(els.gallery.querySelector(".gallery-wall"));
+  markLongCaptions();
   state.seen = shown;
   els.more.hidden = shown >= total;
 }
 
-/* ---------------- Captions behind "View more" ----------------
- * Every photo's write-up starts hidden. "View more" shows it and
- * "View less" hides it again. The full-size viewer always shows it.
+/* ---------------- Captions: two lines, then "more" ----------------
+ * Each caption shows up to two lines. If it's longer, it's cut at a word so
+ * that "… more" ends the second line; tapping it shows the rest, and "less"
+ * folds it back. Re-measured when the screen size changes, since the number
+ * of lines depends on the width.
  */
+const LINES = 2;
+
+function linesOf(el) {
+  const lh = parseFloat(getComputedStyle(el).lineHeight) || 24;
+  return Math.round(el.getBoundingClientRect().height / lh);
+}
+
+function fitCaption(p) {
+  const words = p.querySelector("[data-caption-words]");
+  const button = p.querySelector("[data-caption-toggle]");
+  const full = p.dataset.full || "";
+  if (p.closest(".gallery-card__caption").classList.contains("is-open")) return;
+
+  // Fits as it is? Then no "more".
+  words.textContent = full;
+  button.hidden = true;
+  if (linesOf(p) <= LINES) return;
+
+  // Longest run of words that fits on two lines together with "… more".
+  button.hidden = false;
+  button.textContent = "more";
+  const parts = full.split(/\s+/);
+  let lo = 1;
+  let hi = parts.length - 1;
+  let best = 1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    words.textContent = `${parts.slice(0, mid).join(" ")}… `;
+    if (linesOf(p) <= LINES) {
+      best = mid;
+      lo = mid + 1;
+    } else {
+      hi = mid - 1;
+    }
+  }
+  words.textContent = `${parts.slice(0, best).join(" ").replace(/[,;:.\s]+$/, "")}… `;
+}
+
+function markLongCaptions() {
+  els.gallery.querySelectorAll(".gallery-card__text[data-full]").forEach(fitCaption);
+}
+
 els.gallery.addEventListener("click", (e) => {
   const button = e.target.closest("[data-caption-toggle]");
   if (!button) return;
-  const plate = button.closest(".gallery-card__plate");
-  const text = plate.querySelector(".gallery-card__caption");
-  const open = text.hidden;
-  text.hidden = !open;
-  plate.classList.toggle("is-open", open);
+  const p = button.closest(".gallery-card__text");
+  const box = button.closest(".gallery-card__caption");
+  const open = !box.classList.contains("is-open");
+  box.classList.toggle("is-open", open);
   button.setAttribute("aria-expanded", String(open));
-  button.textContent = open ? "View less" : "View more";
+  if (open) {
+    p.querySelector("[data-caption-words]").textContent = `${p.dataset.full} `;
+    button.textContent = "less";
+  } else {
+    fitCaption(p);
+  }
 });
+
+let resizeTimer = 0;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(markLongCaptions, 150);
+});
+// Web fonts can change line breaks once they load.
+document.fonts?.ready?.then(markLongCaptions);
 
 els.moreButton.addEventListener("click", () => {
   const firstNew = state.shown;

@@ -4840,10 +4840,16 @@ html:has(.pdf-viewer[open]) {
     margin-top: var(--space-2);
   }
 
-  .gallery-wall .gallery-card__caption {
+  .gallery-wall .gallery-card__caption.is-open {
     padding: var(--space-2) var(--space-3);
+  }
+
+  .gallery-wall .gallery-card__text,
+  .gallery-wall .gallery-card__more {
     font-size: var(--step--1);
   }
+
+
 }
 
 /* The frame: one thin gold line around the photo */
@@ -4970,8 +4976,9 @@ html:has(.pdf-viewer[open]) {
   z-index: 1;
 }
 
-/* Caption design: a short gold line with a diamond, a "View more" button,
-   and the write-up (hidden until "View more" is tapped) in italic serif. */
+/* Caption design: a short gold line with a diamond, then the write-up in an
+   off-white box. Long captions stop at two lines with "… more" at the end
+   of the second line; tapping it shows the rest, "less" folds it back. */
 .gallery-card__rule {
   position: relative;
   width: 3.5rem;
@@ -4992,39 +4999,37 @@ html:has(.pdf-viewer[open]) {
 }
 
 .gallery-card__caption {
+  --caption-bg: #ece8dd; /* soft off-white, used when opened */
   position: relative;
   width: 100%;
-  margin: var(--space-3) 0 0;
+  margin-top: var(--space-2);
+  text-align: center;
+}
+
+/* Closed: plain text straight on the page, no box */
+.gallery-card__text {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+/* Opened: the full write-up in the off-white box */
+.gallery-card__caption.is-open {
   padding: var(--space-3) var(--space-4);
   border-top: 3px solid var(--gold);
   border-radius: 14px;
-  background: #ece8dd; /* soft off-white */
+  background: var(--caption-bg);
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
-  color: #143d27; /* dark green text */
-  font-family: var(--font-body);
-  font-size: var(--step-0);
-  font-style: italic;
-  line-height: 1.55;
-  text-align: center;
+  text-align: left;
   animation: caption-in 0.3s ease both;
 }
 
-/* A small pointer from the box up to the View less button */
-.gallery-card__caption::before {
-  content: "";
-  position: absolute;
-  top: -9px;
-  left: 50%;
-  width: 12px;
-  height: 12px;
-  border-top: 3px solid var(--gold);
-  border-left: 3px solid var(--gold);
-  background: #ece8dd;
-  transform: translateX(-50%) rotate(45deg);
-}
-
-.gallery-card__caption[hidden] {
-  display: none;
+.gallery-card__caption.is-open .gallery-card__text {
+  color: #143d27;
+  font-style: italic;
 }
 
 @keyframes caption-in {
@@ -5033,30 +5038,186 @@ html:has(.pdf-viewer[open]) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gallery-card__caption {
+  .gallery-card__caption.is-open {
     animation: none;
   }
 }
 
 .gallery-card__more {
-  margin-top: 0;
-  padding: 0.35rem 1rem;
-  border: 1px solid #e9c46a;
-  border-radius: 999px;
-  background: #f3dfa6; /* light gold */
-  color: #143d27;
-  font-family: var(--font-display);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.25s, border-color 0.25s;
+    font-size: var(--step--1);
+  }
+
+
 }
 
-.gallery-card__more:hover,
-.gallery-card__more[aria-expanded="true"] {
-  border-color: var(--gold);
-  background: #f7e7b9;
+/* The frame: one thin gold line around the photo */
+.gallery-wall .gallery-card__frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  margin: 0;
+  overflow: hidden;
+  border: 1.5px solid var(--gold);
+  border-radius: 24px;
+  background: #0f2f1e;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
+  transition: box-shadow 0.35s, transform 0.35s;
+}
+
+.gallery-wall .gallery-card__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%; /* keeps faces in view on tall photos */
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Shade and "View" badge, shown on hover and keyboard focus */
+.gallery-card__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 45%, rgba(8, 28, 18, 0.75));
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.gallery-card__view {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--brand);
+  font-family: var(--font-display);
+  font-size: var(--step--1);
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 10px);
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+.gallery-card__view svg {
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.gallery-card__frame:hover,
+.gallery-card__frame:focus-visible {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 24px 6px rgba(227, 167, 47, 0.25),
+    0 24px 44px rgba(0, 0, 0, 0.5);
+}
+
+.gallery-card__frame:hover img,
+.gallery-card__frame:focus-visible img {
+  transform: scale(1.06);
+}
+
+.gallery-card__frame:hover::after,
+.gallery-card__frame:focus-visible::after,
+.gallery-card__frame:hover .gallery-card__view,
+.gallery-card__frame:focus-visible .gallery-card__view {
+  opacity: 1;
+}
+
+.gallery-card__frame:hover .gallery-card__view,
+.gallery-card__frame:focus-visible .gallery-card__view {
+  transform: translate(-50%, 0);
+}
+
+/* Caption plate: gold number between diamonds, then the caption */
+.gallery-card__plate {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-4);
+  padding-bottom: var(--space-1);
+  text-align: center;
+}
+
+.gallery-card__number {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.gallery-card__number::before,
+.gallery-card__number::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+
+/* Above the photo's shadow, so the whole caption is the same colour */
+.gallery-card__plate {
+  position: relative;
+  z-index: 1;
+}
+
+/* Caption design: a short gold line with a diamond, then the write-up in an
+   off-white box. Long captions stop at two lines with "… more" at the end
+   of the second line; tapping it shows the rest, "less" folds it back. */
+.gallery-card__rule {
+  position: relative;
+  width: 3.5rem;
+  height: 1px;
+  margin-bottom: var(--space-1);
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.gallery-card__rule::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* "more" / "less": a small gold link at the end of the text */
+.gallery-card__more {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: inherit;
+  font-style: normal;
+  font-weight: 500 !important;
+  line-height: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.gallery-card__more:hover {
+  text-decoration: underline;
+}
+
+.gallery-card__caption.is-open .gallery-card__more {
+  color: #8a5d00;
 }
 
 .gallery-card__more[hidden] {
