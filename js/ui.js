@@ -284,7 +284,7 @@ const NAV = [
   { label: "News", note: "Announcements and stories", href: urls.posts(), match: ["/posts.html", "/post.html", "/category.html"] },
   { label: "Events", note: "Meetings, festivals and gatherings", href: urls.events(), match: ["/events.html", "/event.html"] },
   { label: "Gallery", note: "Photos from home", href: urls.gallery(), match: ["/gallery.html"] },
-  { label: "About", note: "Orlu Zone, the Compendium and investing", href: urls.about(), match: ["/about.html"] },
+  { label: "About", note: "Orlu Land, the Compendium and investing", href: urls.about(), match: ["/about.html"] },
   { label: "Leadership", note: "Profiles of community leaders", href: urls.profiles(), match: ["/profiles.html"] },
   { label: "Documents", note: "Forms and reports to download", href: urls.documents(), match: ["/documents.html"] },
   { label: "Contact", note: "Ask a question or share news", href: urls.contact(), match: ["/contact.html"] },
@@ -478,7 +478,7 @@ const FOOTER_LINKS = {
     { label: "Search", href: "/search.html" },
   ],
   community: [
-    { label: "About Orlu Zone", href: urls.about() },
+    { label: "About Orlu Land", href: urls.about() },
     { label: "Leadership", href: urls.profiles() },
     { label: "Documents", href: urls.documents() },
     { label: "Invest at home", href: "/about.html#invest" },
@@ -503,7 +503,7 @@ function renderFooter(site) {
     site?.email && `<li><span class="footer__label">Email</span><a href="mailto:${escapeHtml(site.email)}">${escapeHtml(site.email)}</a></li>`,
     site?.phone && `<li><span class="footer__label">Phone</span><a href="tel:${escapeHtml(site.phone.replace(/\s+/g, ""))}">${escapeHtml(site.phone)}</a></li>`,
     whatsapp && `<li><span class="footer__label">WhatsApp</span><a href="${whatsapp}" rel="noopener" target="_blank">Message us on WhatsApp</a></li>`,
-    `<li><span class="footer__label">Address</span>${escapeHtml(site?.address || "Orlu Zone, Imo State, Nigeria")}</li>`,
+    `<li><span class="footer__label">Address</span>${escapeHtml(site?.address || "Orlu Land, Imo State, Nigeria")}</li>`,
   ].filter(Boolean);
   const links = (list) => list.map((i) => `<li><a href="${i.href}">${i.label}</a></li>`).join("");
   // Social media logos (WhatsApp from Site settings, the rest from js/config.js).
@@ -535,7 +535,7 @@ function renderFooter(site) {
     <div class="footer__inner">
       <div class="footer__about">
         <h2 class="footer__heading">About us</h2>
-        <p>${escapeHtml(site?.description || "News, events and the people of Orlu Zone, for everyone at home and in the diaspora.")}</p>
+        <p>${escapeHtml(site?.description || "News, events and the people of Orlu Land, for everyone at home and in the diaspora.")}</p>
         ${socialRow ? `<p class="footer__label footer__social-label">Follow us</p>${socialRow}` : ""}
       </div>
       <nav class="footer__col" aria-labelledby="footer-explore">
@@ -553,7 +553,7 @@ function renderFooter(site) {
     </div>
 
     <div class="footer__lgas">
-      <p class="visually-hidden">The 12 local government areas of Orlu Zone:</p>
+      <p class="visually-hidden">The 12 local government areas of Orlu Land:</p>
       <ul>${FOOTER_LGAS.map((l) => `<li>${l}</li>`).join("")}</ul>
     </div>
 

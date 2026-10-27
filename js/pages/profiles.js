@@ -359,21 +359,21 @@ function showSection(section, opts) {
  */
 const WHOSWHO = {
   royal: { label: "Traditional Rulers & Titled Chiefs", words: ["royal", "traditional", "ruler", "eze", "igwe", "chief", "king", "monarch"],
-    caption: "Ndi Eze, royal fathers and titled chiefs: custodians of our customs, culture and heritage across Orlu Zone." },
+    caption: "Ndi Eze, royal fathers and titled chiefs: custodians of our customs, culture and heritage across Orlu Land." },
   politics: { label: "Public Service & Politics", words: ["politic", "public service", "government", "legislat", "senat", "council"],
-    caption: "Governors, senators, legislators and public office holders who have served Orlu Zone, Imo State and Nigeria." },
+    caption: "Governors, senators, legislators and public office holders who have served Orlu Land, Imo State and Nigeria." },
   business: { label: "Business & Industry", words: ["business", "industry", "industri", "captain", "entrepreneur", "enterprise", "commerce"],
     caption: "Entrepreneurs, bankers and industrialists whose enterprise creates jobs and wealth at home and abroad." },
   professionals: { label: "Professionals & Academics", words: ["professional", "academ", "scholar", "education", "lecturer", "professor"],
-    caption: "Professors, doctors, engineers, lawyers and scholars whose knowledge and skill bring honour to Orlu Zone." },
+    caption: "Professors, doctors, engineers, lawyers and scholars whose knowledge and skill bring honour to Orlu Land." },
   clergy: { label: "Clergy & Faith Leaders", words: ["clergy", "faith", "church", "religio", "bishop", "pastor", "priest"],
     caption: "Bishops, priests, pastors and faith leaders who guide our people in faith, service and good conscience." },
   philanthropy: { label: "Philanthropy & Community Service", words: ["philanthrop", "community service", "charit", "humanitarian"],
     caption: "Sons and daughters who give their time and wealth to build schools, roads, hospitals and hope at home." },
   women: { label: "Women Leaders", words: ["women", "woman", "female", "mothers", "august meeting", "cwo"],
-    caption: "Women who lead in business, public service, faith and community across Orlu Zone and the diaspora." },
+    caption: "Women who lead in business, public service, faith and community across Orlu Land and the diaspora." },
   youth: { label: "Youth, Arts & Sports", words: ["youth", "art", "sport", "young"],
-    caption: "Young achievers, artists and sportsmen and women carrying the name of Orlu Zone forward." },
+    caption: "Young achievers, artists and sportsmen and women carrying the name of Orlu Land forward." },
   editorial: { label: "Editorial Board", words: ["editorial", "editor", "compendium team", "project team", "secretariat"],
     caption: "The team behind the Compendium of Honour: research, writing, verification and records." },
   posthumous: { label: "Posthumous Honours", words: ["posthumous", "memoriam", "in memory", "late", "departed"],
@@ -394,7 +394,7 @@ function keyForName(name) {
   return null;
 }
 
-const DEFAULT_CAPTION = "Distinguished sons and daughters of Orlu Zone, honoured for their service and achievements.";
+const DEFAULT_CAPTION = "Distinguished sons and daughters of Orlu Land, honoured for their service and achievements.";
 
 /** The short write-up shown under a category's title. */
 function captionFor(category) {

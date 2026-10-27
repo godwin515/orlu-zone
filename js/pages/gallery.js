@@ -30,7 +30,7 @@ const VIEW_ICON = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v
 function cardHtml(img, i) {
   const number = String(i + 1).padStart(2, "0");
   const caption = img.caption || "";
-  const alt = img.alt_text || caption || `Orlu Zone photo ${number}`;
+  const alt = img.alt_text || caption || `Orlu Land photo ${number}`;
   return `
     <li class="gallery-card">
       <a class="photo-grid__item gallery-card__frame" href="${safeUrl(img.public_url)}" data-index="${i}"

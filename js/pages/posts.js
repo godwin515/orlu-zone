@@ -90,7 +90,7 @@ function renderFilters(activeSlug) {
 }
 
 function renderHeading(category) {
-  if (els.sectionTitle) els.sectionTitle.textContent = category ? category.name : "Latest from the Zone";
+  if (els.sectionTitle) els.sectionTitle.textContent = category ? category.name : "Latest from Orlu Land";
   els.title.textContent = category ? category.name : "News";
   els.lead.textContent = category?.description || (category ? "" : DEFAULT_LEAD);
   els.lead.hidden = !els.lead.textContent;

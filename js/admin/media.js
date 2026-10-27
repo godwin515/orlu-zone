@@ -106,7 +106,7 @@ function renderQueue() {
           <div class="field">
             <label class="field__label field__label--small" for="caption-${q.key}">Caption: the write-up shown under the photo <span class="field__optional">optional</span></label>
             <input class="field__input" id="caption-${q.key}" data-caption value="${escapeHtml(q.caption)}"
-              placeholder="For example: Royal fathers at the Orlu Zone honours night, Orlu Civic Centre"
+              placeholder="For example: Royal fathers at the Orlu Land honours night, Orlu Civic Centre"
               ${q.status === "done" || q.status === "uploading" ? "disabled" : ""}>
           </div>
           ${q.status === "error" ? `<p class="field__error">${escapeHtml(q.error)}</p>` : ""}

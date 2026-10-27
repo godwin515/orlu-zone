@@ -31,7 +31,7 @@ function build() {
           <div class="field">
             <label class="field__label" for="caption-editor-caption">Caption</label>
             <textarea class="field__input" id="caption-editor-caption" name="caption" rows="3" maxlength="500"
-              placeholder="For example: Royal fathers at the Orlu Zone honours night, Orlu Civic Centre"></textarea>
+              placeholder="For example: Royal fathers at the Orlu Land honours night, Orlu Civic Centre"></textarea>
             <p class="field__hint">The write-up shown under the photo in the Gallery, and in posts and events that use it. Leave empty for no caption.</p>
           </div>
           <div class="field">
