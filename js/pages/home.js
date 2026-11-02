@@ -2,8 +2,8 @@
  * Homepage.
  * Location: js/pages/home.js   (loaded by index.html)
  *
- * One request to /home gives the site settings, featured posts,
- * latest posts and upcoming events.
+ * One request to /home gives the site settings, featured posts
+ * and upcoming events.
  */
 
 import { api, adapters } from "../api.js";
@@ -22,7 +22,6 @@ import { initHeroShow } from "../hero-show.js";
 
 const MAX_EVENTS = 4;
 const MAX_FEATURED = 4; // one lead + three on the side
-const MAX_LATEST = 6;
 
 const els = {
   heroTitle: document.querySelector("[data-hero-title]"),
@@ -30,7 +29,6 @@ const els = {
   events: document.querySelector("[data-upcoming-events]"),
   featuredSection: document.querySelector("[data-featured-section]"),
   featured: document.querySelector("[data-featured-posts]"),
-  latest: document.querySelector("[data-latest-posts]"),
 };
 
 /* ---------------- Rendering ---------------- */
@@ -71,17 +69,6 @@ async function renderFeatured(posts) {
   return list.map((p) => p.id);
 }
 
-async function renderLatest(posts, excludeIds) {
-  // Don't repeat a story that is already in the featured block.
-  const list = (posts || []).filter((p) => !excludeIds.includes(p.id)).slice(0, MAX_LATEST);
-  if (!list.length) {
-    showEmpty(els.latest, "No news has been posted yet.");
-    return;
-  }
-  const cats = await categoriesFor(list);
-  els.latest.innerHTML = `<div class="post-grid">${list.map((p, i) => postEntry(p, cats[i])).join("")}</div>`;
-}
-
 /* ---------------- Load ---------------- */
 
 async function load() {
@@ -89,7 +76,6 @@ async function load() {
   const stops = [
     showLoading(els.events, { lines: 2 }),
     showLoading(els.featured),
-    showLoading(els.latest),
   ];
 
   try {
@@ -99,13 +85,11 @@ async function load() {
     await initShell(home.site);
     renderHero(home.site);
     renderEvents(home.upcoming_events);
-    const featuredIds = await renderFeatured(home.featured_posts);
-    await renderLatest(home.latest_posts, featuredIds);
+    await renderFeatured(home.featured_posts);
   } catch (error) {
     stops.forEach((stop) => stop());
     showError(els.events, error, load);
     els.featuredSection.hidden = true;
-    els.latest.innerHTML = "";
   }
 }
 
