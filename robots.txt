@@ -1,0 +1,3 @@
+# Search engines: index the public site, stay out of the admin area.
+User-agent: *
+Disallow: /admin/

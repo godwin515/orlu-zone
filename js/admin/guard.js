@@ -79,6 +79,7 @@ export async function requireAdmin() {
     }
     cacheUser(user);
     document.body.classList.remove("admin-pending");
+    startIdleTimer();
     return user;
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) {
@@ -93,6 +94,60 @@ export async function requireAdmin() {
     window.dispatchEvent(new CustomEvent("admin:offline", { detail: error }));
     return user || { email: "", is_active: true };
   }
+}
+
+/*
+ * Automatic sign-out after 30 minutes without any activity (no clicks,
+ * typing, scrolling or touches), so an admin left open on a shared or lost
+ * computer doesn't stay signed in. Activity in another admin tab counts too.
+ */
+const IDLE_LIMIT_MS = 30 * 60 * 1000;
+const ACTIVITY_KEY = "orlu_admin_last_activity";
+
+function noteActivity() {
+  try {
+    localStorage.setItem(ACTIVITY_KEY, String(Date.now()));
+  } catch {
+    /* storage blocked */
+  }
+}
+
+function lastActivity() {
+  try {
+    return Number(localStorage.getItem(ACTIVITY_KEY)) || Date.now();
+  } catch {
+    return Date.now();
+  }
+}
+
+let idleStarted = false;
+function startIdleTimer() {
+  if (idleStarted) return;
+  idleStarted = true;
+  noteActivity();
+  let last = 0;
+  const onActivity = () => {
+    const now = Date.now();
+    if (now - last > 15000) {
+      last = now;
+      noteActivity();
+    }
+  };
+  ["pointerdown", "keydown", "scroll", "touchstart"].forEach((type) =>
+    window.addEventListener(type, onActivity, { passive: true }),
+  );
+  setInterval(() => {
+    if (Date.now() - lastActivity() > IDLE_LIMIT_MS) {
+      session.logout();
+      try {
+        sessionStorage.removeItem(USER_KEY);
+        localStorage.removeItem(ACTIVITY_KEY);
+      } catch {
+        /* storage blocked */
+      }
+      window.location.replace(loginUrl("idle"));
+    }
+  }, 30000);
 }
 
 /** Safe "next" target from the login URL: only admin pages on this site. */

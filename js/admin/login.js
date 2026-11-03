@@ -30,6 +30,7 @@ const REASONS = {
   expired: { kind: "warn", text: "Your session has ended. Please sign in again." },
   "signed-out": { kind: "ok", text: "You've been signed out." },
   inactive: { kind: "error", text: "This account has been deactivated. Contact the site owner." },
+  idle: { kind: "warn", text: "You were signed out after 30 minutes without activity. Please sign in again." },
 };
 
 function showNotice(kind, text) {
